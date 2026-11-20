@@ -42,3 +42,37 @@
   .artist-modal>.cover{aspect-ratio:4 / 4.5}
   .artist-modal-body{padding:20px}
 }
+
+/* Keep the close control properly aligned and tappable in mobile Safari. */
+@media(max-width:720px){
+  .artist-modal>.close-btn{
+    position:sticky;
+    top:12px;
+    right:12px;
+    align-self:flex-end;
+    margin:12px 12px -58px 0;
+    z-index:20;
+    width:46px;
+    height:46px;
+    flex:0 0 46px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    border:1px solid #a77aca;
+    border-radius:0;
+    box-sizing:border-box;
+    background:rgba(19,11,28,.94);
+    color:#fff;
+    line-height:1;
+    -webkit-appearance:none;
+    appearance:none;
+  }
+  .artist-modal>.close-btn svg{
+    width:24px;
+    height:24px;
+    flex:0 0 24px;
+    display:block;
+    stroke-width:2;
+  }
+}

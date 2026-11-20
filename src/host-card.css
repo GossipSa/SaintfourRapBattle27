@@ -18,3 +18,12 @@
 .host-action{display:flex;gap:12px;align-items:center;margin-top:28px;padding-bottom:7px;border-bottom:1px solid #ff64cc;color:#ff90df;font:700 10px 'IBM Plex Mono',monospace;letter-spacing:.06em}
 @media(max-width:700px){.host-card{grid-template-columns:1fr;min-height:0}.host-portrait{min-height:220px;max-height:275px}.host-portrait::after{background:linear-gradient(to bottom,transparent 60%,#170e22)}.host-content{padding:25px 21px 29px}.host-content h3{font-size:clamp(32px,9vw,48px)}.host-feature-heading{font-size:9px}}
 @media(max-width:430px){.host-feature-heading>span:last-child{display:none}.host-portrait{min-height:190px;max-height:225px}.host-caption{margin-top:14px}.host-action{margin-top:19px}}
+/* On mobile, reveal Poppy's face rather than center-cropping the square portrait. */
+@media(max-width:700px){
+  .host-card .host-portrait{height:305px;min-height:305px;max-height:none}
+  .host-card .host-portrait .cover img{object-position:center top}
+  .host-card .host-portrait::after{background:linear-gradient(to bottom,transparent 70%,#170e22 100%)}
+}
+@media(max-width:430px){
+  .host-card .host-portrait{height:285px;min-height:285px;max-height:none}
+}
