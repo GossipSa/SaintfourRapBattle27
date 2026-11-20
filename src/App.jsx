@@ -3,6 +3,7 @@ import { ArrowDownRight, ArrowRight, CalendarDays, Check, ChevronLeft, ChevronRi
 import './App.css'
 import './theme.css'
 import './cyber.css'
+import './glitch.css'
 
 const rappers = [
   { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#ff78cf', initials:'DX', image:'/media/lil-dex.jpg', description:'Самый непредсказуемый участник. Резкие панчи, хаос и никаких тормозов.' },
@@ -88,7 +89,7 @@ export default function App() {
   {galleryIndex!==null&&<div className="modal-backdrop" onClick={()=>setGalleryIndex(null)}><section className="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фотографии" onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setGalleryIndex(null)} aria-label="Закрыть"><X/></button><Cover src={gallery[galleryIndex].image} initials={String(galleryIndex+1).padStart(2,'0')} alt={gallery[galleryIndex].label}/><div className="lightbox-controls"><button onClick={()=>setGalleryIndex((galleryIndex+gallery.length-1)%gallery.length)} aria-label="Предыдущее"><ChevronLeft/></button><span>{gallery[galleryIndex].label} — {galleryIndex+1}/{gallery.length}</span><button onClick={()=>setGalleryIndex((galleryIndex+1)%gallery.length)} aria-label="Следующее"><ChevronRight/></button></div></section></div>}
  </div>
 }
-function ArtistCard({r,onClick}){return <button className="artist-card" onClick={onClick} style={{'--artist-color':r.color}}><Cover src={r.image} alt={r.stage} initials={r.initials}/><div className="artist-vignette"/><div className="artist-number">{r.number} / 04</div><div className="artist-info"><span>{r.role}</span><h3>{r.stage}</h3><p>{r.name}</p><div className="artist-action">VIEW PROFILE <ArrowRight size={16}/></div></div></button>}
+function ArtistCard({r,onClick}){return <button className="artist-card" onClick={onClick} style={{'--artist-color':r.color}}><Cover src={r.image} alt={r.stage} initials={r.initials}/><div className="artist-vignette"/><div className="artist-number">{r.number} / 04</div><div className="artist-info"><span>{r.role}</span><h3 className="glitch-label" data-text={r.stage}>{r.stage}</h3><p>{r.name}</p><div className="artist-action">VIEW PROFILE <ArrowRight size={16}/></div></div></button>}
 function MediaCard({m,onClick}){return <button className="media-card" onClick={onClick}><div className="media-image"><Cover src={m.thumbnail} alt={m.title} initials={m.type==='VIDEO'?'PLAY':'INT'}/><span className="media-type">{m.type}</span><span className="play-circle"><Play fill="currentColor" size={19}/></span></div><div className="media-info"><span>{m.artist} <i>•</i> {m.duration}</span><h3>{m.title}</h3><p>WATCH THE STORY <ArrowRight size={15}/></p></div></button>}
 function PageHeading({number,tag,title,intro}){return <div className="page-heading"><div className="page-kicker"><span className="red-dot"/> {number} / {tag}</div><h1>{title}</h1><p>{intro}</p><div className="page-heading-line"/></div>}
 function NewsList(){return <div className="news-list">{announcements.map((a,i)=><article className="news-item" key={a.title}><span className="news-date">{a.date}</span><div><span className="news-label">{a.label}</span><h3>{a.title}</h3><p>{a.detail}</p></div><div className="news-index">0{i+1}</div></article>)}</div>}

@@ -1,0 +1,45 @@
+
+/* Glitch layer — subtle interference on key identity elements */
+.logo-mark,.poster-inner b,.glitch-label,.section-heading h2{position:relative;isolation:isolate}
+.logo-mark{text-shadow:-1px 0 #ff4fcf,1px 0 #885cff}
+.logo:hover .logo-mark{animation:sf-logo-glitch .52s steps(1,end) 1}
+@keyframes sf-logo-glitch{
+ 0%,100%{transform:none;filter:none}
+ 20%{transform:translateX(2px);filter:drop-shadow(-3px 0 #ff4fcf)}
+ 40%{transform:translateX(-2px);filter:drop-shadow(3px 0 #885cff)}
+ 60%{transform:skewX(-3deg)}
+ 80%{transform:translateX(1px)}
+}
+.glitch-label::before,.glitch-label::after{content:attr(data-text);position:absolute;inset:0;opacity:0;pointer-events:none}
+.glitch-label::before{color:#FF4FCF;text-shadow:-2px 0 #ff4fcf;clip-path:inset(14% 0 53% 0)}
+.glitch-label::after{color:#BD9AFF;text-shadow:2px 0 #885cff;clip-path:inset(63% 0 18% 0)}
+.artist-card:hover .glitch-label::before,.artist-card:focus-visible .glitch-label::before{animation:sf-glitch-top .55s steps(1,end) 1}
+.artist-card:hover .glitch-label::after,.artist-card:focus-visible .glitch-label::after{animation:sf-glitch-bottom .55s steps(1,end) 1}
+@keyframes sf-glitch-top{
+ 0%,100%{opacity:0;transform:none}
+ 18%,29%{opacity:.8;transform:translate(3px,-1px)}
+ 30%,62%{opacity:0}
+ 63%,77%{opacity:.65;transform:translate(-2px,1px)}
+ 78%{opacity:0}
+}
+@keyframes sf-glitch-bottom{
+ 0%,100%{opacity:0;transform:none}
+ 22%,36%{opacity:.75;transform:translate(-3px,1px)}
+ 37%,68%{opacity:0}
+ 69%,82%{opacity:.65;transform:translate(2px,-1px)}
+ 83%{opacity:0}
+}
+.poster-inner b{animation:sf-poster-interference 11s steps(1,end) infinite}
+@keyframes sf-poster-interference{
+ 0%,94%,96%,98%,100%{filter:none;transform:none}
+ 95%{filter:drop-shadow(-5px 0 #ff4fcf) drop-shadow(4px 0 #885cff);transform:translateX(2px)}
+ 97%{filter:drop-shadow(4px 0 #ff4fcf) drop-shadow(-4px 0 #885cff);transform:translateX(-2px)}
+}
+.section-heading h2{transition:text-shadow .2s}
+.section-heading:hover h2{text-shadow:-1px 0 #ff4fcf76,1px 0 #885cff76}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0 7px,#d4a5ff08 8px 9px);opacity:.23;mix-blend-mode:screen}
+.hero-copy,.hero-poster{z-index:1}
+@media(prefers-reduced-motion:reduce){
+ .logo:hover .logo-mark,.artist-card:hover .glitch-label::before,.artist-card:hover .glitch-label::after,.artist-card:focus-visible .glitch-label::before,.artist-card:focus-visible .glitch-label::after,.poster-inner b{animation:none}
+ .glitch-label::before,.glitch-label::after{display:none}
+}
