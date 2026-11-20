@@ -1,4 +1,4 @@
-/* Animated slogans between hero and rapper lineup: original site's position */
+/* Tickers framing the opening screen */
 .battle-ticker{width:100%;overflow:hidden;background:#15101f;border-top:1px solid #5a3475;border-bottom:1px solid #5a3475}
 .battle-ticker-track{display:flex;align-items:center;width:max-content;animation:battle-ticker-move 24s linear infinite;will-change:transform}
 .battle-ticker-copy{display:flex;align-items:center;flex:none;white-space:nowrap}
@@ -7,3 +7,48 @@
 @keyframes battle-ticker-move{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(max-width:540px){.battle-ticker-phrase{font-size:13px;padding:11px 18px;gap:15px}}
 @media(prefers-reduced-motion:reduce){.battle-ticker-track{animation:none}.battle-ticker{overflow-x:auto}}
+
+.battle-ticker-lineup {
+  background: #493655;
+  border-top: 0;
+}
+.battle-ticker-lineup .battle-ticker-track { animation-duration: 32s; animation-direction: reverse; }
+.hero-frame .battle-ticker-copy { min-width: 100vw; justify-content: space-around; }
+.battle-ticker-lineup .battle-ticker-phrase { color: #fff3ff; text-shadow: none; }
+.battle-ticker-lineup .battle-ticker-phrase:last-child { color: #e7c7ff; }
+.hero-host {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 20px;
+  color: #fff3ff;
+}
+.hero-host span[lang="en"] { color: #e7c7ff; }
+.host-card {
+  display: grid;
+  grid-template-columns: minmax(120px, 220px) minmax(0, 1fr);
+  margin-top: 24px;
+  border: 1px solid #745982;
+  background: #21172c;
+}
+.host-portrait {
+  display: grid;
+  min-height: 200px;
+  place-items: center;
+  background: linear-gradient(145deg, #493655, #21172c);
+  color: #e7c7ff;
+  font-size: 3rem;
+  font-weight: 700;
+}
+.host-card-copy { align-self: center; padding: clamp(20px, 4vw, 40px); }
+.host-card-copy h3 { margin: 8px 0 12px; color: #fff3ff; font-size: clamp(1.5rem, 4vw, 2.5rem); }
+.host-card-copy p:last-child { max-width: 58ch; margin: 0; color: #e9d9f4; line-height: 1.6; }
+
+@media (max-width: 540px) {
+  .host-card { grid-template-columns: 1fr; }
+  .host-portrait { min-height: 140px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .battle-ticker-repeat { display: none; }
+  .hero-frame .battle-ticker-track { width: auto; }
+  .hero-frame .battle-ticker-copy { flex-wrap: wrap; white-space: normal; min-width: 0; }
+}
