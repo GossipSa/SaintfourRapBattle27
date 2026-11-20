@@ -13,7 +13,7 @@ import './hero-background.css'
 const rappers = [
   { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#ff78cf', initials:'DX', image:'/media/lil-dex.jpg', description:'Байкер, провокатор и человек, который никогда не держит язык за зубами. На баттле играет грязно, бьёт по больному и получает от этого удовольствие. Особенно если напротив Руди.' },
   { id:'netti', stage:'MC NETTI', name:'NATHANIEL HOWARD', subtitle:'BUSINESS IS PERSONAL.', role:'THE EXECUTIVE', number:'02', color:'#c49afd', initials:'MN', image:'/media/mc-netti.jpg', description:'Глава компании «Уорлок». До сих пор не понимает, кто записал его на рэп-баттл и зачем ему всё это нужно. Но раз уж оказался здесь, уходить без победы не собирается.' },
-  { id:'rudi', stage:'YUNG RUD', name:'RUDI BROOKS', subtitle:'PLAY TO WIN.', role:'THE CONTENDER', number:'03', color:'#e2a0ff', initials:'RB', image:'/media/rudi.jpg', description:'Капитан команды выходит за пределы площадки. Игра только начинается.' },
+  { id:'rudi', stage:'YUNG RUD', name:'RUDI BROOKS', subtitle:'PLAY TO WIN.', role:'THE CONTENDER', number:'03', color:'#e2a0ff', initials:'RB', image:'/media/rudi.jpg', description:'Капитан школьной баскетбольной команды. На баттле у него тот же азарт, что и на площадке. Особенно когда напротив Декс.' },
   { id:'daro', stage:'DON DARO', name:'DARREN', subtitle:'MAKE SOME NOISE.', role:'THE UNKNOWN', number:'04', color:'#a87fff', initials:'DD', image:'/media/don-daro.jpg', description:'Один из главных сюрпризов вечера. Его карты пока не раскрыты.' },
 ]
 // Интервью выходят по четвергам с 3 декабря 2026 года в 19:00 МСК (UTC+3).
