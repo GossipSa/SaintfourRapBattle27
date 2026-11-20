@@ -98,7 +98,7 @@ function SponsorCard({sponsor,onOpen}) {
     </div>
     <div className="sponsor-identity">
       <div className="sponsor-wordmark" aria-label={sponsor.name+' '+sponsor.subtitle}>
-        <strong>{sponsor.name}</strong><span>{sponsor.subtitle}</span>
+        <strong className={sponsor.id==='warlock'?undefined:'sponsor-brand-glitch'} data-text={sponsor.name}>{sponsor.name}</strong><span>{sponsor.subtitle}</span>
       </div>
     </div>
     <div className="sponsor-pitch">
