@@ -1,0 +1,23 @@
+.hype-polls{margin:0 0 42px;padding:27px 0 12px}
+.hype-polls-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #563450}
+.hype-kicker{font:700 10px 'IBM Plex Mono',monospace;color:#d785c6;letter-spacing:.15em}
+.hype-polls-intro h2{font:900 clamp(38px,6vw,66px)/1 'Barlow Condensed',Impact,sans-serif;color:#f5e8f7;letter-spacing:-.02em;margin:12px 0}
+.hype-polls-intro h2 em{color:#ed79c6;font-style:normal}
+.hype-polls-intro p{font-size:13px;color:#b9a7c0;margin:0;line-height:1.7}
+.hype-counter{white-space:nowrap;font:800 32px 'Barlow Condensed',Impact,sans-serif;color:#f0a7d8}
+.hype-counter small{font:600 9px 'IBM Plex Mono',monospace;color:#b898c0}
+.hype-poll-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.hype-poll{display:flex;flex-direction:column;min-width:0;padding:22px;background:linear-gradient(145deg,#211326,#13101a 75%);border:1px solid #5c385f;border-top:2px solid #b956aa}
+.hype-poll-top{display:flex;justify-content:space-between;gap:12px;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.09em;color:#c58abc}
+.hype-poll-top span:last-child{color:#9c85a7}
+.hype-poll h3{font:800 clamp(22px,3vw,32px)/1.1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.005em;color:#f7eff8;margin:18px 0 20px;min-height:68px}
+.hype-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hype-option{display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:48px;padding:11px 12px;text-align:left;cursor:pointer;background:#1d1723;border:1px solid #503951;color:#dcc6df;font:700 12px 'Space Grotesk',sans-serif;transition:background .15s,border-color .15s}
+.hype-option:hover:not(:disabled){background:#38213b;border-color:#cf75b6;color:white}
+.hype-option:disabled{cursor:default;opacity:.49}
+.hype-option.chosen:disabled{opacity:1;background:#472341;border-color:#e68dca;color:white}
+.hype-option svg{flex-shrink:0}
+.hype-poll-footer{margin-top:auto;padding-top:17px;font:600 9px/1.5 'IBM Plex Mono',monospace;letter-spacing:.04em;color:#a995b1}
+.hype-disclaimer{font:11px/1.7 'DM Sans',sans-serif;color:#9f8da8;margin:18px 0 0}
+@media(max-width:740px){.hype-poll-grid{grid-template-columns:1fr}.hype-polls{padding-top:12px}.hype-poll h3{min-height:auto}.hype-counter{font-size:26px}.hype-poll{padding:19px}}
+@media(max-width:380px){.hype-options{grid-template-columns:1fr}}
