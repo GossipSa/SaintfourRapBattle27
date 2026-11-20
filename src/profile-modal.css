@@ -1,0 +1,44 @@
+/* Mobile artist profile: keep the alternate image prominent instead of cropping it to 210px */
+@media(max-width:720px){
+  .modal-backdrop:has(.artist-modal){
+    padding:12px;
+    align-items:center;
+  }
+  .artist-modal{
+    display:flex;
+    flex-direction:column;
+    width:min(440px,100%);
+    max-width:440px;
+    max-height:calc(100dvh - 24px);
+    min-height:0;
+    overflow-x:hidden;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+  }
+  .artist-modal>.cover{
+    position:relative;
+    inset:auto;
+    display:block;
+    width:100%;
+    height:auto;
+    min-height:0;
+    flex:0 0 auto;
+    aspect-ratio:4 / 5;
+    overflow:hidden;
+  }
+  .artist-modal>.cover>img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center 26%;
+  }
+  .artist-modal-body{
+    flex:0 0 auto;
+    padding:23px;
+  }
+}
+@media(max-width:420px){
+  .artist-modal>.cover{aspect-ratio:4 / 4.5}
+  .artist-modal-body{padding:20px}
+}
