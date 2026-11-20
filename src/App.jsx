@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { ArrowDownRight, ArrowRight, Check, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Images, Menu, Mic2, Play, Radio, Vote, X } from 'lucide-react'
+import { ArrowDownRight, ArrowRight, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Images, Menu, Mic2, Play, Radio, Vote, X } from 'lucide-react'
 import './App.css'
 import './theme.css'
 import './cyber.css'
@@ -47,9 +47,6 @@ const announcements = [
   { date:'03 DEC', label:'INTERVIEW SERIES', title:'FIVE THURSDAYS. FIVE VOICES.', detail:'Пять интервью: четыре рэпера и Надин. Каждый четверг с 3 по 31 декабря 2026 года.' },
   { date:'2027', label:'MAIN EVENT', title:'SAINTFOUR RAP BATTLE ’27', detail:'Главный баттл Сентфора. Дата премьеры будет объявлена отдельно.' },
 ]
-const pollOptions = [
-  { id:'dex', label:'LIL DEX' }, { id:'netti', label:'MC NETTI' }, { id:'rudi', label:'YUNG RUD' }, { id:'daro', label:'DON DARO' },
-]
 const nav = [
   { id:'home', name:'Главная', Icon:Home },
   { id:'artists', name:'Участники', Icon:Mic2 },
@@ -68,11 +65,9 @@ export default function App() {
  const [page,setPage]=useState('home')
  const [menuOpen,setMenuOpen]=useState(false)
  const [selected,setSelected]=useState(null)
- const [voted,setVoted]=useState(()=>{try{return localStorage.getItem('sf_poll_vote')}catch{return null}})
  const [activeVideo,setActiveVideo]=useState(null)
  const [premieres,setPremieres]=useState({})
  const [galleryIndex,setGalleryIndex]=useState(null)
- const telegramUser=window.Telegram?.WebApp?.initDataUnsafe?.user?.first_name || null
  useEffect(()=>{
    const tg=window.Telegram?.WebApp
    if(!tg)return
@@ -108,7 +103,6 @@ export default function App() {
  useEffect(()=>{const onKey=e=>{if(e.key==='Escape'){setSelected(null);setActiveVideo(null);setGalleryIndex(null)} if(galleryIndex!==null){if(e.key==='ArrowRight')setGalleryIndex(i=>(i+1)%gallery.length);if(e.key==='ArrowLeft')setGalleryIndex(i=>(i+gallery.length-1)%gallery.length)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[galleryIndex])
  const filteredMedia=useMemo(()=>media.filter(m=>m.type==='INTERVIEW'),[])
  const go=(p)=>{setPage(p);setMenuOpen(false)}
- function castVote(id){setVoted(id);try{localStorage.setItem('sf_poll_vote',id)}catch{}}
  return <div className="app">
   <div className="top-strip"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="top-right"><span className="live-dot"/> THE UNDERGROUND IS CALLING</span></div>
   <header className="header"><button className="logo" onClick={()=>go('home')} aria-label="На главную"><span className="logo-mark">SF<span>✳</span></span><span className="logo-type">SAINTFOUR<strong>RAP BATTLE <i>’27</i></strong></span></button><nav className="desktop-nav" aria-label="Навигация">{nav.map(n=><button key={n.id} className={page===n.id?'active':''} onClick={()=>go(n.id)}>{n.name}</button>)}</nav><div className="header-actions"><span className="edition">VOL. 001 / 2027</span><button className="mobile-menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Меню">{menuOpen?<X/>:<Menu/>}</button></div></header>
@@ -120,7 +114,7 @@ export default function App() {
    <BattleTicker/>
    <section className="section wrap"><SectionTitle tag="01 / THE LINEUP" title="MEET THE CONTENDERS" action="ВСЕ УЧАСТНИКИ" onAction={()=>go('artists')}/><div className="artist-grid">{rappers.map(r=><ArtistCard key={r.id} r={r} onClick={()=>setSelected(r)}/>)}</div><HostFeature onClick={()=>setSelected(host)}/></section>
    <section className="section wrap"><SectionTitle tag="02 / ON THE RECORD" title="BEHIND THE MIC" action="ВСЕ ИНТЕРВЬЮ" onAction={()=>go('interviews')}/><div className="interview-schedule-note">5 ИНТЕРВЬЮ <span>✳</span> КАЖДЫЙ ЧЕТВЕРГ <span>✳</span> С 3 ДЕКАБРЯ 2026 В 19:00 МСК</div><div className="media-grid">{media.slice(0,3).map(m=><MediaCard key={m.id} m={m} available={Boolean(premieres[m.id.replace('interview-','')]?.available)} onClick={()=>openInterview(m)}/>)}</div></section>
-   <section className="promo-band"><div className="wrap promo-content"><div><p className="eyebrow"><span className="red-dot"/> HAVE YOUR SAY</p><h2><span className="glitch-line" data-text="WHO RUNS">WHO RUNS</span><br/><em className="glitch-line" data-text="THIS TOWN?">THIS TOWN?</em></h2><p>Выбирай фаворита до начала баттла.</p></div><button className="primary-btn light-btn" onClick={()=>go('polls')}>ПЕРЕЙТИ К ОПРОСУ <ArrowRight size={18}/></button></div></section>
+   <section className="promo-band"><div className="wrap promo-content"><div><p className="eyebrow"><span className="red-dot"/> HAVE YOUR SAY</p><h2><span className="glitch-line" data-text="WHO RUNS">WHO RUNS</span><br/><em className="glitch-line" data-text="THIS TOWN?">THIS TOWN?</em></h2><p>Голосование за победителя откроется после выхода батла.</p></div><button className="primary-btn light-btn" onClick={()=>go('polls')}>ПЕРЕЙТИ К ОПРОСУ <ArrowRight size={18}/></button></div></section>
    <section className="section wrap sponsors-home"><SectionTitle tag="03 / POWERED BY" title="THE PEOPLE BEHIND THE NOISE" action="ВСЕ ПАРТНЁРЫ" onAction={()=>go('sponsors')}/><SponsorsShowcase compact/></section>
    <section className="section wrap"><SectionTitle tag="04 / LATEST UPDATES" title="THE WORD ON THE STREET" action="ВСЕ АНОНСЫ" onAction={()=>go('news')}/><NewsList/></section>
   </>}
@@ -137,7 +131,15 @@ export default function App() {
   {page==='gallery'&&<section className="inner-page wrap"><PageHeading number="03" tag="THE ARCHIVE" title={<><span className="glitch-line" data-text="FREEZE">FREEZE</span><br/><em className="glitch-line" data-text="THE MOMENT.">THE MOMENT.</em></>} intro="Фотографии со сцены, бэкстейджа и съёмок. Настоящие кадры добавим по мере готовности."/><div className="gallery-grid">{gallery.map((g,i)=><button className={'gallery-tile tile-'+i} key={g.label} onClick={()=>setGalleryIndex(i)}><Cover src={g.image} alt={g.label} initials={String(i+1).padStart(2,'0')}/><span>{g.label} <ArrowRight size={16}/></span></button>)}</div></section>}
   {page==='news'&&<section className="inner-page wrap"><PageHeading number="04" tag="THE BULLETIN" title={<><span className="glitch-line" data-text="STAY">STAY</span><br/><em className="glitch-line" data-text="LOCKED IN.">LOCKED IN.</em></>} intro="Главные новости и анонсы предстоящего рэп-баттла. Следи за обновлениями."/><NewsList/></section>}
   {page==='sponsors'&&<section className="inner-page wrap sponsors-page"><PageHeading number="06" tag="POWERED BY" title={<><span className="glitch-heading" data-text="BACKED BY">BACKED BY</span><br/><em className="glitch-heading" data-text="THE CULTURE.">THE CULTURE.</em></>} intro="WARLOCK, BLACK HELLEBORE ENERGY и GOSSIP SAINTFOUR — бренды и партнёры нашего фанатского рэп-шоу."/><SponsorsShowcase/></section>}
-  {page==='polls'&&<section className="inner-page wrap"><PageHeading number="05" tag="YOUR VOICE COUNTS" title={<><span className="glitch-line" data-text="PICK YOUR">PICK YOUR</span><br/><em className="glitch-line" data-text="FAVOURITE.">FAVOURITE.</em></>} intro="Кто, по твоему мнению, заберёт сцену? Выбирай фаворита до премьеры."/><div className="poll-layout"><div className="poll-box"><div className="poll-top"><span><Vote size={17}/> FAN POLL / 001</span><span className="poll-status">LOCAL PREVIEW</span></div><h3 className="glitch-heading" data-text="WHO WILL OWN THE MIC?">WHO WILL OWN THE MIC?</h3><p className="poll-description">Выбери одного участника. Голос сохраняется только в этом браузере, пока не подключим серверную систему голосования.</p><div className="poll-options">{pollOptions.map((o,i)=><button onClick={()=>castVote(o.id)} key={o.id} className={voted===o.id?'chosen':''}><span className="poll-number">0{i+1}</span><span>{o.label}</span><span className="poll-indicator">{voted===o.id?<Check size={17}/>:<span/>}</span></button>)}</div><div className="poll-bottom">{voted?<span><Check size={16}/> Твой выбор сохранён на этом устройстве</span>:<span>ONE VOICE. ONE CHOICE.</span>}<button onClick={()=>{setVoted(null);try{localStorage.removeItem('sf_poll_vote')}catch{}}}>Сбросить</button></div></div><aside className="poll-side"><Flame size={31}/><p>THE HYPE IS REAL</p><h4 className="glitch-heading" data-text="THIS IS JUST THE BEGINNING.">THIS IS JUST THE BEGINNING.</h4><span>Позже добавим авторизацию через Telegram, защиту от повторных голосов и настоящие результаты. Пока это демонстрационный опрос.</span>{telegramUser&&<small>Telegram: {telegramUser}</small>}</aside></div></section>}
+  {page==='polls'&&<section className="inner-page wrap official-voting-page"><PageHeading number="04" tag="YOUR VOTE MATTERS" title={<><span className="glitch-line" data-text="WHO WINS?">WHO WINS?</span><br/><em className="glitch-line" data-text="YOU DECIDE.">YOU DECIDE.</em></>} intro="Три голосования. Два победителя первых батлов встретятся в финале. Голосования откроются после выхода соответствующих выпусков."/>
+    <div className="vote-rules-strip"><span><Vote size={18}/> OFFICIAL VOTING</span><span>48 ЧАСОВ НА ГОЛОСОВАНИЕ</span><span>TELEGRAM + SAINTFOUR VS</span></div>
+    <div className="official-vote-grid">
+      <OfficialVoteCard number="01" first={rappers[0]} second={rappers[1]}/>
+      <OfficialVoteCard number="02" first={rappers[2]} second={rappers[3]}/>
+      <OfficialVoteCard number="03" final/>
+    </div>
+    <div className="vote-explanation"><div><strong>КАК ПРОХОДИТ ГОЛОСОВАНИЕ?</strong><p>После выхода батла появятся голосования на сайте и в Telegram. Они будут открыты в течение 48 часов. Победители первых двух батлов проходят в финал.</p></div><div><strong>КОГДА МОЖНО ГОЛОСОВАТЬ?</strong><p>Пока голосования закрыты. Откроем их вместе с публикацией соответствующих выпусков. Система учёта голосов ещё подключается — сейчас это анонс будущих голосований, а не действующий опрос.</p></div></div>
+  </section>}
   </main>
   <footer className="footer"><div className="wrap footer-main"><div><span className="footer-logo">SAINTFOUR<span>✳</span></span><p>RAP BATTLE <b>’27</b></p><small>AN ORIGINAL GOSSIP SAINTFOUR PROJECT</small></div><div className="footer-nav">{nav.slice(1).map(n=><button key={n.id} onClick={()=>go(n.id)}>{n.name}</button>)}</div><div className="footer-stamp"><Radio size={23}/><span>UNDERGROUND<br/>NEVER DIES.</span></div></div><div className="wrap footer-bottom"><span>© {2027} GOSSIP SAINTFOUR. FAN PROJECT.</span><span>MADE FOR THE CULTURE. NOT FOR THE CLOUT.</span></div></footer>
   <nav className="bottom-nav" aria-label="Быстрая навигация">{nav.filter(n=>['home','artists','battles','interviews','polls'].includes(n.id)).map(n=><button key={n.id} onClick={()=>go(n.id)} className={page===n.id?'active':''}><n.Icon size={19}/><span>{n.name}</span></button>)}</nav>
@@ -145,6 +147,24 @@ export default function App() {
   {activeVideo&&<div className="modal-backdrop" onClick={()=>setActiveVideo(null)}><section className="video-modal" role="dialog" aria-modal="true" aria-label={activeVideo.title} onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setActiveVideo(null)} aria-label="Закрыть"><X/></button>{activeVideo.url?<video controls playsInline autoPlay src={activeVideo.url}/>:<div className="video-unavailable"><Play size={42}/><h3>COMING SOON</h3><p>Видео ещё не опубликовано.</p></div>}<h3>{activeVideo.title}</h3></section></div>}
   {galleryIndex!==null&&<div className="modal-backdrop" onClick={()=>setGalleryIndex(null)}><section className="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фотографии" onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setGalleryIndex(null)} aria-label="Закрыть"><X/></button><Cover src={gallery[galleryIndex].image} initials={String(galleryIndex+1).padStart(2,'0')} alt={gallery[galleryIndex].label}/><div className="lightbox-controls"><button onClick={()=>setGalleryIndex((galleryIndex+gallery.length-1)%gallery.length)} aria-label="Предыдущее"><ChevronLeft/></button><span>{gallery[galleryIndex].label} — {galleryIndex+1}/{gallery.length}</span><button onClick={()=>setGalleryIndex((galleryIndex+1)%gallery.length)} aria-label="Следующее"><ChevronRight/></button></div></section></div>}
  </div>
+}
+function OfficialVoteCard({number,first,second,final=false}){
+ return <article className={'official-vote-card '+(final?'official-vote-final':'')}>
+   <div className="official-vote-head"><span>VOTING / {number}</span><span className="official-vote-status"><span className="official-vote-dot"/> СКОРО</span></div>
+   <div className="official-vote-fighters">
+     {final?<>
+       <div className="official-vote-person mystery"><div className="vote-question">?</div><strong>ПОБЕДИТЕЛЬ 01</strong></div>
+       <span className="official-vs">VS</span>
+       <div className="official-vote-person mystery"><div className="vote-question">?</div><strong>ПОБЕДИТЕЛЬ 02</strong></div>
+     </>:<>
+       <div className="official-vote-person"><img src={first.image} alt={first.stage}/><strong>{first.stage}</strong></div>
+       <span className="official-vs">VS</span>
+       <div className="official-vote-person"><img src={second.image} alt={second.stage}/><strong>{second.stage}</strong></div>
+     </>}
+   </div>
+   <div className="official-vote-foot"><span>{final?'ГОЛОСОВАНИЕ ЗА ПОБЕДИТЕЛЯ ШОУ':'КТО ПРОЙДЁТ В ФИНАЛ?'}</span><span>48H VOTE WINDOW</span></div>
+   <div className="official-vote-locked"><span>ГОЛОСОВАНИЕ ЕЩЁ НЕ ОТКРЫТО</span><span>ОЖИДАЕМ ПРЕМЬЕРУ</span></div>
+ </article>
 }
 function BattleMatch({number,name,left,right,final=false}){
  return <article className={'battle-match '+(final?'battle-match-final':'')}>
