@@ -20,15 +20,16 @@ function gate(req, res, next) {
   if (url.pathname === '/api/interviews/status') {
     return json(res, 200, {serverTime:new Date().toISOString(), premieres:Object.fromEntries(Object.entries(premieres).map(([id, at])=>[id,{at,available:Date.now()>=Date.parse(at)}]))})
   }
-  const match = /^\/api\/interviews\/(dex|netti|rudi|daro|nadine)$/.exec(url.pathname)
+  const match = /^\/api\/interviews\/(dex|netti|rudi|daro|nadine)(\/poster)?$/.exec(url.pathname)
   if (!match) return next()
   const id = match[1]
   if (Date.now() < Date.parse(premieres[id])) return json(res, 403, {error:'NOT_RELEASED',premiere:premieres[id]})
-  const file = path.join(folder, `${id}.mp4`)
+  const isPoster=Boolean(match[2])
+  const file = isPoster ? path.join(folder, 'posters', `${id}.jpg`) : path.join(folder, `${id}.mp4`)
   let size
   try { size = fs.statSync(file).size } catch { return json(res, 404, {error:'VIDEO_NOT_UPLOADED'}) }
   const range = req.headers.range
-  res.setHeader('Content-Type','video/mp4')
+  res.setHeader('Content-Type',isPoster?'image/jpeg':'video/mp4')
   res.setHeader('Accept-Ranges','bytes')
   res.setHeader('Cache-Control','no-store')
   res.setHeader('X-Content-Type-Options','nosniff')
