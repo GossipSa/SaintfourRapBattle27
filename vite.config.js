@@ -3,4 +3,4 @@ import { defineConfig } from 'vite'
 import { interviewGatePlugin } from './interview-gate.js'
 
 // Videos remain outside public/ and are served only after their UTC premiere.
-export default defineConfig({ plugins: [react(), interviewGatePlugin()] })
+export default defineConfig({ base: process.env.GITHUB_PAGES === 'true' ? '/SaintfourVS/' : '/', plugins: [react(), interviewGatePlugin()] })
