@@ -76,3 +76,55 @@
     stroke-width:2;
   }
 }
+
+/* One consistent close-icon hit area for every mobile overlay and mobile menu. */
+@media(max-width:720px){
+  .close-btn,
+  .sponsor-modal-close,
+  .mobile-menu-button{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:46px;
+    height:46px;
+    min-width:46px;
+    min-height:46px;
+    padding:0;
+    margin-inline:0;
+    box-sizing:border-box;
+    border-radius:0;
+    line-height:1;
+    -webkit-appearance:none;
+    appearance:none;
+    touch-action:manipulation;
+  }
+  .close-btn svg,
+  .sponsor-modal-close svg,
+  .mobile-menu-button svg{
+    display:block;
+    width:24px;
+    height:24px;
+    min-width:24px;
+    min-height:24px;
+    flex:0 0 24px;
+    margin:0;
+    stroke-width:2;
+    transform:none;
+  }
+  .video-modal>.close-btn,
+  .lightbox>.close-btn,
+  .sponsor-modal>.sponsor-modal-close{
+    position:absolute;
+    top:12px;
+    right:12px;
+    z-index:20;
+    background:rgba(19,11,28,.94);
+    border:1px solid #a77aca;
+    color:#fff;
+  }
+  .artist-modal>.close-btn{
+    margin:12px 12px -58px 0;
+    background:rgba(19,11,28,.94);
+    border:1px solid #a77aca;
+  }
+}
