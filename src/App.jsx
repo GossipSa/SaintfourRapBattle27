@@ -8,7 +8,7 @@ import './glitch.css'
 const rappers = [
   { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#ff78cf', initials:'DX', image:'/media/lil-dex.jpg', description:'Самый непредсказуемый участник. Резкие панчи, хаос и никаких тормозов.' },
   { id:'netti', stage:'MC NETTI', name:'NATHANIEL HOWARD', subtitle:'BUSINESS IS PERSONAL.', role:'THE EXECUTIVE', number:'02', color:'#c49afd', initials:'MN', image:'/media/mc-netti.jpg', description:'Глава Warlock на баттл-сцене. Холодный расчёт и ни одного лишнего слова.' },
-  { id:'rudi', stage:'RUDI', name:'RUDI BROOKS', subtitle:'PLAY TO WIN.', role:'THE CONTENDER', number:'03', color:'#e2a0ff', initials:'RB', image:'/media/rudi.jpg', description:'Капитан команды выходит за пределы площадки. Игра только начинается.' },
+  { id:'rudi', stage:'YUNG RUD', name:'RUDI BROOKS', subtitle:'PLAY TO WIN.', role:'THE CONTENDER', number:'03', color:'#e2a0ff', initials:'RB', image:'/media/rudi.jpg', description:'Капитан команды выходит за пределы площадки. Игра только начинается.' },
   { id:'daro', stage:'DON DARO', name:'DARREN', subtitle:'MAKE SOME NOISE.', role:'THE UNKNOWN', number:'04', color:'#a87fff', initials:'DD', image:'/media/don-daro.jpg', description:'Один из главных сюрпризов вечера. Его карты пока не раскрыты.' },
 ]
 const media = [
@@ -28,7 +28,7 @@ const announcements = [
   { date:'2027', label:'MAIN EVENT', title:'SAINTFOUR RAP BATTLE ’27', detail:'Главный баттл Сентфора. Дата премьеры будет объявлена отдельно.' },
 ]
 const pollOptions = [
-  { id:'dex', label:'LIL DEX' }, { id:'netti', label:'MC NETTI' }, { id:'rudi', label:'RUDI' }, { id:'daro', label:'DON DARO' },
+  { id:'dex', label:'LIL DEX' }, { id:'netti', label:'MC NETTI' }, { id:'rudi', label:'YUNG RUD' }, { id:'daro', label:'DON DARO' },
 ]
 const nav = [
   { id:'home', name:'Главная', Icon:Home },
