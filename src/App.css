@@ -48,10 +48,10 @@
 .battle-page-note{color:#ab97b9;font:12px/1.7 'DM Sans',sans-serif;margin:14px 0 36px}
 @media(max-width:760px){.battle-match-grid{grid-template-columns:1fr}.battle-match-final{grid-column:1}.battle-match-stage{min-height:215px;grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr);padding:15px 12px}.battle-fighter img{height:155px}.battle-match-final .battle-match-stage{grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr)}.battle-silhouette{height:150px}.battle-fighter span{font-size:20px}.battle-fighter-unknown span{font-size:11px}.battle-match-top,.battle-match-bottom{padding-left:14px;padding-right:14px}}
 
-/* Mobile battle-page glitch: keep the word and both RGB slices aligned on narrow viewports. */
+/* Preserve the large battle headline on phones; each word gets its own aligned RGB slices. */
 @media(max-width:760px){
-  .battles-page .page-heading h1{font-size:clamp(27px,7.7vw,59px);letter-spacing:-.045em;line-height:1.08}
-  .battles-page .page-heading .glitch-line{max-width:100%;white-space:nowrap;vertical-align:top;letter-spacing:inherit}
-  .battles-page .page-heading .glitch-line::before,
-  .battles-page .page-heading .glitch-line::after{white-space:nowrap;letter-spacing:inherit;line-height:inherit}
+  .battles-page .page-heading h1{font-size:clamp(68px,13vw,90px);letter-spacing:-.055em;line-height:.98}
+  .battles-page .page-heading .battle-title-word{display:block;width:max-content;max-width:100%;white-space:nowrap;vertical-align:top;letter-spacing:inherit}
+  .battles-page .page-heading .battle-title-word::before,
+  .battles-page .page-heading .battle-title-word::after{white-space:nowrap;letter-spacing:inherit;line-height:inherit}
 }
