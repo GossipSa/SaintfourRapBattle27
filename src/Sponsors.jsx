@@ -1,12 +1,28 @@
 import './sponsor-tile-redesign.css'
 import { useEffect, useRef, useState } from 'react'
-import { ArrowUpRight, Bolt, Building2, Play, Radio, Star, X } from 'lucide-react'
+import { ArrowUpRight, Play, Star, X, Zap } from 'lucide-react'
+
+// Bespoke partner symbols, kept small and understated like the other top-row marks.
+function HelleboreMark({ size=24, className='' }) {
+  return <svg className={className} width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <g stroke="currentColor" strokeWidth="1.25" strokeLinejoin="round">
+      {[0,72,144,216,288].map(a=><path key={a} d="M16 14.5C11.4 11.2 11.7 5.9 16 2.5C20.3 5.9 20.6 11.2 16 14.5Z" transform={`rotate(${a} 16 16)`}/>) }
+      <circle cx="16" cy="16" r="3.3" fill="#19141e"/>
+      <circle cx="16" cy="16" r="1.1" fill="currentColor" stroke="none"/>
+    </g>
+  </svg>
+}
+function GossipSpark({ size=24, className='' }) {
+  return <svg className={className} width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <path d="M16 2.5 19.2 12.8 29.5 16 19.2 19.2 16 29.5 12.8 19.2 2.5 16 12.8 12.8 16 2.5Z" fill="currentColor"/>
+  </svg>
+}
 
 // In-universe fan project partners. Add actual media files to public/media/sponsors/.
 const sponsors = [
   {
     id:'warlock',name:'WARLOCK',subtitle:'INDUSTRIES',tier:'ГЕНЕРАЛЬНЫЙ ПАРТНЁР',
-    tag:'MAIN PARTNER',Icon:Building2,featured:true,
+    tag:'MAIN PARTNER',Icon:HelleboreMark,featured:true,
     cardLine:'Не всё идёт по плану.',cardDetail:'Даже когда план составляли вы.',cardAction:'ПОДРОБНЕЕ О ПАРТНЁРЕ',
     heading:'НЕКОТОРЫЕ РЕШЕНИЯ ПРИНИМАЮТСЯ БЕЗ ВАШЕГО УЧАСТИЯ.',
     description:'WARLOCK INDUSTRIES — генеральный партнёр SAINTFOUR RAP BATTLE ’27.\n\nКомпания Натаниэля Говарда привыкла контролировать происходящее. Однако в этот раз обстоятельства сложились несколько иначе.\n\nКак именно генеральный директор оказался среди участников шоу — вопрос, который пока остаётся открытым. Одно известно точно: WARLOCK не привыкла отступать.',
@@ -14,16 +30,16 @@ const sponsors = [
     aside:'WARLOCK / SAINTFOUR',
   },
   {
-    id:'energy',name:'BLACK HELLEBORE',subtitle:'ENERGY',tier:'ОФИЦИАЛЬНЫЙ ЭНЕРГЕТИК ШОУ',
-    tag:'OFFICIAL ENERGY',Icon:Bolt,
+    id:'energy',name:'BLACK HELLEBORE',subtitle:'ENERGY',tier:'ЭНЕРГИЯ БАТЛА',
+    tag:'OFFICIAL ENERGY',Icon:Zap,
     cardLine:'Заряжен на большее.',cardDetail:'Официальный источник энергии SAINTFOUR RAP BATTLE ’27.',cardAction:'ПОЗНАКОМИТЬСЯ С БРЕНДОМ',
     heading:'КОГДА ГРАДУС ПОВЫШАЕТСЯ — МЫ ДОБАВЛЯЕМ ЭНЕРГИИ.',
     description:'BLACK HELLEBORE ENERGY становится официальным энергетическим партнёром SAINTFOUR RAP BATTLE ’27.\n\nБренд поддерживает самые громкие события города, и первый рэп-баттл Сентфора не стал исключением. Новые лица, неожиданные противостояния и энергия, которую невозможно сдержать.\n\nBLACK HELLEBORE ENERGY. Заряжен на большее.',
     aside:'BLACK HELLEBORE / ENERGY',
   },
   {
-    id:'gossip',name:'GOSSIP',subtitle:'SAINTFOUR',tier:'ОРГАНИЗАТОР И ИНФОРМАЦИОННЫЙ ПАРТНЁР',
-    tag:'THE ORGANIZER',Icon:Radio,
+    id:'gossip',name:'GOSSIP',subtitle:'SAINTFOUR',tier:'ОРГАНИЗАТОР ШОУ',
+    tag:'THE ORGANIZER',Icon:GossipSpark,
     cardLine:'Мы просто включили камеры.',cardDetail:'А теперь весь Сентфор услышит, что произошло.',cardAction:'УЗНАТЬ ОБ ОРГАНИЗАТОРЕ',
     heading:'МЫ НЕ СОЗДАЁМ СЛУХИ. МЫ ДАЁМ ИМ МИКРОФОН.',
     description:'GOSSIP SAINTFOUR представляет SAINTFOUR RAP BATTLE ’27.\n\nМы привыкли рассказывать о том, что происходит в Сентфоре. Теперь решили дать его героям возможность высказаться самостоятельно.\n\nЧетыре участника. Один микрофон. И слишком много того, о чём раньше предпочитали молчать.\n\nМы просто включили камеры.',
