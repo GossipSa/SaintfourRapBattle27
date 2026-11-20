@@ -13,3 +13,10 @@
 .battle-preview-card p{font-size:13px;color:#b4a4bd;margin:0 0 25px}
 .battle-preview-card>div{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #4b3755;padding-top:13px;margin-top:auto}
 @media(max-width:720px){.battle-preview-grid{grid-template-columns:1fr}.battle-preview-card{min-height:190px}}
+
+/* Premiere cards retain their artwork but cannot be opened before release. */
+.media-card.media-locked{cursor:default}
+.media-card.media-locked:hover{transform:none;border-color:#2b292e}
+.media-card.media-locked .play-circle{padding:0;opacity:.9;border-color:#bd8bb6;background:#120b1ddd;font:700 11px 'IBM Plex Mono',monospace;letter-spacing:0}
+.media-card.media-locked .media-image::after{content:'';pointer-events:none;position:absolute;inset:0;background:linear-gradient(transparent 45%,#120b1d45)}
+.media-card.media-locked .media-info p{color:#bfa0c9}

@@ -29,11 +29,11 @@ const host = {
 // Интервью выходят по четвергам с 3 декабря 2026 года в 19:00 МСК (UTC+3).
 // Порядок героев предварительный — даты/героев можно поменять перед анонсом.
 const media = [
-  { id:'interview-dex', type:'INTERVIEW', title:'LIL DEX — INTERVIEW', duration:'03 DEC · 19:00 МСК', artist:'Lil Dex', date:'2026-12-03', thumbnail:'/media/interview-dex.jpg', url:'' },
-  { id:'interview-netti', type:'INTERVIEW', title:'MC NETTI — INTERVIEW', duration:'10 DEC · 19:00 МСК', artist:'MC Netti', date:'2026-12-10', thumbnail:'/media/interview-netti.jpg', url:'' },
-  { id:'interview-rud', type:'INTERVIEW', title:'YUNG RUD — INTERVIEW', duration:'17 DEC · 19:00 МСК', artist:'Yung Rud', date:'2026-12-17', thumbnail:'/media/interview-rud.jpg', url:'' },
-  { id:'interview-daro', type:'INTERVIEW', title:'DON DARO — INTERVIEW', duration:'24 DEC · 19:00 МСК', artist:'Don Daro', date:'2026-12-24', thumbnail:'/media/interview-daro.jpg', url:'' },
-  { id:'interview-nadine', type:'INTERVIEW', title:'NADINE — INTERVIEW', duration:'31 DEC · 19:00 МСК', artist:'Nadine', date:'2026-12-31', thumbnail:'/media/interview-nadine.jpg', url:'' },
+  { id:'interview-dex', type:'INTERVIEW', title:'LIL DEX — INTERVIEW', duration:'03 DEC · 19:00 МСК', artist:'Lil Dex', date:'2026-12-03', thumbnail:'/media/interviews/dex.jpg', url:'/api/interviews/dex' },
+  { id:'interview-netti', type:'INTERVIEW', title:'MC NETTI — INTERVIEW', duration:'10 DEC · 19:00 МСК', artist:'MC Netti', date:'2026-12-10', thumbnail:'/media/interviews/netti.jpg', url:'/api/interviews/netti' },
+  { id:'interview-rud', type:'INTERVIEW', title:'YUNG RUD — INTERVIEW', duration:'17 DEC · 19:00 МСК', artist:'Yung Rud', date:'2026-12-17', thumbnail:'/media/interviews/rudi.jpg', url:'/api/interviews/rudi' },
+  { id:'interview-daro', type:'INTERVIEW', title:'DON DARO — INTERVIEW', duration:'24 DEC · 19:00 МСК', artist:'Don Daro', date:'2026-12-24', thumbnail:'/media/interviews/daro.jpg', url:'/api/interviews/daro' },
+  { id:'interview-nadine', type:'INTERVIEW', title:'NADINE — INTERVIEW', duration:'31 DEC · 19:00 МСК', artist:'Nadine', date:'2026-12-31', thumbnail:'/media/interviews/nadine.jpg', url:'/api/interviews/nadine' },
   { id:'trailer', type:'VIDEO', title:'SAINTFOUR RAP BATTLE — OFFICIAL TEASER', duration:'SOON', artist:'Saintfour', thumbnail:'/media/teaser.jpg', url:'' },
 ]
 const gallery = [
@@ -70,6 +70,7 @@ export default function App() {
  const [selected,setSelected]=useState(null)
  const [voted,setVoted]=useState(()=>{try{return localStorage.getItem('sf_poll_vote')}catch{return null}})
  const [activeVideo,setActiveVideo]=useState(null)
+ const [premieres,setPremieres]=useState({})
  const [galleryIndex,setGalleryIndex]=useState(null)
  const telegramUser=window.Telegram?.WebApp?.initDataUnsafe?.user?.first_name || null
  useEffect(()=>{
@@ -78,6 +79,31 @@ export default function App() {
    tg.ready();tg.expand()
    tg.setHeaderColor?.('#09090d');tg.setBackgroundColor?.('#09090d')
  },[])
+ useEffect(()=>{
+   let live=true
+   let releaseTimer
+   async function refreshPremieres(){
+     try {
+       const response=await fetch('/api/interviews/status',{cache:'no-store'})
+       if(!response.ok)throw Error('status unavailable')
+       const data=await response.json()
+       if(!live)return
+       setPremieres(data.premieres || {})
+       clearTimeout(releaseTimer)
+       const next=Object.values(data.premieres || {}).filter(x=>!x.available).map(x=>Date.parse(x.at)-Date.parse(data.serverTime)).filter(ms=>ms>=0).sort((a,b)=>a-b)[0]
+       if(next!==undefined)releaseTimer=setTimeout(refreshPremieres,Math.min(next+250,2147483000))
+     }catch{if(live)setPremieres({})} // No trusted backend means fail closed.
+   }
+   refreshPremieres()
+   const interval=setInterval(refreshPremieres,60000)
+   const onFocus=()=>{if(document.visibilityState==='visible')refreshPremieres()}
+   document.addEventListener('visibilitychange',onFocus)
+   return ()=>{live=false;clearInterval(interval);clearTimeout(releaseTimer);document.removeEventListener('visibilitychange',onFocus)}
+ },[])
+ const openInterview=(item)=>{
+   if(!item.url || !premieres[item.id.replace('interview-','')]?.available)return
+   setActiveVideo(item)
+ }
  useEffect(()=>{window.scrollTo({top:0,behavior:'smooth'})},[page])
  useEffect(()=>{const onKey=e=>{if(e.key==='Escape'){setSelected(null);setActiveVideo(null);setGalleryIndex(null)} if(galleryIndex!==null){if(e.key==='ArrowRight')setGalleryIndex(i=>(i+1)%gallery.length);if(e.key==='ArrowLeft')setGalleryIndex(i=>(i+gallery.length-1)%gallery.length)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[galleryIndex])
  const filteredMedia=useMemo(()=>media.filter(m=>m.type==='INTERVIEW'),[])
@@ -93,14 +119,14 @@ export default function App() {
    <section className="hero"><div className="hero-photo-soft" aria-hidden="true"/><div className="hero-grid"/><div className="hero-flare"/><div className="hero-inner"><div className="hero-copy"><div className="hero-tag"><span className="status-pulse"/> THE STREETS HAVE A VOICE <span className="hero-tag-end">EST. SAINTFOUR</span></div><p className="hero-overline">GOSSIP SAINTFOUR ORIGINAL PRODUCTION</p><h1><span className="glitch-line" data-text="NO">NO</span><br/><span className="glitch-line" data-text="MORE">MORE</span><br/><em className="hero-glitch" data-text="SILENCE.">SILENCE<span>.</span></em></h1><p className="hero-subtitle">Четыре имени. Один микрофон. Никаких правил.<br/>SAINTFOUR RAP BATTLE <strong>’27</strong> — скоро.</p><div className="hero-buttons"><button className="primary-btn" onClick={()=>go('artists')}>УЗНАТЬ УЧАСТНИКОВ <ArrowRight size={17}/></button><button className="secondary-btn" onClick={()=>go('interviews')}><Play size={15}/> СМОТРЕТЬ ИНТЕРВЬЮ</button></div></div></div><div className="hero-bottom"><span>SCROLL TO EXPLORE <ArrowDownRight size={15}/></span><span>INDEPENDENT UNDERGROUND SHOW — 2027</span></div></section>
    <BattleTicker/>
    <section className="section wrap"><SectionTitle tag="01 / THE LINEUP" title="MEET THE CONTENDERS" action="ВСЕ УЧАСТНИКИ" onAction={()=>go('artists')}/><div className="artist-grid">{rappers.map(r=><ArtistCard key={r.id} r={r} onClick={()=>setSelected(r)}/>)}</div><HostFeature onClick={()=>setSelected(host)}/></section>
-   <section className="section wrap"><SectionTitle tag="02 / ON THE RECORD" title="BEHIND THE MIC" action="ВСЕ ИНТЕРВЬЮ" onAction={()=>go('interviews')}/><div className="interview-schedule-note">5 ИНТЕРВЬЮ <span>✳</span> КАЖДЫЙ ЧЕТВЕРГ <span>✳</span> С 3 ДЕКАБРЯ 2026 В 19:00 МСК</div><div className="media-grid">{media.slice(0,3).map(m=><MediaCard key={m.id} m={m} onClick={()=>setActiveVideo(m)}/>)}</div></section>
+   <section className="section wrap"><SectionTitle tag="02 / ON THE RECORD" title="BEHIND THE MIC" action="ВСЕ ИНТЕРВЬЮ" onAction={()=>go('interviews')}/><div className="interview-schedule-note">5 ИНТЕРВЬЮ <span>✳</span> КАЖДЫЙ ЧЕТВЕРГ <span>✳</span> С 3 ДЕКАБРЯ 2026 В 19:00 МСК</div><div className="media-grid">{media.slice(0,3).map(m=><MediaCard key={m.id} m={m} available={Boolean(premieres[m.id.replace('interview-','')]?.available)} onClick={()=>openInterview(m)}/>)}</div></section>
    <section className="promo-band"><div className="wrap promo-content"><div><p className="eyebrow"><span className="red-dot"/> HAVE YOUR SAY</p><h2><span className="glitch-line" data-text="WHO RUNS">WHO RUNS</span><br/><em className="glitch-line" data-text="THIS TOWN?">THIS TOWN?</em></h2><p>Выбирай фаворита до начала баттла.</p></div><button className="primary-btn light-btn" onClick={()=>go('polls')}>ПЕРЕЙТИ К ОПРОСУ <ArrowRight size={18}/></button></div></section>
    <section className="section wrap sponsors-home"><SectionTitle tag="03 / POWERED BY" title="THE PEOPLE BEHIND THE NOISE" action="ВСЕ ПАРТНЁРЫ" onAction={()=>go('sponsors')}/><SponsorsShowcase compact/></section>
    <section className="section wrap"><SectionTitle tag="04 / LATEST UPDATES" title="THE WORD ON THE STREET" action="ВСЕ АНОНСЫ" onAction={()=>go('news')}/><NewsList/></section>
   </>}
   {page==='artists'&&<section className="inner-page wrap"><PageHeading number="01" tag="THE LINEUP" title={<><span className="glitch-line" data-text="FOUR NAMES.">FOUR NAMES.</span><br/><em className="glitch-line" data-text="ONE STAGE.">ONE STAGE.</em></>} intro="Знакомься с участниками SAINTFOUR RAP BATTLE ’27. У каждого своя история и своя причина выйти к микрофону."/><div className="artist-grid">{rappers.map(r=><ArtistCard key={r.id} r={r} onClick={()=>setSelected(r)}/>)}</div><HostFeature onClick={()=>setSelected(host)}/><p className="page-footnote">* Состав и сценические псевдонимы могут уточняться по мере подготовки шоу.</p></section>}
   {page==='battles'&&<section className="inner-page wrap"><PageHeading number="02" tag="THE BATTLES" title={<><span className="glitch-line" data-text="THREE BATTLES.">THREE BATTLES.</span><br/><em className="glitch-line" data-text="NO MERCY.">NO MERCY.</em></>} intro="Три противостояния SAINTFOUR RAP BATTLE ’27. Участников пар и даты выпусков объявим отдельно."/><div className="battle-preview-grid">{[1,2,3].map(i=><article className="battle-preview-card" key={i}><span>ROUND / {String(i).padStart(2,'0')}</span><h2>БАТЛ {String(i).padStart(2,'0')}</h2><p>Участники и дата — скоро.</p><div>COMING SOON <Flame size={19}/></div></article>)}</div></section>}
-  {page==='interviews'&&<section className="inner-page wrap"><PageHeading number="03" tag="ON THE RECORD" title={<><span className="glitch-line" data-text="ALL ACCESS.">ALL ACCESS.</span><br/><em className="glitch-line" data-text="NO FILTER.">NO FILTER.</em></>} intro="Пять интервью: по одному с каждым из четырёх рэперов и отдельный выпуск с Надин. Новая премьера каждый четверг в 19:00 МСК с 3 декабря 2026 года. Порядок участников пока предварительный."/><div className="interview-schedule-note">5 ВЫПУСКОВ <span>✳</span> 03 / 10 / 17 / 24 / 31 DEC 2026 <span>✳</span> 19:00 МСК</div><div className="media-grid">{filteredMedia.map(m=><MediaCard key={m.id} m={m} onClick={()=>setActiveVideo(m)}/>)}</div><p className="page-footnote">Видео появятся здесь после публикации. Превью пока являются заглушками.</p></section>}
+  {page==='interviews'&&<section className="inner-page wrap"><PageHeading number="03" tag="ON THE RECORD" title={<><span className="glitch-line" data-text="ALL ACCESS.">ALL ACCESS.</span><br/><em className="glitch-line" data-text="NO FILTER.">NO FILTER.</em></>} intro="Пять интервью: по одному с каждым из четырёх рэперов и отдельный выпуск с Надин. Новая премьера каждый четверг в 19:00 МСК с 3 декабря 2026 года. Порядок участников пока предварительный."/><div className="interview-schedule-note">5 ВЫПУСКОВ <span>✳</span> 03 / 10 / 17 / 24 / 31 DEC 2026 <span>✳</span> 19:00 МСК</div><div className="media-grid">{filteredMedia.map(m=><MediaCard key={m.id} m={m} available={Boolean(premieres[m.id.replace('interview-','')]?.available)} onClick={()=>openInterview(m)}/>)}</div><p className="page-footnote">Каждое интервью становится доступным в 19:00 МСК в день указанной премьеры.</p></section>}
   {page==='gallery'&&<section className="inner-page wrap"><PageHeading number="03" tag="THE ARCHIVE" title={<><span className="glitch-line" data-text="FREEZE">FREEZE</span><br/><em className="glitch-line" data-text="THE MOMENT.">THE MOMENT.</em></>} intro="Фотографии со сцены, бэкстейджа и съёмок. Настоящие кадры добавим по мере готовности."/><div className="gallery-grid">{gallery.map((g,i)=><button className={'gallery-tile tile-'+i} key={g.label} onClick={()=>setGalleryIndex(i)}><Cover src={g.image} alt={g.label} initials={String(i+1).padStart(2,'0')}/><span>{g.label} <ArrowRight size={16}/></span></button>)}</div></section>}
   {page==='news'&&<section className="inner-page wrap"><PageHeading number="04" tag="THE BULLETIN" title={<><span className="glitch-line" data-text="STAY">STAY</span><br/><em className="glitch-line" data-text="LOCKED IN.">LOCKED IN.</em></>} intro="Главные новости и анонсы предстоящего рэп-баттла. Следи за обновлениями."/><NewsList/></section>}
   {page==='sponsors'&&<section className="inner-page wrap sponsors-page"><PageHeading number="06" tag="POWERED BY" title={<><span className="glitch-heading" data-text="BACKED BY">BACKED BY</span><br/><em className="glitch-heading" data-text="THE CULTURE.">THE CULTURE.</em></>} intro="WARLOCK, BLACK HELLEBORE ENERGY и GOSSIP SAINTFOUR — бренды и партнёры нашего фанатского рэп-шоу."/><SponsorsShowcase/></section>}
@@ -115,6 +141,6 @@ export default function App() {
 }
 function HostFeature({onClick}){return <section className="host-feature" aria-label="Ведущая шоу"><div className="host-feature-heading"><span>05 / THE HOST</span><span>THE ONE HOLDING THE MIC ✳</span></div><button className="host-card" onClick={onClick}><div className="host-portrait"><Cover src={host.image} alt="Поппи Эмерсон" initials="PE"/></div><div className="host-content"><span className="host-role">NOT A CONTESTANT — THE HOST</span><h3 className="glitch-heading" data-text="POPPY EMERSON">POPPY EMERSON</h3><p>Пенелопа (Поппи) Эмерсон</p><span className="host-caption">SHE RUNS THE SHOW.</span><span className="host-action">ПОЗНАКОМИТЬСЯ С ВЕДУЩЕЙ <ArrowRight size={17}/></span></div></button></section>}
 function ArtistCard({r,onClick}){return <button className="artist-card" onClick={onClick} style={{'--artist-color':r.color}}><Cover src={r.image} alt={r.stage} initials={r.initials}/><div className="artist-vignette"/><div className="artist-number">{r.number} / 04</div><div className="artist-info"><span>{r.role}</span><h3 className="glitch-label" data-text={r.stage}>{r.stage}</h3><p>{r.name}</p><div className="artist-action">VIEW PROFILE <ArrowRight size={16}/></div></div></button>}
-function MediaCard({m,onClick}){return <button className="media-card" onClick={onClick}><div className="media-image"><Cover src={m.thumbnail} alt={m.title} initials={m.type==='VIDEO'?'PLAY':'INT'}/><span className="media-type">{m.type}</span><span className="play-circle"><Play fill="currentColor" size={19}/></span></div><div className="media-info"><span>{m.artist} <i>•</i> {m.date?'ПРЕМЬЕРА '+m.duration:m.duration}</span><h3 className="glitch-heading" data-text={m.title}>{m.title}</h3><p>{m.url?'WATCH THE STORY':'СКОРО ВЫЙДЕТ'} <ArrowRight size={15}/></p></div></button>}
+function MediaCard({m,onClick,available=false}){return <button className={'media-card '+(!available?'media-locked':'')} onClick={onClick} disabled={!available} aria-label={available?`Смотреть ${m.title}`:`${m.title} — премьера ${m.duration}`}><div className="media-image"><Cover src={m.thumbnail} alt={m.title} initials={m.type==='VIDEO'?'PLAY':'INT'}/><span className="media-type">{available?'В ЭФИРЕ':'СКОРО'}</span><span className="play-circle">{available?<Play fill="currentColor" size={19}/>:<span>19:00</span>}</span></div><div className="media-info"><span>{m.artist} <i>•</i> {m.date?'ПРЕМЬЕРА '+m.duration:m.duration}</span><h3 className="glitch-heading" data-text={m.title}>{m.title}</h3><p>{available?'СМОТРЕТЬ ИНТЕРВЬЮ':'ДОСТУПНО ПОСЛЕ ПРЕМЬЕРЫ'} <ArrowRight size={15}/></p></div></button>}
 function PageHeading({number,tag,title,intro}){return <div className="page-heading"><div className="page-kicker"><span className="red-dot"/> {number} / {tag}</div><h1>{title}</h1><p>{intro}</p><div className="page-heading-line"/></div>}
 function NewsList(){return <div className="news-list">{announcements.map((a,i)=><article className="news-item" key={a.title}><span className="news-date">{a.date}</span><div><span className="news-label">{a.label}</span><h3 className="glitch-heading" data-text={a.title}>{a.title}</h3><p>{a.detail}</p></div><div className="news-index">0{i+1}</div></article>)}</div>}
