@@ -15,15 +15,15 @@ import './credits-ticker.css'
 import './profile-modal.css'
 
 const rappers = [
-  { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#ff78cf', initials:'DX', image:'/media/lil-dex.jpg', profileImage:'/media/lil-dex-profile.jpg', description:'Байкер, провокатор и человек, который никогда не держит язык за зубами. На баттле играет грязно, бьёт по больному и получает от этого удовольствие. Особенно если напротив Руди.' },
-  { id:'netti', stage:'MC NETTI', name:'NATHANIEL HOWARD', subtitle:'BUSINESS IS PERSONAL.', role:'THE EXECUTIVE', number:'02', color:'#c49afd', initials:'MN', image:'/media/mc-netti.jpg', profileImage:'/media/mc-netti-profile.jpg', description:'Глава компании «Уорлок». До сих пор не понимает, кто записал его на рэп-баттл и зачем ему всё это нужно. Но раз уж оказался здесь, уходить без победы не собирается.' },
-  { id:'rudi', stage:'YUNG RUD', name:'RUDI BROOKS', subtitle:'PLAY TO WIN.', role:'THE CONTENDER', number:'03', color:'#e2a0ff', initials:'RB', image:'/media/rudi.jpg', profileImage:'/media/rudi-profile.jpg', description:'Капитан школьной баскетбольной команды. На баттле у него тот же азарт, что и на площадке. Особенно когда напротив Декс.' },
-  { id:'daro', stage:'DON DARO', name:'DARREN BOWIE', subtitle:'MAKE SOME NOISE.', role:'THE UNKNOWN', number:'04', color:'#a87fff', initials:'DD', image:'/media/don-daro.jpg', profileImage:'/media/don-daro-profile.jpg', description:'Леопардовая шуба, золото и уверенность человека, которому не нужно ничего доказывать. Он пришёл не просто зачитать пару строк, а устроить настоящее шоу.' },
+  { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#ff78cf', initials:'DX', image:`${import.meta.env.BASE_URL}media/lil-dex.jpg`, profileImage:`${import.meta.env.BASE_URL}media/lil-dex-profile.jpg`, description:'Байкер, провокатор и человек, который никогда не держит язык за зубами. На баттле играет грязно, бьёт по больному и получает от этого удовольствие. Особенно если напротив Руди.' },
+  { id:'netti', stage:'MC NETTI', name:'NATHANIEL HOWARD', subtitle:'BUSINESS IS PERSONAL.', role:'THE EXECUTIVE', number:'02', color:'#c49afd', initials:'MN', image:`${import.meta.env.BASE_URL}media/mc-netti.jpg`, profileImage:`${import.meta.env.BASE_URL}media/mc-netti-profile.jpg`, description:'Глава компании «Уорлок». До сих пор не понимает, кто записал его на рэп-баттл и зачем ему всё это нужно. Но раз уж оказался здесь, уходить без победы не собирается.' },
+  { id:'rudi', stage:'YUNG RUD', name:'RUDI BROOKS', subtitle:'PLAY TO WIN.', role:'THE CONTENDER', number:'03', color:'#e2a0ff', initials:'RB', image:`${import.meta.env.BASE_URL}media/rudi.jpg`, profileImage:`${import.meta.env.BASE_URL}media/rudi-profile.jpg`, description:'Капитан школьной баскетбольной команды. На баттле у него тот же азарт, что и на площадке. Особенно когда напротив Декс.' },
+  { id:'daro', stage:'DON DARO', name:'DARREN BOWIE', subtitle:'MAKE SOME NOISE.', role:'THE UNKNOWN', number:'04', color:'#a87fff', initials:'DD', image:`${import.meta.env.BASE_URL}media/don-daro.jpg`, profileImage:`${import.meta.env.BASE_URL}media/don-daro-profile.jpg`, description:'Леопардовая шуба, золото и уверенность человека, которому не нужно ничего доказывать. Он пришёл не просто зачитать пару строк, а устроить настоящее шоу.' },
 ]
 const host = {
   id:'host', stage:'POPPY', name:'PENELOPE (POPPY) EMERSON',
   subtitle:'SHE RUNS THE SHOW.', role:'THE HOST', number:'HOST',
-  color:'#bd9aff', initials:'PE', image:'/media/poppy-host.jpg', profileImage:'/media/poppy-host-profile.jpg', isHost:true,
+  color:'#bd9aff', initials:'PE', image:`${import.meta.env.BASE_URL}media/poppy-host.jpg`, profileImage:`${import.meta.env.BASE_URL}media/poppy-host-profile.jpg`, isHost:true,
   description:'Ведущая SAINTFOUR RAP BATTLE ’27. Она здесь, чтобы держать микрофон, направлять хаос в нужное русло и не дать никому забыть, кто сегодня управляет этим шоу.'
 }
 // Интервью выходят по четвергам с 3 декабря 2026 года в 19:00 МСК (UTC+3).
@@ -34,13 +34,13 @@ const media = [
   { id:'interview-rud', type:'INTERVIEW', title:'YUNG RUD — INTERVIEW', duration:'17 DEC · 19:00 МСК', artist:'Yung Rud', date:'2026-12-17', thumbnail:'/api/interviews/rudi/poster', url:'/api/interviews/rudi' },
   { id:'interview-daro', type:'INTERVIEW', title:'DON DARO — INTERVIEW', duration:'24 DEC · 19:00 МСК', artist:'Don Daro', date:'2026-12-24', thumbnail:'/api/interviews/daro/poster', url:'/api/interviews/daro' },
   { id:'interview-nadine', type:'INTERVIEW', title:'NADINE — INTERVIEW', duration:'31 DEC · 19:00 МСК', artist:'Nadine', date:'2026-12-31', thumbnail:'/api/interviews/nadine/poster', url:'/api/interviews/nadine' },
-  { id:'trailer', type:'VIDEO', title:'SAINTFOUR RAP BATTLE — OFFICIAL TEASER', duration:'SOON', artist:'Saintfour', thumbnail:'/media/teaser.jpg', url:'' },
+  { id:'trailer', type:'VIDEO', title:'SAINTFOUR RAP BATTLE — OFFICIAL TEASER', duration:'SOON', artist:'Saintfour', thumbnail:`${import.meta.env.BASE_URL}media/teaser.jpg`, url:'' },
 ]
 const gallery = [
-  { image:'/media/gallery-01.jpg', label:'BACKSTAGE / 001' },
-  { image:'/media/gallery-02.jpg', label:'THE STAGE / 002' },
-  { image:'/media/gallery-03.jpg', label:'AFTER THE ROUND / 003' },
-  { image:'/media/gallery-04.jpg', label:'BEHIND THE SCENES / 004' },
+  { image:`${import.meta.env.BASE_URL}media/gallery-01.jpg`, label:'BACKSTAGE / 001' },
+  { image:`${import.meta.env.BASE_URL}media/gallery-02.jpg`, label:'THE STAGE / 002' },
+  { image:`${import.meta.env.BASE_URL}media/gallery-03.jpg`, label:'AFTER THE ROUND / 003' },
+  { image:`${import.meta.env.BASE_URL}media/gallery-04.jpg`, label:'BEHIND THE SCENES / 004' },
 ]
 const announcements = [
   { date:'26 NOV', label:'ANNOUNCEMENT', title:'THE LINEUP IS HERE', detail:'Четыре участника. Один микрофон. Начинаем обратный отсчёт.' },
