@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowRight, CalendarDays, Check, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Images, Menu, Mic2, Play, Radio, Vote, X } from 'lucide-react'
 import './App.css'
 import './theme.css'
+import './cyber.css'
 
 const rappers = [
   { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#ff78cf', initials:'DX', image:'/media/lil-dex.jpg', description:'Самый непредсказуемый участник. Резкие панчи, хаос и никаких тормозов.' },
@@ -54,7 +55,7 @@ export default function App() {
    const tg=window.Telegram?.WebApp
    if(!tg)return
    tg.ready();tg.expand()
-   tg.setHeaderColor?.('#1c1329');tg.setBackgroundColor?.('#1c1329')
+   tg.setHeaderColor?.('#09090d');tg.setBackgroundColor?.('#09090d')
  },[])
  useEffect(()=>{window.scrollTo({top:0,behavior:'smooth'})},[page])
  useEffect(()=>{const onKey=e=>{if(e.key==='Escape'){setSelected(null);setActiveVideo(null);setGalleryIndex(null)} if(galleryIndex!==null){if(e.key==='ArrowRight')setGalleryIndex(i=>(i+1)%gallery.length);if(e.key==='ArrowLeft')setGalleryIndex(i=>(i+gallery.length-1)%gallery.length)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[galleryIndex])
