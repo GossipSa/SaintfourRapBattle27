@@ -47,3 +47,10 @@
 .hype-poll.has-voted .hype-poll-footer{color:var(--picked-color)}
 @media(max-width:540px){.hype-option{min-height:56px;padding:11px 10px 11px 13px;font-size:11px}.hype-choice-percent{font-size:11px}.hype-poll{border-radius:3px}}
 @media(prefers-reduced-motion:reduce){.hype-option,.hype-option-fill,.hype-poll{transition:none}}
+
+/* Saintfour's unified neon orchid / violet palette instead of unrelated hues. */
+.hype-poll{background:linear-gradient(145deg,#251633,#191025 75%);border-color:#604378;border-top-color:#c469dc}
+.hype-option{background:#241832;border-color:#513b68;box-shadow:inset 3px 0 0 color-mix(in srgb,var(--option-color) 42%,transparent)}
+.hype-option:hover:not(:disabled){background:color-mix(in srgb,var(--option-color) 12%,#241832)}
+.hype-option.chosen:disabled{background:linear-gradient(110deg,color-mix(in srgb,var(--option-color) 25%,#23152d),color-mix(in srgb,var(--option-color) 9%,#21142d));box-shadow:inset 4px 0 0 var(--option-color),0 0 15px color-mix(in srgb,var(--option-color) 13%,transparent)}
+.hype-poll.has-voted{background:radial-gradient(ellipse at 100% 0%,color-mix(in srgb,var(--picked-color) 9%,transparent),transparent 72%),linear-gradient(145deg,#251633,#191025 75%)}
