@@ -1,3 +1,4 @@
+import './sponsor-tile-redesign.css'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, Bolt, Building2, Play, Radio, Star, X } from 'lucide-react'
 
@@ -6,6 +7,7 @@ const sponsors = [
   {
     id:'warlock',name:'WARLOCK',subtitle:'INDUSTRIES',tier:'ГЕНЕРАЛЬНЫЙ ПАРТНЁР',
     tag:'MAIN PARTNER',Icon:Building2,featured:true,
+    cardLine:'Не всё идёт по плану.',cardDetail:'Даже когда план составляли вы.',cardAction:'ПОДРОБНЕЕ О ПАРТНЁРЕ',
     heading:'НЕКОТОРЫЕ РЕШЕНИЯ ПРИНИМАЮТСЯ БЕЗ ВАШЕГО УЧАСТИЯ.',
     description:'WARLOCK INDUSTRIES — генеральный партнёр SAINTFOUR RAP BATTLE ’27.\n\nКомпания Натаниэля Говарда привыкла контролировать происходящее. Однако в этот раз обстоятельства сложились несколько иначе.\n\nКак именно генеральный директор оказался среди участников шоу — вопрос, который пока остаётся открытым. Одно известно точно: WARLOCK не привыкла отступать.',
     note:'Участие генерального директора в программе мероприятия не комментируется.',
@@ -14,6 +16,7 @@ const sponsors = [
   {
     id:'energy',name:'BLACK HELLEBORE',subtitle:'ENERGY',tier:'ОФИЦИАЛЬНЫЙ ЭНЕРГЕТИК ШОУ',
     tag:'OFFICIAL ENERGY',Icon:Bolt,
+    cardLine:'Заряжен на большее.',cardDetail:'Официальный источник энергии SAINTFOUR RAP BATTLE ’27.',cardAction:'ПОЗНАКОМИТЬСЯ С БРЕНДОМ',
     heading:'КОГДА ГРАДУС ПОВЫШАЕТСЯ — МЫ ДОБАВЛЯЕМ ЭНЕРГИИ.',
     description:'BLACK HELLEBORE ENERGY становится официальным энергетическим партнёром SAINTFOUR RAP BATTLE ’27.\n\nБренд поддерживает самые громкие события города, и первый рэп-баттл Сентфора не стал исключением. Новые лица, неожиданные противостояния и энергия, которую невозможно сдержать.\n\nBLACK HELLEBORE ENERGY. Заряжен на большее.',
     aside:'BLACK HELLEBORE / ENERGY',
@@ -21,6 +24,7 @@ const sponsors = [
   {
     id:'gossip',name:'GOSSIP',subtitle:'SAINTFOUR',tier:'ОРГАНИЗАТОР И ИНФОРМАЦИОННЫЙ ПАРТНЁР',
     tag:'THE ORGANIZER',Icon:Radio,
+    cardLine:'Мы просто включили камеры.',cardDetail:'А теперь весь Сентфор услышит, что произошло.',cardAction:'УЗНАТЬ ОБ ОРГАНИЗАТОРЕ',
     heading:'МЫ НЕ СОЗДАЁМ СЛУХИ. МЫ ДАЁМ ИМ МИКРОФОН.',
     description:'GOSSIP SAINTFOUR представляет SAINTFOUR RAP BATTLE ’27.\n\nМы привыкли рассказывать о том, что происходит в Сентфоре. Теперь решили дать его героям возможность высказаться самостоятельно.\n\nЧетыре участника. Один микрофон. И слишком много того, о чём раньше предпочитали молчать.\n\nМы просто включили камеры.',
     url:'https://t.me/Gossip_Saintfour',
@@ -57,15 +61,23 @@ function ProductMedia() {
 
 function SponsorCard({sponsor,onOpen}) {
   const Icon=sponsor.Icon
+  const number=sponsor.id==='warlock'?'01':sponsor.id==='energy'?'02':'03'
   return <article className={`sponsor-tile sponsor-${sponsor.id} ${sponsor.featured?'sponsor-featured':''}`}>
-    <div className="sponsor-tile-top"><span>{sponsor.tag}</span><span className="sponsor-cross" aria-hidden="true">✳</span></div>
-    <div className="sponsor-identity">
-      <Icon className="sponsor-symbol" size={sponsor.featured?35:27} strokeWidth={1.4} aria-hidden="true"/>
-      <div className="sponsor-wordmark" aria-label={sponsor.name+' '+sponsor.subtitle}><strong>{sponsor.name}</strong><span>{sponsor.subtitle}</span></div>
+    <div className="sponsor-tile-top">
+      <span>{number} / {sponsor.tier}</span>
+      <Icon className="sponsor-symbol" size={24} strokeWidth={1.55} aria-hidden="true"/>
     </div>
-    <div className="sponsor-tile-bottom"><span>{sponsor.tier}</span><span className="sponsor-tile-number">{sponsor.id==='warlock'?'001':sponsor.id==='energy'?'002':'003'}</span></div>
+    <div className="sponsor-identity">
+      <div className="sponsor-wordmark" aria-label={sponsor.name+' '+sponsor.subtitle}>
+        <strong>{sponsor.name}</strong><span>{sponsor.subtitle}</span>
+      </div>
+    </div>
+    <div className="sponsor-pitch">
+      <h3>{sponsor.cardLine}</h3>
+      <p>{sponsor.cardDetail}</p>
+    </div>
     <button type="button" className="sponsor-details-toggle" onClick={()=>onOpen(sponsor)}>
-      ОТКРЫТЬ КАРТОЧКУ <ArrowUpRight size={17}/>
+      <span>{sponsor.cardAction}</span><ArrowUpRight size={19} aria-hidden="true"/>
     </button>
   </article>
 }

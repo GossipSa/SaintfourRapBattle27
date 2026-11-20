@@ -1,0 +1,197 @@
+/* Outside of the sponsor dialogs: three distinct partner campaign posters. */
+.sponsors-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+.sponsors-grid .sponsor-tile{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  min-height:342px;
+  padding:28px 32px 25px;
+  border:1px solid #6d4a7e;
+  border-radius:0;
+  isolation:isolate;
+  overflow:hidden;
+  background:#17111e;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.sponsors-grid .sponsor-tile::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  background:none;
+  pointer-events:none;
+}
+.sponsors-grid .sponsor-tile::after{
+  content:'';
+  position:absolute;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.55;
+}
+.sponsors-grid .sponsor-tile:hover{
+  transform:translateY(-3px);
+  border-color:#e693e0;
+  box-shadow:0 14px 36px #0005,0 0 25px #bb63cf22;
+}
+.sponsors-grid .sponsor-featured,
+.sponsors-page .sponsors-grid .sponsor-featured{
+  grid-column:1/-1;
+  min-height:304px;
+  padding:29px 38px 29px;
+}
+.sponsors-grid .sponsor-tile-top{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  align-items:center;
+  margin:0 0 24px;
+}
+.sponsors-grid .sponsor-tile-top>span:first-child{
+  font:600 10px/1.5 'IBM Plex Mono',monospace;
+  color:#c9b2d0;
+  letter-spacing:.08em;
+}
+.sponsors-grid .sponsor-tile .sponsor-symbol{
+  flex:none;
+  color:#d1b4dc;
+  filter:none;
+}
+.sponsors-grid .sponsor-identity{
+  min-height:0;
+  flex:initial;
+  display:block;
+  margin:0 0 30px;
+  text-align:left;
+  color:inherit;
+}
+.sponsors-grid .sponsor-wordmark{display:flex;gap:4px;align-items:flex-start;}
+.sponsors-grid .sponsor-wordmark strong,
+.sponsors-page .sponsors-grid .sponsor-wordmark strong{
+  font:800 clamp(30px,4.2vw,52px)/.95 'Space Grotesk',sans-serif;
+  letter-spacing:-.07em;
+  text-shadow:none;
+  color:#f9edfc;
+  word-break:normal;
+  overflow-wrap:break-word;
+}
+.sponsors-grid .sponsor-wordmark>span{
+  font:600 11px/1.3 'IBM Plex Mono',monospace;
+  letter-spacing:.23em;
+  color:#cdb2d9;
+}
+.sponsors-grid .sponsor-featured .sponsor-wordmark strong,
+.sponsors-page .sponsors-grid .sponsor-featured .sponsor-wordmark strong{
+  font-size:clamp(46px,7vw,87px);
+  letter-spacing:-.08em;
+}
+.sponsors-grid .sponsor-featured .sponsor-wordmark>span{
+  letter-spacing:.3em;
+  font-size:13px;
+}
+.sponsor-pitch{
+  position:relative;
+  z-index:1;
+  margin-top:auto;
+  padding-bottom:17px;
+}
+.sponsor-pitch h3{
+  margin:0 0 7px;
+  color:#fff5ff;
+  font:700 clamp(19px,2.3vw,28px)/1.17 'Space Grotesk',sans-serif;
+  letter-spacing:-.035em;
+}
+.sponsor-pitch p{
+  max-width:510px;
+  margin:0;
+  color:#cbb7d3;
+  font-size:13px;
+  line-height:1.55;
+}
+.sponsors-grid .sponsor-details-toggle{
+  position:relative;
+  z-index:1;
+  margin-top:0;
+  padding:17px 0 0;
+  border-top:1px solid #735181;
+  font:700 10px/1.5 'IBM Plex Mono',monospace;
+  letter-spacing:.06em;
+  color:#efb7ee;
+  cursor:pointer;
+}
+.sponsors-grid .sponsor-details-toggle svg{flex:none;}
+.sponsors-grid .sponsor-details-toggle:hover{color:#fff;}
+.sponsors-grid .sponsor-warlock{
+  border-color:#7d6b81;
+  background:linear-gradient(115deg,#201a26,#14121a 68%,#221729);
+}
+.sponsors-grid .sponsor-warlock::after{
+  right:-28px;top:38px;width:230px;height:230px;
+  border:1px solid #b0a0ba33;
+  transform:rotate(45deg);
+  box-shadow:0 0 0 35px #9d83b40a,0 0 0 75px #9d83b407;
+}
+.sponsors-grid .sponsor-warlock .sponsor-pitch{max-width:700px;}
+.sponsors-grid .sponsor-warlock .sponsor-pitch h3{font-size:clamp(24px,3vw,34px);}
+.sponsors-grid .sponsor-warlock .sponsor-tile-top>span:first-child{color:#c9bdcd;}
+.sponsors-grid .sponsor-energy{
+  border-color:#9e4bc0;
+  background:radial-gradient(ellipse at 90% 9%,#63207d8c,transparent 52%),linear-gradient(145deg,#24112e,#140d21);
+}
+.sponsors-grid .sponsor-energy::after{
+  top:14px;right:-43px;width:175px;height:270px;
+  transform:skew(-18deg) rotate(14deg);
+  background:linear-gradient(110deg,transparent 33%,#f33fc41e 35%,#e05ffc59 45%,transparent 53%,#7d4dff38 69%,transparent 75%);
+}
+.sponsors-grid .sponsor-energy .sponsor-wordmark strong{color:#ffe6fa;}
+.sponsors-grid .sponsor-energy .sponsor-wordmark>span,
+.sponsors-grid .sponsor-energy .sponsor-symbol{color:#f086fa;}
+.sponsors-grid .sponsor-gossip{
+  border-color:#bd5795;
+  background:radial-gradient(ellipse at 85% 12%,#7f2a684a,transparent 60%),linear-gradient(135deg,#281325,#160f1e);
+}
+.sponsors-grid .sponsor-gossip::after{
+  right:-48px;top:28px;width:220px;height:220px;
+  border-radius:50%;
+  border:1px dashed #ec71b268;
+  box-shadow:0 0 0 18px #f55aaf0d,0 0 0 44px #f55aaf0b;
+}
+.sponsors-grid .sponsor-gossip .sponsor-wordmark strong{color:#ffe6f6;}
+.sponsors-grid .sponsor-gossip .sponsor-wordmark>span,
+.sponsors-grid .sponsor-gossip .sponsor-symbol{color:#ff83ce;}
+@media(max-width:800px){
+  .sponsors-grid .sponsor-tile{padding:24px;min-height:320px}
+  .sponsors-grid .sponsor-featured{padding:27px 30px}
+  .sponsors-grid .sponsor-wordmark strong,
+  .sponsors-page .sponsors-grid .sponsor-wordmark strong{font-size:clamp(29px,4vw,42px)}
+}
+@media(max-width:540px){
+  .sponsors-grid,
+  .sponsors-page .sponsors-grid{grid-template-columns:minmax(0,1fr);gap:13px}
+  .sponsors-grid .sponsor-tile,
+  .sponsors-page .sponsors-grid .sponsor-tile,
+  .sponsors-grid .sponsor-featured,
+  .sponsors-page .sponsors-grid .sponsor-featured{
+    grid-column:1;
+    min-height:310px;
+    padding:23px 22px 21px;
+  }
+  .sponsors-grid .sponsor-featured,
+  .sponsors-page .sponsors-grid .sponsor-featured{min-height:305px}
+  .sponsors-grid .sponsor-tile-top{margin-bottom:24px}
+  .sponsors-grid .sponsor-tile-top>span:first-child{font-size:9px}
+  .sponsors-grid .sponsor-wordmark strong,
+  .sponsors-page .sponsors-grid .sponsor-wordmark strong{font-size:clamp(29px,9vw,43px)}
+  .sponsors-grid .sponsor-featured .sponsor-wordmark strong,
+  .sponsors-page .sponsors-grid .sponsor-featured .sponsor-wordmark strong{font-size:clamp(48px,13vw,68px)}
+  .sponsors-grid .sponsor-identity{margin-bottom:25px}
+  .sponsor-pitch h3{font-size:clamp(21px,6vw,25px)}
+  .sponsors-grid .sponsor-warlock .sponsor-pitch h3{font-size:clamp(22px,6vw,27px)}
+  .sponsor-pitch p{font-size:12px}
+  .sponsors-grid .sponsor-details-toggle{font-size:9px;letter-spacing:.02em}
+}
+@media(prefers-reduced-motion:reduce){
+  .sponsors-grid .sponsor-tile{transition:none}
+}
