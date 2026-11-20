@@ -6,6 +6,7 @@ import './cyber.css'
 import './glitch.css'
 import './sponsors.css'
 import SponsorsShowcase from './Sponsors.jsx'
+import HypePolls from './HypePolls.jsx'
 import BattleTicker from './LineupMarquee.jsx'
 import './lineup-marquee.css'
 import './hero-background.css'
@@ -131,7 +132,8 @@ export default function App() {
   {page==='gallery'&&<section className="inner-page wrap"><PageHeading number="03" tag="THE ARCHIVE" title={<><span className="glitch-line" data-text="FREEZE">FREEZE</span><br/><em className="glitch-line" data-text="THE MOMENT.">THE MOMENT.</em></>} intro="Фотографии со сцены, бэкстейджа и съёмок. Настоящие кадры добавим по мере готовности."/><div className="gallery-grid">{gallery.map((g,i)=><button className={'gallery-tile tile-'+i} key={g.label} onClick={()=>setGalleryIndex(i)}><Cover src={g.image} alt={g.label} initials={String(i+1).padStart(2,'0')}/><span>{g.label} <ArrowRight size={16}/></span></button>)}</div></section>}
   {page==='news'&&<section className="inner-page wrap"><PageHeading number="04" tag="THE BULLETIN" title={<><span className="glitch-line" data-text="STAY">STAY</span><br/><em className="glitch-line" data-text="LOCKED IN.">LOCKED IN.</em></>} intro="Главные новости и анонсы предстоящего рэп-баттла. Следи за обновлениями."/><NewsList/></section>}
   {page==='sponsors'&&<section className="inner-page wrap sponsors-page"><PageHeading number="06" tag="POWERED BY" title={<><span className="glitch-heading" data-text="BACKED BY">BACKED BY</span><br/><em className="glitch-heading" data-text="THE CULTURE.">THE CULTURE.</em></>} intro="WARLOCK, BLACK HELLEBORE ENERGY и GOSSIP SAINTFOUR — бренды и партнёры нашего фанатского рэп-шоу."/><SponsorsShowcase/></section>}
-  {page==='polls'&&<section className="inner-page wrap official-voting-page"><PageHeading number="04" tag="YOUR VOTE MATTERS" title={<><span className="glitch-line" data-text="WHO WINS?">WHO WINS?</span><br/><em className="glitch-line" data-text="YOU DECIDE.">YOU DECIDE.</em></>} intro="Три голосования. Два победителя первых батлов встретятся в финале. Голосования откроются после выхода соответствующих выпусков."/>
+  {page==='polls'&&<section className="inner-page wrap official-voting-page"><PageHeading number="04" tag="YOUR VOTE MATTERS" title={<><span className="glitch-line" data-text="WHO WINS?">WHO WINS?</span><br/><em className="glitch-line" data-text="YOU DECIDE.">YOU DECIDE.</em></>} intro="Прогнозы до премьеры уже открыты! А официальные голосования за победителей начнутся после выхода соответствующих выпусков."/>
+    <HypePolls/>
     <div className="vote-rules-strip"><span><Vote size={18}/> OFFICIAL VOTING</span><span>48 ЧАСОВ НА ГОЛОСОВАНИЕ</span><span>TELEGRAM + SAINTFOUR VS</span></div>
     <div className="official-vote-grid">
       <OfficialVoteCard number="01" first={rappers[0]} second={rappers[1]}/>
