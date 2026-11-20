@@ -22,7 +22,7 @@ const rappers = [
 const host = {
   id:'host', stage:'POPPY', name:'PENELOPE (POPPY) EMERSON',
   subtitle:'SHE RUNS THE SHOW.', role:'THE HOST', number:'HOST',
-  color:'#bd9aff', initials:'PE', image:'/media/poppy-host.jpg', isHost:true,
+  color:'#bd9aff', initials:'PE', image:'/media/poppy-host.jpg', profileImage:'/media/poppy-host-profile.jpg', isHost:true,
   description:'Ведущая SAINTFOUR RAP BATTLE ’27. Она здесь, чтобы держать микрофон, направлять хаос в нужное русло и не дать никому забыть, кто сегодня управляет этим шоу.'
 }
 // Интервью выходят по четвергам с 3 декабря 2026 года в 19:00 МСК (UTC+3).
