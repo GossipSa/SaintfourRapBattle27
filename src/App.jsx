@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowRight, CalendarDays, Check, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Images, Menu, Mic2, Play, Radio, Vote, X } from 'lucide-react'
 import './App.css'
+import './theme.css'
 
 const rappers = [
-  { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#e84a4e', initials:'DX', image:'/media/lil-dex.jpg', description:'Самый непредсказуемый участник. Резкие панчи, хаос и никаких тормозов.' },
-  { id:'netti', stage:'MC NETTI', name:'NATHANIEL HOWARD', subtitle:'BUSINESS IS PERSONAL.', role:'THE EXECUTIVE', number:'02', color:'#b7a2a2', initials:'MN', image:'/media/mc-netti.jpg', description:'Глава Warlock на баттл-сцене. Холодный расчёт и ни одного лишнего слова.' },
-  { id:'rudi', stage:'RUDI', name:'RUDI BROOKS', subtitle:'PLAY TO WIN.', role:'THE CONTENDER', number:'03', color:'#81a987', initials:'RB', image:'/media/rudi.jpg', description:'Капитан команды выходит за пределы площадки. Игра только начинается.' },
-  { id:'daro', stage:'DON DARO', name:'DARREN', subtitle:'MAKE SOME NOISE.', role:'THE UNKNOWN', number:'04', color:'#9b84c6', initials:'DD', image:'/media/don-daro.jpg', description:'Один из главных сюрпризов вечера. Его карты пока не раскрыты.' },
+  { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#ff78cf', initials:'DX', image:'/media/lil-dex.jpg', description:'Самый непредсказуемый участник. Резкие панчи, хаос и никаких тормозов.' },
+  { id:'netti', stage:'MC NETTI', name:'NATHANIEL HOWARD', subtitle:'BUSINESS IS PERSONAL.', role:'THE EXECUTIVE', number:'02', color:'#c49afd', initials:'MN', image:'/media/mc-netti.jpg', description:'Глава Warlock на баттл-сцене. Холодный расчёт и ни одного лишнего слова.' },
+  { id:'rudi', stage:'RUDI', name:'RUDI BROOKS', subtitle:'PLAY TO WIN.', role:'THE CONTENDER', number:'03', color:'#e2a0ff', initials:'RB', image:'/media/rudi.jpg', description:'Капитан команды выходит за пределы площадки. Игра только начинается.' },
+  { id:'daro', stage:'DON DARO', name:'DARREN', subtitle:'MAKE SOME NOISE.', role:'THE UNKNOWN', number:'04', color:'#a87fff', initials:'DD', image:'/media/don-daro.jpg', description:'Один из главных сюрпризов вечера. Его карты пока не раскрыты.' },
 ]
 const media = [
   { id:'interview-dex', type:'INTERVIEW', title:'LIL DEX — BEFORE THE BATTLE', duration:'SOON', artist:'Lil Dex', thumbnail:'/media/interview-dex.jpg', url:'' },
@@ -53,7 +54,7 @@ export default function App() {
    const tg=window.Telegram?.WebApp
    if(!tg)return
    tg.ready();tg.expand()
-   tg.setHeaderColor?.('#0b0b0d');tg.setBackgroundColor?.('#0b0b0d')
+   tg.setHeaderColor?.('#1c1329');tg.setBackgroundColor?.('#1c1329')
  },[])
  useEffect(()=>{window.scrollTo({top:0,behavior:'smooth'})},[page])
  useEffect(()=>{const onKey=e=>{if(e.key==='Escape'){setSelected(null);setActiveVideo(null);setGalleryIndex(null)} if(galleryIndex!==null){if(e.key==='ArrowRight')setGalleryIndex(i=>(i+1)%gallery.length);if(e.key==='ArrowLeft')setGalleryIndex(i=>(i+gallery.length-1)%gallery.length)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[galleryIndex])

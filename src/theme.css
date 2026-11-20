@@ -1,0 +1,109 @@
+/* Gossip Saintfour brand: plum, orchid, neon pink — no red accents */
+:root{--sf-base:#1c1329;--sf-deep:#130d20;--sf-surface:#2a1c3a;--sf-surface-2:#38264e;--sf-muted:#baa7ca;--sf-text:#fff4ff;--sf-pink:#ff64cc;--sf-violet:#bb76ff;--sf-lilac:#e7baff;--sf-rose:#f8b9e9;color:var(--sf-text);background:var(--sf-base)}
+body{background:var(--sf-base)}
+::selection{background:#cf6dff;color:#1c1329}
+button:focus-visible{outline-color:var(--sf-pink)}
+.app{background:linear-gradient(180deg,#1c1329 0%,#251733 42%,#1c1329 100%)}
+.top-strip{background:linear-gradient(90deg,#b74ee2,#ec5bc3 55%,#ab6af0);color:#fff}
+.live-dot{background:#fff}
+.red-dot,.status-pulse{background:var(--sf-pink)}
+.header{background:#1b1228ef;border-bottom-color:#5b386b}
+.logo-mark{background:linear-gradient(145deg,#ff72d4,#a55af6);box-shadow:0 0 28px #dc63df24;color:#26132f}
+.logo-type i{color:var(--sf-pink)}
+.desktop-nav button,.footer-nav button{color:#c0adcf}
+.desktop-nav button.active:after{background:var(--sf-pink);box-shadow:0 0 13px #ff64cc65}
+.edition{color:#dbc1e5}
+.hero{background:radial-gradient(ellipse at 75% 34%,#6c336f 0%,#3c2054 32%,#241633 66%,#1b1129 100%)}
+.hero-grid{opacity:.28;background-image:linear-gradient(#e6baff18 1px,transparent 1px),linear-gradient(90deg,#e6baff18 1px,transparent 1px)}
+.hero-flare{background:#e767ed44;filter:blur(110px)}
+.hero-tag{border-color:#bd70d080;color:#f7d5fa;background:#783d8057}
+.status-pulse{box-shadow:0 0 0 4px #f27bde37}
+.hero-tag-end{color:#d9b7dc;border-left-color:#9d63a8}
+.hero-overline{color:#d8b5e6}
+.hero h1 em,.page-heading h1 em{color:#ff81d5;text-shadow:0 0 38px #e55cc036}
+.hero h1 em span{color:#fdf0ff}
+.hero-subtitle{color:#dfc9e7}
+.primary-btn{background:linear-gradient(110deg,#ee56be,#bc63ed);color:#25112e;box-shadow:0 7px 25px #b83fb72b}
+.primary-btn:hover{background:linear-gradient(110deg,#ff83d8,#d78bff)}
+.secondary-btn{border-color:#a477b1;color:#fff4ff;background:#d7a6fa12}
+.secondary-btn:hover{background:#d7a6fa24}
+.poster-ring{border-color:#e9a3fa78}
+.poster-inner{background:radial-gradient(circle at 44% 30%,#df76d5,#874ab0 43%,#381d59 73%);border-color:#f5abef60;box-shadow:0 0 0 20px #f1a4ea10,0 0 0 35px #de88ff0a,0 0 130px #de7ee660}
+.poster-inner b{text-shadow:6px 9px #301644a1}
+.poster-corner{color:#e2a8e6}
+.hero-bottom{color:#bea6cf;border-top-color:#edc2f526}
+.ticker{background:linear-gradient(90deg,#e95fca,#bb64e9,#e95fca)}
+.ticker span{color:#7a368e}
+.eyebrow{color:#e8c6f4}
+.text-button{border-color:#cf78ed;color:#f6dcff}
+.artist-card{border-color:#614568;background:#2d1d3c}
+.artist-card:hover{border-color:var(--artist-color);box-shadow:0 0 30px #e271e92b}
+.cover{background:#362344}
+.cover-fallback{background:radial-gradient(ellipse at 65% 26%,#87528e,#472b5a 50%,#261733 90%)}
+.cover-fallback strong{color:#ffffff22}
+.cover-fallback small{color:#f1d2ed7d}
+.artist-card .cover-fallback{background:radial-gradient(ellipse at 68% 27%,color-mix(in srgb,var(--artist-color) 34%,#61377b),#372044 60%,#241630 100%)}
+.artist-vignette{background:linear-gradient(180deg,#190d2b44 0%,transparent 35%,#220f35b4 70%,#1b1027fa 100%)}
+.artist-info p{color:#e9ccec}
+.artist-action{border-top-color:#f4c5ec56}
+.media-card{background:#30213f;border-color:#61456d}
+.media-card:hover{border-color:#c57eec}
+.media-type{background:#eb6dcc;color:#291333}
+.play-circle{border-color:#f0cbf8;background:#3b1a5780}
+.media-info>span{color:#c6afd3}
+.media-info i{color:#f5a0e1}
+.media-info p{color:#f6a0e2}
+.promo-band{background:radial-gradient(ellipse at 90% 30%,#ac5cdb,#813cb3 48%,#572973 96%);border-color:#c67fe869}
+.promo-content em{color:#ffc3ee}
+.promo-content p:not(.eyebrow){color:#f4d9fa}
+.light-btn{background:#fce8ff;color:#32153f}
+.light-btn:hover{background:#fff}
+.news-list{border-top-color:#6d5077}
+.news-item{border-bottom-color:#594160}
+.news-date{color:#fda2e4}
+.news-label{color:#c4aacb}
+.news-item p{color:#c8b5d0}
+.news-index{color:#8c759e}
+.footer{background:#180f23;border-top-color:#52345d}
+.footer-logo span,.footer-main p,.footer-stamp svg{color:#f17cda}
+.footer-main small,.footer-bottom{color:#ae91bb}
+.footer-stamp{color:#e9c5f3}
+.footer-bottom{border-top-color:#4b3258}
+.page-kicker{color:#e3b7e6}
+.page-heading>p{color:#d1badb}
+.page-heading-line{background:linear-gradient(to right,#e87fdb 0 70px,#70527d 70px 100%)}
+.page-footnote{color:#a590b4}
+.filter-pills button{background:#342445;border-color:#70537b;color:#e6cbeb}
+.filter-pills button.selected{background:linear-gradient(110deg,#ea5bc7,#ba70ef);border-color:transparent;color:#271334}
+.gallery-tile{background:#332144;border-color:#644973}
+.gallery-tile:hover{border-color:#f69de9}
+.gallery-tile>span{background:linear-gradient(transparent,#210e32d4)}
+.poll-box{background:#2b1d3c;border-color:#765382}
+.poll-top{color:#f7a1e3}
+.poll-status{border-color:#a269ab;color:#eec6f2}
+.poll-description{color:#d0b7d9}
+.poll-options button{background:#382749;border-color:#71517e;color:#fff4ff}
+.poll-options button:hover,.poll-options button.chosen{border-color:#ff83d9;background:#643772}
+.poll-number{color:#d4b1de}
+.poll-indicator{border-color:#b280c1;color:#f7c9f4}
+.poll-indicator>span{background:#765a88}
+.poll-bottom{color:#cab2d3}
+.poll-bottom svg{color:#f8a7e7}
+.poll-bottom button{color:#f9b0ed}
+.poll-side{background:radial-gradient(circle at top right,#a650b8,#58326f 62%,#342047);border-color:#8b5c9a}
+.poll-side svg,.poll-side>p{color:#ffc0eb}
+.poll-side>span{color:#eed4f3}
+.poll-side small{color:#ffbbe8}
+.modal-backdrop{background:#0e0617e8}
+.artist-modal,.video-modal,.lightbox{background:#291b38;border-color:#9c71ac}
+.modal-realname{color:#dfb5e6}
+.modal-rule{background:#f27de1}
+.artist-modal-body>p:not(.modal-realname){color:#e1cbe8}
+.artist-modal-body>strong{color:#ffc2ed}
+.close-btn{background:#241331e3;border-color:#b584c7}
+.video-unavailable{background:radial-gradient(circle,#7d478b,#261631 72%)}
+.video-unavailable svg{color:#fba1e7}
+.video-unavailable p{color:#e0bfdc}
+.lightbox-controls{color:#e5c5ed}
+@media(max-width:800px){.mobile-menu-button{border-color:#9c6dac}.mobile-nav{background:#291838;border-bottom-color:#875596}.mobile-nav button{border-bottom-color:#63416e}}
+@media(max-width:540px){.bottom-nav{background:#241630f5;border-top-color:#79508d}.bottom-nav button{color:#ba9fca}.bottom-nav button.active{color:#ff91df}.hero-poster{opacity:.61}.hero{background:radial-gradient(ellipse at 82% 45%,#6d337a,#371c50 52%,#20132f)}}
