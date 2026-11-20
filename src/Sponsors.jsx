@@ -41,6 +41,19 @@ function ProductMedia() {
   const [mode,setMode]=useState('photo')
   const [unavailable,setUnavailable]=useState({photo:false,video:false})
   const [loaded,setLoaded]=useState({photo:false,video:false})
+  const [videoReady,setVideoReady]=useState(false)
+  useEffect(()=>{
+    const controller=new AbortController()
+    fetch(mediaPaths.video,{method:'HEAD',signal:controller.signal})
+      .then(response=>{
+        if(response.ok && response.headers.get('content-type')?.startsWith('video/')){
+          setVideoReady(true)
+          setMode('video')
+        }
+      })
+      .catch(()=>{})
+    return ()=>controller.abort()
+  },[])
   const mediaAvailable=loaded[mode]&&!unavailable[mode]
   return <div className="sponsor-product-media">
     <div className="sponsor-media-tabs" aria-label="Медиаматериалы энергетика">
@@ -49,7 +62,7 @@ function ProductMedia() {
     </div>
     <div className="sponsor-media-stage">
       {mode==='photo'&&<img src={mediaPaths.photo} alt="BLACK HELLEBORE ENERGY — фото банки" onLoad={()=>setLoaded(s=>({...s,photo:true}))} onError={()=>setUnavailable(s=>({...s,photo:true}))} className={mediaAvailable?'sponsor-loaded-media':'sponsor-hidden-media'}/>}
-      {mode==='video'&&<video key={mediaPaths.video} src={mediaPaths.video} controls playsInline preload="metadata" onLoadedMetadata={()=>setLoaded(s=>({...s,video:true}))} onError={()=>setUnavailable(s=>({...s,video:true}))} className={mediaAvailable?'sponsor-loaded-media':'sponsor-hidden-media'}/>}
+      {mode==='video'&&videoReady&&<video key={mediaPaths.video} src={mediaPaths.video} autoPlay muted loop playsInline preload="auto" aria-label="Рекламный ролик BLACK HELLEBORE ENERGY без звука" onLoadedMetadata={()=>setLoaded(s=>({...s,video:true}))} onError={()=>{setUnavailable(s=>({...s,video:true}));setMode('photo')}} className={mediaAvailable?'sponsor-loaded-media':'sponsor-hidden-media'}/>}
       {!mediaAvailable&&<div className="sponsor-media-fallback">
         <div className="sponsor-can-concept" aria-hidden="true"><span>BLACK</span><strong>HELLEBORE</strong><em>ENERGY</em><small>✳</small></div>
         <div className="sponsor-media-fallback-caption">{mode==='photo'?'ФОТО ПРОДУКТА':'РЕКЛАМНЫЙ РОЛИК'}<strong>MEDIA COMING SOON</strong><span>Добавим настоящий {mode==='photo'?'снимок банки':'ролик с Поппи'}</span></div>
