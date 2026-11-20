@@ -1,4 +1,4 @@
-/* Animated slogans between hero and rapper lineup: original site's position */
+/* Tickers framing the opening screen */
 .battle-ticker{width:100%;overflow:hidden;background:#15101f;border-top:1px solid #5a3475;border-bottom:1px solid #5a3475}
 .battle-ticker-track{display:flex;align-items:center;width:max-content;animation:battle-ticker-move 24s linear infinite;will-change:transform}
 .battle-ticker-copy{display:flex;align-items:center;flex:none;white-space:nowrap}
@@ -12,8 +12,8 @@
   background: #493655;
   border-top: 0;
 }
-.battle-ticker-lineup .battle-ticker-track { animation-duration: 32s; }
-.battle-ticker-lineup .battle-ticker-copy { min-width: 100vw; justify-content: space-around; }
+.battle-ticker-lineup .battle-ticker-track { animation-duration: 32s; animation-direction: reverse; }
+.hero-frame .battle-ticker-copy { min-width: 100vw; justify-content: space-around; }
 .battle-ticker-lineup .battle-ticker-phrase { color: #fff3ff; text-shadow: none; }
 .battle-ticker-lineup .battle-ticker-phrase:last-child { color: #e7c7ff; }
 .hero-host {
@@ -49,6 +49,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .battle-ticker-repeat { display: none; }
-  .battle-ticker-lineup .battle-ticker-track { width: auto; }
-  .battle-ticker-lineup .battle-ticker-copy { flex-wrap: wrap; white-space: normal; min-width: 0; }
+  .hero-frame .battle-ticker-track { width: auto; }
+  .hero-frame .battle-ticker-copy { flex-wrap: wrap; white-space: normal; min-width: 0; }
 }
