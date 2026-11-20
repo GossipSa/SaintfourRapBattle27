@@ -128,7 +128,7 @@ function SponsorModal({sponsor,onClose}) {
       <button ref={closeRef} className="sponsor-modal-close" type="button" onClick={onClose} aria-label="Закрыть карточку"><X size={21}/></button>
       <div className="sponsor-modal-banner">
         <span className="sponsor-details-overline">SAINTFOUR / PARTNER PROFILE / {sponsor.id.toUpperCase()}</span>
-        <div className="sponsor-modal-brand"><Icon size={31} strokeWidth={1.4}/><div><strong id={`sponsor-title-${sponsor.id}`}>{sponsor.name}</strong><span>{sponsor.subtitle}</span></div></div>
+        <div className="sponsor-modal-brand"><Icon size={31} strokeWidth={1.4}/><div><strong id={`sponsor-title-${sponsor.id}`} className={sponsor.id==='warlock'?'':'glitch-label'} data-text={sponsor.name}>{sponsor.name}</strong><span>{sponsor.subtitle}</span></div></div>
         <span className="sponsor-modal-tier">{sponsor.tier}</span>
       </div>
       <div className="sponsor-modal-content">
