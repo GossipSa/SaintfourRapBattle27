@@ -29,3 +29,21 @@
 .interview-locked-art .locked-pink{color:#ff4fcf;text-shadow:2px 2px #580855,-2px 0 #8c44ec;transform:skewX(-6deg);font-size:clamp(37px,3.7vw,64px)}
 .interview-locked-art .locked-premiere{font:600 clamp(8px,.9vw,12px) 'IBM Plex Mono',monospace;letter-spacing:.09em;color:#f3c9eb;border:1px solid #be3d9e;padding:7px 11px;margin-top:13px;background:#170d24c9}
 @media(max-width:540px){.interview-locked-art .locked-word{font-size:46px}.interview-locked-art .locked-pink{font-size:57px}}
+
+/* Battle bracket: confirmed pairings, then a winner-dependent final. */
+.battle-match-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:28px 0 24px}
+.battle-match{position:relative;min-width:0;overflow:hidden;isolation:isolate;border:1px solid #634673;border-top:2px solid #cf5dab;background:radial-gradient(ellipse at 50% 12%,#40214f,#18121f 68%,#100c16);box-shadow:inset 0 0 45px #0005}
+.battle-match-top{display:flex;justify-content:space-between;gap:16px;padding:17px 20px;border-bottom:1px solid #5b416a;color:#d2afdf;font:700 10px 'IBM Plex Mono',monospace;letter-spacing:.12em}
+.battle-match-stage{display:grid;grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr);align-items:stretch;min-height:270px;padding:20px 17px 15px;gap:0}
+.battle-fighter{position:relative;min-width:0;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:11px;text-align:center}
+.battle-fighter img{display:block;width:100%;height:200px;max-width:195px;object-fit:cover;object-position:center 25%;filter:saturate(.75) contrast(1.08);border:1px solid #67486d;box-shadow:0 0 25px #9046c71d}
+.battle-fighter span{font:800 clamp(18px,2.1vw,28px)/1.05 'Space Grotesk',sans-serif;letter-spacing:-.05em;color:#fff2fd;text-shadow:-2px 0 #885cff,2px 0 #ff4fcf}
+.battle-versus{align-self:center;text-align:center;z-index:1;color:#ff5fcd;font:900 italic clamp(29px,3.3vw,46px)/1 'Space Grotesk',sans-serif;letter-spacing:-.1em;text-shadow:2px 2px #8335bc,0 0 25px #ff4fcf60;transform:skewX(-8deg)}
+.battle-match-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 20px 18px;border-top:1px solid #5b416a;color:#b99fcc;font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.05em}
+.battle-match-bottom strong{color:#f4c8eb;font:inherit}
+.battle-match-final{grid-column:1/-1;max-width:none;background:radial-gradient(ellipse at 50% 16%,#4b1b4e,#190f23 60%,#100b16)}
+.battle-match-final .battle-match-stage{max-width:640px;margin:auto;grid-template-columns:minmax(0,1fr) 90px minmax(0,1fr);min-height:245px}
+.battle-silhouette{width:100%;max-width:195px;height:175px;display:grid;place-items:center;background:linear-gradient(135deg,#30203f,#100d1b);border:1px dashed #886b9b;font:800 94px 'Space Grotesk',sans-serif;color:#8767a6;text-shadow:0 0 35px #b57cf355}
+.battle-fighter-unknown span{font:700 13px/1.45 'IBM Plex Mono',monospace;letter-spacing:.05em;color:#d7b6e5;text-shadow:none}
+.battle-page-note{color:#ab97b9;font:12px/1.7 'DM Sans',sans-serif;margin:14px 0 36px}
+@media(max-width:760px){.battle-match-grid{grid-template-columns:1fr}.battle-match-final{grid-column:1}.battle-match-stage{min-height:215px;grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr);padding:15px 12px}.battle-fighter img{height:155px}.battle-match-final .battle-match-stage{grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr)}.battle-silhouette{height:150px}.battle-fighter span{font-size:20px}.battle-fighter-unknown span{font-size:11px}.battle-match-top,.battle-match-bottom{padding-left:14px;padding-right:14px}}
