@@ -1,0 +1,20 @@
+/* Host is a separate feature, never counted among the four MCs */
+.host-feature{margin-top:28px;max-width:100%}
+.host-feature-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px;color:#cba4e5;font:600 10px 'IBM Plex Mono',monospace;letter-spacing:.11em}
+.host-feature-heading>span:last-child{color:#9c85b3;text-align:right}
+.host-card{display:grid;grid-template-columns:minmax(210px,.36fr) 1fr;min-height:275px;width:100%;border:1px solid #6b3f87;background:linear-gradient(125deg,#1b1128,#0d0b13 65%,#1e0f27);color:#fff;text-align:left;padding:0;overflow:hidden;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.host-card:hover,.host-card:focus-visible{border-color:#ff78df;box-shadow:0 0 26px #ac65e627;outline-offset:3px}
+.host-portrait{position:relative;overflow:hidden;min-height:245px}
+.host-portrait .cover{position:absolute;inset:0;width:100%;height:100%}
+.host-portrait .cover img{width:100%;height:100%;object-fit:cover}
+.host-portrait .cover-fallback{background:radial-gradient(ellipse at 45% 35%,#573271,#170f22 70%,#110c18);height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.host-portrait .cover-fallback strong{font-size:clamp(85px,11vw,150px);color:#cb92f72e}
+.host-portrait::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,transparent 68%,#160f22 100%);pointer-events:none}
+.host-content{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:30px clamp(20px,4vw,58px);min-width:0}
+.host-role{font:700 10px 'IBM Plex Mono',monospace;color:#ff8fe3;letter-spacing:.12em}
+.host-content h3{margin:16px 0 6px;font:700 clamp(35px,5vw,66px)/.98 'Space Grotesk',sans-serif;letter-spacing:-.065em}
+.host-content p{margin:0;color:#d2b4e5;font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.07em}
+.host-caption{display:block;margin-top:20px;color:#d6c1e5;font-size:13px;line-height:1.5}
+.host-action{display:flex;gap:12px;align-items:center;margin-top:28px;padding-bottom:7px;border-bottom:1px solid #ff64cc;color:#ff90df;font:700 10px 'IBM Plex Mono',monospace;letter-spacing:.06em}
+@media(max-width:700px){.host-card{grid-template-columns:1fr;min-height:0}.host-portrait{min-height:220px;max-height:275px}.host-portrait::after{background:linear-gradient(to bottom,transparent 60%,#170e22)}.host-content{padding:25px 21px 29px}.host-content h3{font-size:clamp(32px,9vw,48px)}.host-feature-heading{font-size:9px}}
+@media(max-width:430px){.host-feature-heading>span:last-child{display:none}.host-portrait{min-height:190px;max-height:225px}.host-caption{margin-top:14px}.host-action{margin-top:19px}}

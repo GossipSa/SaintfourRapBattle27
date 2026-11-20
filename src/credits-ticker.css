@@ -1,0 +1,12 @@
+/* Subtle top credits: MC lineup and host, separate from the original slogan ticker */
+.credits-runner{position:relative;z-index:3;width:100%;overflow:hidden;background:#100b17;border-bottom:1px solid #64356f}
+.credits-runner-track{display:flex;width:max-content;align-items:center;animation:credits-slide 34s linear infinite;will-change:transform}
+.credits-runner-set{display:flex;align-items:center;white-space:nowrap;flex:none}
+.credits-runner-item{display:inline-flex;gap:12px;align-items:center;padding:10px 27px;color:#e9d8f4;font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.09em}
+.credits-runner-item small{font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.09em;color:#ac8cc0}
+.credits-runner-item b{font-size:13px;color:#bd9aff;font-weight:600}
+.credits-runner-host strong{color:#ff8fe3;text-shadow:-1px 0 #885cff,1px 0 #ff4fcf}
+.credits-runner-host small,.credits-runner-host b{color:#ff4fcf}
+@keyframes credits-slide{to{transform:translateX(-50%)}}
+@media(max-width:540px){.credits-runner-item{padding:9px 17px;gap:9px;font-size:11px}.credits-runner-item small{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.credits-runner-track{animation:none}.credits-runner{overflow-x:auto}}
