@@ -6,22 +6,23 @@ const sponsors = [
   {
     id:'warlock',name:'WARLOCK',subtitle:'INDUSTRIES',tier:'ГЕНЕРАЛЬНЫЙ ПАРТНЁР',
     tag:'MAIN PARTNER',Icon:Building2,featured:true,
-    heading:'БОЛЬШЕ, ЧЕМ КОМПАНИЯ.',
-    description:'WARLOCK — влиятельная компания Сентфора, которой руководит Натаниэль Говард. На этой сцене даже бизнес становится личным.',
+    heading:'НЕКОТОРЫЕ РЕШЕНИЯ ПРИНИМАЮТСЯ БЕЗ ВАШЕГО УЧАСТИЯ.',
+    description:'WARLOCK INDUSTRIES — генеральный партнёр SAINTFOUR RAP BATTLE ’27.\n\nКомпания Натаниэля Говарда привыкла контролировать происходящее. Однако в этот раз обстоятельства сложились несколько иначе.\n\nКак именно генеральный директор оказался среди участников шоу — вопрос, который пока остаётся открытым. Одно известно точно: WARLOCK не привыкла отступать.',
+    note:'Участие генерального директора в программе мероприятия не комментируется.',
     aside:'WARLOCK / SAINTFOUR',
   },
   {
     id:'energy',name:'BLACK HELLEBORE',subtitle:'ENERGY',tier:'ОФИЦИАЛЬНЫЙ ЭНЕРГЕТИК ШОУ',
     tag:'OFFICIAL ENERGY',Icon:Bolt,
-    heading:'LET THE CHAOS BEGIN.',
-    description:'BLACK HELLEBORE ENERGY — вымышленный энергетик из вселенной SAINTFOUR RAP BATTLE. В рекламном ролике Поппи открывает банку и запускает хаос.',
+    heading:'КОГДА ГРАДУС ПОВЫШАЕТСЯ — МЫ ДОБАВЛЯЕМ ЭНЕРГИИ.',
+    description:'BLACK HELLEBORE ENERGY становится официальным энергетическим партнёром SAINTFOUR RAP BATTLE ’27.\n\nБренд поддерживает самые громкие события города, и первый рэп-баттл Сентфора не стал исключением. Новые лица, неожиданные противостояния и энергия, которую невозможно сдержать.\n\nBLACK HELLEBORE ENERGY. Заряжен на большее.',
     aside:'BLACK HELLEBORE / ENERGY',
   },
   {
-    id:'gossip',name:'GOSSIP',subtitle:'SAINTFOUR',tier:'МЕДИАПАРТНЁР / АВТОР ПРОЕКТА',
-    tag:'MEDIA PARTNER',Icon:Radio,
-    heading:'СЕНТФОРУ ЕСТЬ ЧТО СКРЫВАТЬ.',
-    description:'«Сплетница Сентфора» — Telegram-канал с новостями, теориями, мемами и материалами по вселенной Сентфора. Именно здесь выходит SAINTFOUR RAP BATTLE ’27.',
+    id:'gossip',name:'GOSSIP',subtitle:'SAINTFOUR',tier:'ОРГАНИЗАТОР И ИНФОРМАЦИОННЫЙ ПАРТНЁР',
+    tag:'THE ORGANIZER',Icon:Radio,
+    heading:'МЫ НЕ СОЗДАЁМ СЛУХИ. МЫ ДАЁМ ИМ МИКРОФОН.',
+    description:'GOSSIP SAINTFOUR представляет SAINTFOUR RAP BATTLE ’27.\n\nМы привыкли рассказывать о том, что происходит в Сентфоре. Теперь решили дать его героям возможность высказаться самостоятельно.\n\nЧетыре участника. Один микрофон. И слишком много того, о чём раньше предпочитали молчать.\n\nМы просто включили камеры.',
     url:'https://t.me/Gossip_Saintfour',
     aside:'@GOSSIP_SAINTFOUR',
   },
@@ -92,6 +93,7 @@ function SponsorModal({sponsor,onClose}) {
       <div className="sponsor-modal-content">
         <h3 className="glitch-heading" data-text={sponsor.heading}>{sponsor.heading}</h3>
         <p className="sponsor-details-description">{sponsor.description}</p>
+        {sponsor.note&&<p className="sponsor-partner-note">{sponsor.note}</p>}
         {sponsor.id==='energy'&&<ProductMedia/>}
         {sponsor.url&&<a className="sponsor-channel-link" href={sponsor.url} target="_blank" rel="noopener noreferrer">ПЕРЕЙТИ В TELEGRAM <ArrowUpRight size={18}/></a>}
         <div className="sponsor-details-end"><Star size={13}/>{sponsor.aside}</div>
