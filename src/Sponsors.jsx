@@ -49,8 +49,8 @@ const sponsors = [
 ]
 
 const mediaPaths={
-  photo:'/media/sponsors/black-hellebore.jpg',
-  video:'/media/sponsors/black-hellebore.mp4',
+  photo:`${import.meta.env.BASE_URL}media/sponsors/black-hellebore.jpg`,
+  video:`${import.meta.env.BASE_URL}media/sponsors/black-hellebore.mp4`,
 }
 
 function ProductMedia() {
