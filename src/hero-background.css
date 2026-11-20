@@ -11,7 +11,7 @@
 .hero-photo-soft{
   position:absolute;
   inset:-24px;
-  background:url('/media/hero/stage-blur.webp') center 52% / cover no-repeat;
+  background:url('/media/hero/stage-original.jpeg') center 52% / cover no-repeat;
   transform:scale(1.03);
   pointer-events:none;
 }
@@ -22,9 +22,9 @@
 /* Second copy of the same photo: blurred only on the left. Its blur fades smoothly to zero by the right side. */
 .hero-photo-soft{
   z-index:1;
-  filter:blur(15px);
-  -webkit-mask-image:linear-gradient(to right,#000 0%,#000 29%,transparent 68%);
-  mask-image:linear-gradient(to right,#000 0%,#000 29%,transparent 68%);
+  filter:blur(12px);
+  -webkit-mask-image:linear-gradient(to right,#000 0%,#000 30%,transparent 59%);
+  mask-image:linear-gradient(to right,#000 0%,#000 30%,transparent 59%);
 }
 /* Readability on the left; full image visibility on the right; soft fade into black beneath. */
 .hero::after{
@@ -55,9 +55,9 @@
   .hero-inner{grid-template-columns:minmax(0,1fr);min-height:630px;padding-bottom:100px}
   .hero::before,.hero-photo-soft{background-position:54% center}
   .hero-photo-soft{
-    filter:blur(13px);
-    -webkit-mask-image:linear-gradient(to right,#000 0%,#000 18%,transparent 72%);
-    mask-image:linear-gradient(to right,#000 0%,#000 18%,transparent 72%);
+    filter:blur(11px);
+    -webkit-mask-image:linear-gradient(to right,#000 0%,#000 25%,transparent 62%);
+    mask-image:linear-gradient(to right,#000 0%,#000 25%,transparent 62%);
   }
   .hero::after{
     background:
@@ -71,8 +71,8 @@
   .hero::before,.hero-photo-soft{background-position:55% center}
   .hero-photo-soft{
     filter:blur(12px);
-    -webkit-mask-image:linear-gradient(to right,#000 0%,rgba(0,0,0,.9) 25%,transparent 78%);
-    mask-image:linear-gradient(to right,#000 0%,rgba(0,0,0,.9) 25%,transparent 78%);
+    -webkit-mask-image:linear-gradient(to right,#000 0%,rgba(0,0,0,.9) 25%,transparent 66%);
+    mask-image:linear-gradient(to right,#000 0%,rgba(0,0,0,.9) 25%,transparent 66%);
   }
   .hero-copy{max-width:100%}
   .hero-bottom{background:#09090d20}
