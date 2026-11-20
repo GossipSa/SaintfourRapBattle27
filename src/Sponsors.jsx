@@ -1,8 +1,7 @@
-import { useState } from 'react'
-import { ArrowUpRight, Bolt, Building2, ChevronDown, Play, Radio, Star } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { ArrowUpRight, Bolt, Building2, Play, Radio, Star, X } from 'lucide-react'
 
-// In-universe fan project partners. Add official media files to public/media/sponsors/.
-// The media slots display honest placeholders until real assets are added.
+// In-universe fan project partners. Add actual media files to public/media/sponsors/.
 const sponsors = [
   {
     id:'warlock',name:'WARLOCK',subtitle:'INDUSTRIES',tier:'ГЕНЕРАЛЬНЫЙ ПАРТНЁР',
@@ -55,37 +54,61 @@ function ProductMedia() {
   </div>
 }
 
-function SponsorCard({sponsor,expanded,onToggle}) {
+function SponsorCard({sponsor,onOpen}) {
   const Icon=sponsor.Icon
-  return <article className={`sponsor-tile sponsor-${sponsor.id} ${sponsor.featured?'sponsor-featured':''} ${expanded?'sponsor-expanded':''}`}>
+  return <article className={`sponsor-tile sponsor-${sponsor.id} ${sponsor.featured?'sponsor-featured':''}`}>
     <div className="sponsor-tile-top"><span>{sponsor.tag}</span><span className="sponsor-cross" aria-hidden="true">✳</span></div>
     <div className="sponsor-identity">
       <Icon className="sponsor-symbol" size={sponsor.featured?35:27} strokeWidth={1.4} aria-hidden="true"/>
       <div className="sponsor-wordmark" aria-label={sponsor.name+' '+sponsor.subtitle}><strong>{sponsor.name}</strong><span>{sponsor.subtitle}</span></div>
     </div>
     <div className="sponsor-tile-bottom"><span>{sponsor.tier}</span><span className="sponsor-tile-number">{sponsor.id==='warlock'?'001':sponsor.id==='energy'?'002':'003'}</span></div>
-    <button type="button" className="sponsor-details-toggle" onClick={onToggle} aria-expanded={expanded} aria-controls={`sponsor-details-${sponsor.id}`}>
-      {expanded?'СВЕРНУТЬ':'ПОДРОБНЕЕ'} <ChevronDown size={17} className={expanded?'sponsor-chevron-up':''}/>
+    <button type="button" className="sponsor-details-toggle" onClick={()=>onOpen(sponsor)}>
+      ОТКРЫТЬ КАРТОЧКУ <ArrowUpRight size={17}/>
     </button>
-    {expanded&&<div className="sponsor-details" id={`sponsor-details-${sponsor.id}`}>
-      <p className="sponsor-details-overline">PARTNER PROFILE / {sponsor.id.toUpperCase()}</p>
-      <h3>{sponsor.heading}</h3>
-      <p className="sponsor-details-description">{sponsor.description}</p>
-      {sponsor.id==='energy'&&<ProductMedia/>}
-      {sponsor.url&&<a className="sponsor-channel-link" href={sponsor.url} target="_blank" rel="noopener noreferrer">ПЕРЕЙТИ В TELEGRAM <ArrowUpRight size={18}/></a>}
-      <div className="sponsor-details-end"><Star size={13}/>{sponsor.aside}</div>
-    </div>}
   </article>
 }
 
+function SponsorModal({sponsor,onClose}) {
+  const closeRef=useRef(null)
+  useEffect(()=>{
+    const previous=document.activeElement
+    const oldOverflow=document.body.style.overflow
+    document.body.style.overflow='hidden'
+    closeRef.current?.focus()
+    const onKey=e=>{if(e.key==='Escape')onClose()}
+    window.addEventListener('keydown',onKey)
+    return ()=>{window.removeEventListener('keydown',onKey);document.body.style.overflow=oldOverflow;previous?.focus?.()}
+  },[onClose])
+  const Icon=sponsor.Icon
+  return <div className="sponsor-modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}>
+    <section className={`sponsor-modal sponsor-modal-${sponsor.id}`} role="dialog" aria-modal="true" aria-labelledby={`sponsor-title-${sponsor.id}`}>
+      <button ref={closeRef} className="sponsor-modal-close" type="button" onClick={onClose} aria-label="Закрыть карточку"><X size={21}/></button>
+      <div className="sponsor-modal-banner">
+        <span className="sponsor-details-overline">SAINTFOUR / PARTNER PROFILE / {sponsor.id.toUpperCase()}</span>
+        <div className="sponsor-modal-brand"><Icon size={31} strokeWidth={1.4}/><div><strong id={`sponsor-title-${sponsor.id}`}>{sponsor.name}</strong><span>{sponsor.subtitle}</span></div></div>
+        <span className="sponsor-modal-tier">{sponsor.tier}</span>
+      </div>
+      <div className="sponsor-modal-content">
+        <h3 className="glitch-heading" data-text={sponsor.heading}>{sponsor.heading}</h3>
+        <p className="sponsor-details-description">{sponsor.description}</p>
+        {sponsor.id==='energy'&&<ProductMedia/>}
+        {sponsor.url&&<a className="sponsor-channel-link" href={sponsor.url} target="_blank" rel="noopener noreferrer">ПЕРЕЙТИ В TELEGRAM <ArrowUpRight size={18}/></a>}
+        <div className="sponsor-details-end"><Star size={13}/>{sponsor.aside}</div>
+      </div>
+    </section>
+  </div>
+}
+
 export default function SponsorsShowcase() {
-  const [expanded,setExpanded]=useState([])
-  const toggle=id=>setExpanded(ids=>ids.includes(id)?ids.filter(x=>x!==id):[...ids,id])
+  const [selected,setSelected]=useState(null)
+  const close=()=>setSelected(null)
   return <div className="sponsors-showcase">
-    <div className="sponsors-intro"><p>BEHIND EVERY BIG SHOW — BIG SUPPORT.</p><span>Наши партнёры: открой карточку, чтобы узнать о бренде больше.</span></div>
+    <div className="sponsors-intro"><p>BEHIND EVERY BIG SHOW — BIG SUPPORT.</p><span>Нажми на партнёра, чтобы открыть его карточку.</span></div>
     <div className="sponsors-grid">
-      {sponsors.map(s=><SponsorCard key={s.id} sponsor={s} expanded={expanded.includes(s.id)} onToggle={()=>toggle(s.id)}/>)}
+      {sponsors.map(s=><SponsorCard key={s.id} sponsor={s} onOpen={setSelected}/>)}
     </div>
     <div className="sponsors-note"><span className="red-dot"/> PARTNERS / SAINTFOUR RAP BATTLE ’27 <span>GOSSIP SAINTFOUR ORIGINAL PROJECT</span></div>
+    {selected&&<SponsorModal sponsor={selected} onClose={close}/>}
   </div>
 }

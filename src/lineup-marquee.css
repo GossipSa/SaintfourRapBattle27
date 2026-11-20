@@ -1,0 +1,10 @@
+/* Lineup runner: continuous, seamless, immediately above rapper cards */
+.lineup-marquee{position:relative;overflow:hidden;width:100%;margin:0 0 20px;background:#120d1b;border-top:1px solid #633b77;border-bottom:1px solid #633b77;mask-image:linear-gradient(to right,transparent,#000 3%,#000 97%,transparent)}
+.lineup-marquee-track{display:flex;align-items:center;width:max-content;animation:lineup-scroll 24s linear infinite;will-change:transform}
+.lineup-marquee-set{display:flex;align-items:center;flex:none}
+.lineup-marquee-name{display:flex;align-items:center;gap:15px;white-space:nowrap;padding:13px 25px;font:700 16px 'Space Grotesk',sans-serif;letter-spacing:.035em;color:#f7eaff;text-shadow:-1px 0 #885cff,1px 0 #ff4fcf}
+.lineup-marquee-name>span{font:600 9px 'IBM Plex Mono',monospace;letter-spacing:.06em;color:#b889d5}
+.lineup-marquee-name>b{font-size:14px;font-weight:600;color:#FF4FCF;margin-left:8px}
+@keyframes lineup-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:540px){.lineup-marquee{margin-bottom:13px}.lineup-marquee-name{font-size:14px;padding:11px 18px;gap:10px}}
+@media(prefers-reduced-motion:reduce){.lineup-marquee-track{animation:none}.lineup-marquee{overflow-x:auto}}
