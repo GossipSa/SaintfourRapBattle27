@@ -1,0 +1,63 @@
+/* First screen: user's Saintfour stage photo, softly blurred into black.
+   Text, buttons and the rest of the site remain unchanged. */
+.hero{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  background:#09090d;
+  border-bottom:0;
+}
+.hero::before{
+  content:'';
+  position:absolute;
+  inset:-22px;
+  z-index:0;
+  pointer-events:none;
+  background-image:url('/media/hero/stage-blur.webp');
+  background-position:center 52%;
+  background-size:cover;
+  background-repeat:no-repeat;
+  filter:blur(6px);
+  opacity:.95;
+  transform:scale(1.035);
+}
+.hero::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:
+    linear-gradient(to bottom,rgba(9,9,13,.08) 0%,rgba(9,9,13,.14) 45%,rgba(9,9,13,.62) 78%,#09090d 100%),
+    linear-gradient(to right,rgba(9,9,13,.93) 0%,rgba(9,9,13,.87) 30%,rgba(9,9,13,.49) 62%,rgba(9,9,13,.19) 100%),
+    linear-gradient(110deg,rgba(136,92,255,.11),transparent 67%);
+  opacity:1;
+  mix-blend-mode:normal;
+}
+.hero-grid,.hero-flare{z-index:1;pointer-events:none;opacity:.09}
+.hero-inner{
+  position:relative;
+  z-index:2;
+  grid-template-columns:minmax(0,1fr);
+}
+.hero-copy{position:relative;z-index:3;max-width:740px}
+.hero-bottom{
+  position:relative;
+  z-index:2;
+  background:transparent;
+  border-top:1px solid #ffffff14;
+}
+@media(max-width:800px){
+ .hero-inner{grid-template-columns:minmax(0,1fr);min-height:630px;padding-bottom:100px}
+ .hero::before{background-position:56% center;filter:blur(7px)}
+ .hero::after{background:
+   linear-gradient(to bottom,rgba(9,9,13,.31),rgba(9,9,13,.35) 40%,rgba(9,9,13,.84) 82%,#09090d 100%),
+   linear-gradient(to right,rgba(9,9,13,.88),rgba(9,9,13,.48) 90%)}
+}
+@media(max-width:540px){
+ .hero{min-height:0}
+ .hero-inner{min-height:590px;padding-top:62px;padding-bottom:90px}
+ .hero::before{background-position:56% center;filter:blur(7px)}
+ .hero-copy{max-width:100%}
+ .hero-bottom{background:#09090d20}
+}
