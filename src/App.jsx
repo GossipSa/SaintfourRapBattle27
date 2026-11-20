@@ -11,7 +11,7 @@ import './lineup-marquee.css'
 import './hero-background.css'
 
 const rappers = [
-  { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#ff78cf', initials:'DX', image:'/media/lil-dex.jpg', description:'Самый непредсказуемый участник. Резкие панчи, хаос и никаких тормозов.' },
+  { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#ff78cf', initials:'DX', image:'/media/lil-dex.jpg', description:'Байкер, провокатор и человек, который никогда не держит язык за зубами. На баттле играет грязно, бьёт по больному и получает от этого удовольствие. Особенно если напротив Руди.' },
   { id:'netti', stage:'MC NETTI', name:'NATHANIEL HOWARD', subtitle:'BUSINESS IS PERSONAL.', role:'THE EXECUTIVE', number:'02', color:'#c49afd', initials:'MN', image:'/media/mc-netti.jpg', description:'Глава Warlock на баттл-сцене. Холодный расчёт и ни одного лишнего слова.' },
   { id:'rudi', stage:'YUNG RUD', name:'RUDI BROOKS', subtitle:'PLAY TO WIN.', role:'THE CONTENDER', number:'03', color:'#e2a0ff', initials:'RB', image:'/media/rudi.jpg', description:'Капитан команды выходит за пределы площадки. Игра только начинается.' },
   { id:'daro', stage:'DON DARO', name:'DARREN', subtitle:'MAKE SOME NOISE.', role:'THE UNKNOWN', number:'04', color:'#a87fff', initials:'DD', image:'/media/don-daro.jpg', description:'Один из главных сюрпризов вечера. Его карты пока не раскрыты.' },
