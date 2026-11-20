@@ -1,47 +1,47 @@
-import { Sparkles, Radio, Star } from 'lucide-react'
+import { Bolt, Building2, Radio } from 'lucide-react'
 
-// Replace placeholders with confirmed partner names and licensed logos only.
-// Optional image files should live under public/media/sponsors/.
+// Fictional / in-universe partner identities for the fan project.
+// Replace typography with actual approved logo assets when available.
 const sponsors = [
-  { id:'main', tier:'ГЕНЕРАЛЬНЫЙ ПАРТНЁР', tag:'MAIN PARTNER', icon:Star, featured:true },
-  { id:'partner-1', tier:'ПАРТНЁР ШОУ', tag:'SHOW PARTNER', icon:Sparkles },
-  { id:'partner-2', tier:'ПАРТНЁР ШОУ', tag:'SHOW PARTNER', icon:Sparkles },
-  { id:'media-1', tier:'ИНФОПАРТНЁР', tag:'MEDIA PARTNER', icon:Radio },
-  { id:'media-2', tier:'ИНФОПАРТНЁР', tag:'MEDIA PARTNER', icon:Radio },
+  { id:'warlock', name:'WARLOCK', subtitle:'INDUSTRIES', tier:'ГЕНЕРАЛЬНЫЙ ПАРТНЁР', tag:'MAIN PARTNER', Icon:Building2, featured:true },
+  { id:'energy', name:'BLACK HOLE', subtitle:'ENERGY', tier:'ЭНЕРГЕТИК БАТТЛА', tag:'OFFICIAL ENERGY', Icon:Bolt },
+  { id:'gossip', name:'GOSSIP', subtitle:'SAINTFOUR', tier:'МЕДИАПАРТНЁР / АВТОР ПРОЕКТА', tag:'MEDIA PARTNER', Icon:Radio },
 ]
 
-function SponsorPlaceholder({ sponsor }) {
-  const Icon = sponsor.icon
+function SponsorCard({ sponsor }) {
+  const Icon=sponsor.Icon
   return (
-    <div className={`sponsor-tile ${sponsor.featured ? 'sponsor-featured' : ''}`}>
+    <article className={`sponsor-tile sponsor-${sponsor.id} ${sponsor.featured ? 'sponsor-featured' : ''}`}>
       <div className="sponsor-tile-top">
         <span>{sponsor.tag}</span>
         <span className="sponsor-cross" aria-hidden="true">✳</span>
       </div>
-      <div className="sponsor-placeholder">
-        <Icon size={sponsor.featured ? 37 : 27} strokeWidth={1.2} aria-hidden="true" />
-        <strong>ВАШ ЛОГОТИП</strong>
-        <span>COMING SOON</span>
+      <div className="sponsor-identity">
+        <Icon className="sponsor-symbol" size={sponsor.featured?35:27} strokeWidth={1.4} aria-hidden="true" />
+        <div className="sponsor-wordmark" aria-label={sponsor.name+' '+sponsor.subtitle}>
+          <strong>{sponsor.name}</strong>
+          <span>{sponsor.subtitle}</span>
+        </div>
       </div>
       <div className="sponsor-tile-bottom">
         <span>{sponsor.tier}</span>
-        <span className="sponsor-tile-number">{sponsor.id === 'main' ? '001' : sponsor.id.toUpperCase()}</span>
+        <span className="sponsor-tile-number">{sponsor.id==='warlock'?'001':sponsor.id==='energy'?'002':'003'}</span>
       </div>
-    </div>
+    </article>
   )
 }
 
-export default function SponsorsShowcase({compact=false}) {
+export default function SponsorsShowcase() {
   return (
-    <div className={`sponsors-showcase ${compact ? 'sponsors-compact' : ''}`}>
+    <div className="sponsors-showcase">
       <div className="sponsors-intro">
         <p>BEHIND EVERY BIG SHOW — BIG SUPPORT.</p>
-        <span>Партнёрские места подготовлены. Названия и логотипы появятся после подтверждения участия.</span>
+        <span>Бренды и партнёры вселенной SAINTFOUR RAP BATTLE ’27.</span>
       </div>
       <div className="sponsors-grid">
-        {sponsors.slice(0,compact?3:5).map(s=><SponsorPlaceholder key={s.id} sponsor={s}/>)}
+        {sponsors.map(s=><SponsorCard key={s.id} sponsor={s}/>)}
       </div>
-      <div className="sponsors-note"><span className="red-dot"/> PARTNERS / SAINTFOUR RAP BATTLE ’27 <span>OFFICIAL LINEUP — TO BE ANNOUNCED</span></div>
+      <div className="sponsors-note"><span className="red-dot"/> PARTNERS / SAINTFOUR RAP BATTLE ’27 <span>GOSSIP SAINTFOUR ORIGINAL PROJECT</span></div>
     </div>
   )
 }

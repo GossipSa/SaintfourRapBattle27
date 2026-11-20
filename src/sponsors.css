@@ -28,3 +28,36 @@
 @media(max-width:800px){.sponsors-grid{grid-template-columns:1fr 1fr}.sponsors-grid .sponsor-featured{grid-column:span 2;min-height:235px}.sponsors-intro{flex-direction:column;gap:8px}.sponsors-page .sponsors-grid{grid-template-columns:1fr 1fr}.sponsors-page .sponsor-featured{grid-column:span 2}.sponsors-page .sponsor-tile:not(.sponsor-featured){grid-column:span 1}}
 @media(max-width:540px){.sponsors-grid{gap:10px}.sponsor-tile{padding:13px;min-height:185px}.sponsor-featured{min-height:230px}.sponsor-tile-top>span:first-child{font-size:8px}.sponsor-placeholder strong{font-size:13px}.sponsor-tile-bottom span:first-child{font-size:8px}.sponsor-tile-number{display:none}.sponsors-note>span:last-child{display:none}.sponsors-page .sponsor-tile:not(.sponsor-featured){min-height:194px}.sponsors-page .sponsor-featured .sponsor-placeholder strong{font-size:22px}}
 @media(prefers-reduced-motion:reduce){.sponsor-tile{transition:none}}
+
+/* Branded in-universe sponsorship identities */
+.sponsor-identity{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:16px;min-height:136px;color:#DCA8FF}
+.sponsor-symbol{flex:none;filter:drop-shadow(0 0 11px #A768FF40)}
+.sponsor-wordmark{display:flex;flex-direction:column;gap:1px;min-width:0}
+.sponsor-wordmark strong{display:block;color:#fff6ff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(19px,2.55vw,34px);line-height:1;letter-spacing:-.07em;overflow-wrap:anywhere;text-shadow:-1px 0 #885cff,1px 0 #ff4fcf}
+.sponsor-wordmark>span{font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.24em;color:#d8b4f7}
+.sponsor-featured .sponsor-wordmark strong{font-size:clamp(30px,4vw,56px);letter-spacing:.055em}
+.sponsor-featured .sponsor-wordmark>span{letter-spacing:.45em}
+.sponsor-energy .sponsor-symbol{color:#FF4FCF}
+.sponsor-energy .sponsor-wordmark strong{color:#FFD2F5}
+.sponsor-energy .sponsor-wordmark>span{color:#FF8FE3}
+.sponsor-gossip .sponsor-symbol{color:#BD9AFF}
+.sponsor-gossip .sponsor-wordmark strong{color:#f7d5ff}
+.sponsor-gossip .sponsor-wordmark>span{color:#FF8FE3}
+.sponsor-tile:hover .sponsor-wordmark strong{text-shadow:-3px 0 #885cff,3px 0 #ff4fcf}
+.sponsors-page .sponsor-tile:not(.sponsor-featured){grid-column:span 3}
+.sponsors-page .sponsor-featured .sponsor-wordmark strong{font-size:clamp(40px,5vw,64px)}
+@media(max-width:800px){
+.sponsors-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sponsors-grid .sponsor-featured{grid-column:span 2}
+.sponsor-wordmark strong{font-size:clamp(19px,3vw,30px)}
+}
+@media(max-width:540px){
+.sponsors-grid{grid-template-columns:minmax(0,1fr)}
+.sponsors-grid .sponsor-featured,.sponsors-page .sponsor-featured,.sponsors-page .sponsor-tile:not(.sponsor-featured){grid-column:span 1}
+.sponsors-page .sponsors-grid{grid-template-columns:minmax(0,1fr)}
+.sponsor-tile,.sponsors-page .sponsor-tile:not(.sponsor-featured){min-height:190px}
+.sponsors-grid .sponsor-featured{min-height:225px}
+.sponsor-wordmark strong{font-size:28px}
+.sponsor-featured .sponsor-wordmark strong,.sponsors-page .sponsor-featured .sponsor-wordmark strong{font-size:40px}
+.sponsor-wordmark>span{font-size:10px}
+}
