@@ -66,7 +66,7 @@ export default function HypePolls(){
 
   const answered=polls.filter(p=>Object.hasOwn(votes,p.id)).length
   return <section className="hype-polls" aria-labelledby="hype-polls-title">
-    <div className="hype-polls-intro"><div><span className="hype-kicker">BEFORE THE FIRST DROP / FAN PREDICTIONS</span><h2 id="hype-polls-title">PRE-BATTLE <em>HYPE.</em></h2><p>Батлы ещё не начались, а ставки уже сделаны. Выбирай своих фаворитов и смотри реальные результаты зрителей.</p></div><span className="hype-counter">{answered.toString().padStart(2,'0')} <small>/ 04 ОТВЕТА</small></span></div>
+    <div className="hype-polls-intro"><div><span className="hype-kicker">BEFORE THE FIRST DROP / FAN PREDICTIONS</span><h2 id="hype-polls-title">PRE-BATTLE <em>HYPE.</em></h2><p>Пока микрофоны молчат, Сентфор уже спорит. На чьей стороне ты?</p></div><span className="hype-counter">{answered.toString().padStart(2,'0')} <small>/ 04 ОТВЕТА</small></span></div>
     {error && <div className="hype-error" role="alert">{error} <button onClick={()=>window.location.reload()} type="button"><RefreshCw size={14}/> Обновить</button></div>}
     <div className="hype-poll-grid">{polls.map(p=>{
       const voted=Object.hasOwn(votes,p.id)
@@ -88,6 +88,5 @@ export default function HypePolls(){
         <div className="hype-poll-footer">{pending===p.id?'СОХРАНЯЕМ ГОЛОС…':voted?'ТВОЙ ГОЛОС УЧТЁН':loading?'ЗАГРУЖАЕМ РЕЗУЛЬТАТЫ…':stats?`ВСЕГО ГОЛОСОВ: ${stats.total}`:'СТАТИСТИКА НЕДОСТУПНА'}</div>
       </article>
     })}</div>
-    <p className="hype-disclaimer">Результаты общие для всех посетителей и обновляются автоматически. Один голос на вопрос в пределах одного браузера. Без авторизации невозможно полностью исключить повторные голоса с других устройств. Эти прогнозы не влияют на официальные батлы.</p>
   </section>
 }
