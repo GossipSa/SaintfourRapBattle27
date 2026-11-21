@@ -103,3 +103,7 @@
 .official-voting-seal strong{font:900 49px/.9 'Barlow Condensed',Impact,sans-serif;font-style:italic;color:#fff2ff;text-shadow:3px 2px #e75cb8}
 .official-voting-seal small{margin-top:6px;font:700 7px 'IBM Plex Mono',monospace;letter-spacing:.04em;color:#e9b4de}
 @media(max-width:600px){.official-voting-intro{padding:25px 20px;gap:8px;margin-top:25px}.official-voting-intro h2{font-size:clamp(40px,11vw,56px)}.official-voting-intro p{font-size:12px}.official-voting-kicker{font-size:8px;letter-spacing:.08em}.official-voting-seal{flex-basis:65px;width:65px;height:65px}.official-voting-seal strong{font-size:30px}.official-voting-seal span,.official-voting-seal small{font-size:5px}}
+
+/* Home teaser shows only the next interview; full schedule remains in Interviews. */
+.home-interview-grid{grid-template-columns:minmax(0,390px)}
+@media(max-width:600px){.home-interview-grid{grid-template-columns:minmax(0,1fr)}}
