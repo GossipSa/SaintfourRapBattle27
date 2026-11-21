@@ -125,3 +125,17 @@
 .battle-match-final .battle-match-teaser{min-height:auto;text-align:center;padding:21px 24px 23px}
 .battle-match-final .battle-match-teaser p{margin-inline:auto}
 @media(max-width:760px){.battle-match-teaser{min-height:auto;padding:15px 14px 18px}.battle-match-teaser h3{font-size:23px}.battle-match-teaser p{font-size:11.5px}.battle-match-final .battle-match-teaser{padding:17px 14px 19px}}
+
+/* Hidden character detail: Dex's kitten. Small, touch-friendly and unobtrusive. */
+.artist-card[role="button"]{cursor:pointer}
+.artist-card[role="button"]:focus-visible{outline:2px solid var(--artist-color);outline-offset:4px}
+.dex-kitten-trigger{position:absolute;z-index:4;right:12px;top:12px;width:32px;height:32px;display:grid;place-items:center;padding:0;border:1px solid #ffffff24;border-radius:50%;background:#0e0c13a8;color:#f3c9e5;font-size:14px;opacity:.46;transition:opacity .2s,border-color .2s,transform .2s}
+.dex-kitten-trigger:hover,.dex-kitten-trigger:focus-visible,.dex-kitten-trigger[aria-expanded="true"]{opacity:1;border-color:#f5addb;transform:rotate(-8deg)}
+.dex-kitten-secret{position:absolute;z-index:4;top:53px;right:9px;max-width:calc(100% - 18px);display:flex;align-items:center;gap:9px;padding:9px 11px;background:linear-gradient(120deg,#110e18ed,#32213bf4);border:1px solid #9a668f;border-radius:5px;box-shadow:0 12px 24px #0009;pointer-events:none;animation:dexKittenPeek .26s ease-out both}
+.dex-kitten-face{font-size:32px;line-height:1}
+.dex-kitten-secret-text{display:flex;flex-direction:column;gap:4px;min-width:0}
+.dex-kitten-secret-text strong{font:800 11px/1.15 'DM Sans',sans-serif;letter-spacing:.035em;color:#ffe5f6}
+.dex-kitten-secret-text small{font:600 8px/1.25 'DM Sans',sans-serif;letter-spacing:.08em;color:#c9b1cc}
+@keyframes dexKittenPeek{from{opacity:0;transform:translateY(-8px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:760px){.dex-kitten-trigger{top:7px;right:7px;width:29px;height:29px;font-size:12px}.dex-kitten-secret{top:40px;right:4px;max-width:calc(100% - 8px);gap:4px;padding:7px}.dex-kitten-face{font-size:25px}.dex-kitten-secret-text strong{font-size:9px}.dex-kitten-secret-text small{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.dex-kitten-secret{animation:none}}
