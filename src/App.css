@@ -116,3 +116,12 @@
 .home-interview-date{flex-shrink:0;text-align:right;white-space:nowrap;font:900 27px/.95 'Barlow Condensed',Impact,sans-serif;letter-spacing:.03em;color:#fff0fa}
 .home-interview-date small{display:block;margin-top:7px;font:700 10px 'IBM Plex Mono',monospace;letter-spacing:.04em;color:#ec9ed6}
 @media(max-width:540px){.home-interview-spotlight{align-items:flex-start;gap:12px;padding:14px}.home-interview-eyebrow{font-size:8px;letter-spacing:.035em}.home-interview-spotlight p{font-size:11px}.home-interview-date{font-size:22px}.home-interview-date small{font-size:8px}}
+
+/* Minimal editorial teaser beneath each matchup. No extra cards. */
+.battle-match-teaser{padding:17px 20px 20px;border-top:1px solid #67466c;background:linear-gradient(125deg,#26192f,#1d1427);min-height:136px}
+.battle-match-teaser-label{font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.14em;color:#bb82bf}
+.battle-match-teaser h3{margin:8px 0 6px;color:#f9cef0;font:800 clamp(20px,2.3vw,27px)/1.1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.025em}
+.battle-match-teaser p{margin:0;max-width:520px;color:#c8b4cc;font:12px/1.6 'DM Sans',sans-serif}
+.battle-match-final .battle-match-teaser{min-height:auto;text-align:center;padding:21px 24px 23px}
+.battle-match-final .battle-match-teaser p{margin-inline:auto}
+@media(max-width:760px){.battle-match-teaser{min-height:auto;padding:15px 14px 18px}.battle-match-teaser h3{font-size:23px}.battle-match-teaser p{font-size:11.5px}.battle-match-final .battle-match-teaser{padding:17px 14px 19px}}
