@@ -134,13 +134,17 @@ export default function App() {
   {page==='sponsors'&&<section className="inner-page wrap sponsors-page"><PageHeading number="06" tag="POWERED BY" title={<><span className="glitch-heading" data-text="BACKED BY">BACKED BY</span><br/><em className="glitch-heading" data-text="THE CULTURE.">THE CULTURE.</em></>} intro="WARLOCK, BLACK HELLEBORE ENERGY и GOSSIP SAINTFOUR — бренды и партнёры нашего фанатского рэп-шоу."/><SponsorsShowcase/></section>}
   {page==='polls'&&<section className="inner-page wrap official-voting-page"><PageHeading number="04" tag="YOUR VOTE MATTERS" title={<><span className="glitch-line" data-text="WHO WINS?">WHO WINS?</span><br/><em className="glitch-line" data-text="YOU DECIDE.">YOU DECIDE.</em></>} intro="Прогнозы до премьеры уже открыты! А официальные голосования за победителей начнутся после выхода соответствующих выпусков."/>
     <HypePolls/>
+    <div className="official-voting-intro" aria-labelledby="official-voting-title">
+      <div className="official-voting-intro-copy"><span className="official-voting-kicker"><span className="official-voting-live-dot"/> THE MAIN EVENT / COMING SOON</span><h2 id="official-voting-title">OFFICIAL <em>VOTING.</em></h2><p>Прогнозы закончились. Теперь решать тебе, кто пройдёт дальше. Голосование откроется после выхода каждого батла.</p></div>
+      <div className="official-voting-seal" aria-hidden="true"><span>SF</span><strong>VS</strong><small>THE VERDICT</small></div>
+    </div>
     <div className="vote-rules-strip"><span><Vote size={18}/> OFFICIAL VOTING</span><span>48 ЧАСОВ НА ГОЛОСОВАНИЕ</span><span>TELEGRAM + SAINTFOUR VS</span></div>
     <div className="official-vote-grid">
       <OfficialVoteCard number="01" first={rappers[0]} second={rappers[1]}/>
       <OfficialVoteCard number="02" first={rappers[2]} second={rappers[3]}/>
       <OfficialVoteCard number="03" final/>
     </div>
-    <div className="vote-explanation"><div><strong>КАК ПРОХОДИТ ГОЛОСОВАНИЕ?</strong><p>После выхода батла появятся голосования на сайте и в Telegram. Они будут открыты в течение 48 часов. Победители первых двух батлов проходят в финал.</p></div><div><strong>КОГДА МОЖНО ГОЛОСОВАТЬ?</strong><p>Пока голосования закрыты. Откроем их вместе с публикацией соответствующих выпусков. Система учёта голосов ещё подключается — сейчас это анонс будущих голосований, а не действующий опрос.</p></div></div>
+    <div className="vote-explanation"><div><strong>КАК ПРОХОДИТ ГОЛОСОВАНИЕ?</strong><p>После выхода батла появятся голосования на сайте и в Telegram. Они будут открыты в течение 48 часов. Победители первых двух батлов проходят в финал.</p></div><div><strong>КОГДА МОЖНО ГОЛОСОВАТЬ?</strong><p>Пока официальные голосования закрыты. Они откроются после премьер соответствующих выпусков — тогда и можно будет отдать свой голос за победителя.</p></div></div>
   </section>}
   </main>
   <footer className="footer"><div className="wrap footer-main"><div><span className="footer-logo">SAINTFOUR<span>✳</span></span><p>RAP BATTLE <b>’27</b></p><small>AN ORIGINAL GOSSIP SAINTFOUR PROJECT</small></div><div className="footer-nav">{nav.slice(1).map(n=><button key={n.id} onClick={()=>go(n.id)}>{n.name}</button>)}</div><div className="footer-stamp"><Radio size={23}/><span>UNDERGROUND<br/>NEVER DIES.</span></div></div><div className="wrap footer-bottom"><span>© {2027} GOSSIP SAINTFOUR. FAN PROJECT.</span><span>MADE FOR THE CULTURE. NOT FOR THE CLOUT.</span></div></footer>
