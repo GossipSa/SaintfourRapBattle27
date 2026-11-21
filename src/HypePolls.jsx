@@ -6,11 +6,11 @@ const endpoint = 'https://txnjqqglpxvxljwcrruf.supabase.co/functions/v1/hype-pol
 const voteKey = 'sfvs-hype-server-votes-v1'
 const voterKey = 'sfvs-hype-voter-id-v1'
 const artistColors = {
-  'LIL DEX': '#9aa5ff',
+  'LIL DEX': '#36e9ff',
   'MC NETTI': '#9d73e8',
-  'YUNG RUD': '#c6a7f2',
+  'YUNG RUD': '#bdff42',
   'DON DARO': '#ff59be',
-  'NADINE': '#ffbee6',
+  'NADINE': '#ff9b39',
 }
 const polls = [
   { id:'scandal', label:'01 / CHAOS', question:'Кто устроит самый громкий скандал?', choices:['LIL DEX','MC NETTI','YUNG RUD','DON DARO'] },
