@@ -141,7 +141,7 @@ export default function App() {
   </main>
   <footer className="footer"><div className="wrap footer-main"><div><span className="footer-logo">SAINTFOUR</span><p>RAP BATTLE <b>’27</b></p><small>AN ORIGINAL GOSSIP SAINTFOUR PROJECT</small></div><div className="footer-nav">{nav.slice(1).map(n=><button key={n.id} onClick={()=>go(n.id)}>{n.name}</button>)}</div><div className="footer-stamp"><Radio size={23}/><span>UNDERGROUND<br/>NEVER DIES.</span></div></div><div className="wrap footer-bottom"><span>© {2027} GOSSIP SAINTFOUR. FAN PROJECT.</span><span>MADE FOR THE CULTURE. NOT FOR THE CLOUT.</span></div></footer>
   <nav className="bottom-nav" aria-label="Быстрая навигация">{nav.filter(n=>['home','artists','battles','interviews','polls'].includes(n.id)).map(n=><button key={n.id} onClick={()=>go(n.id)} className={page===n.id?'active':''}><n.Icon size={19}/><span>{n.name}</span></button>)}</nav>
-  {selected&&<div className="modal-backdrop" onClick={()=>setSelected(null)}><section className="artist-modal" role="dialog" aria-modal="true" aria-label={selected.stage} onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setSelected(null)} aria-label="Закрыть"><X/></button><Cover key={selected.id+'-'+(selected.profileImage||selected.image)} src={selected.profileImage?selected.profileImage+'?v=2':selected.image} initials={selected.initials} alt={selected.stage}/><div className="artist-modal-body"><span className="eyebrow">{selected.isHost?'HOST / SHOW PRESENTER':`CONTESTANT / ${selected.number}`}</span><h2 className="glitch-heading" data-text={selected.stage}>{selected.stage}</h2><p className="modal-realname">{selected.name}</p><div className="modal-rule"/><p>{selected.description}</p><strong>{selected.subtitle}</strong></div></section></div>}
+  {selected&&<div className="modal-backdrop" onClick={()=>setSelected(null)}>{selected.id==='dex'?<DexEditorialProfile dex={selected} onClose={()=>setSelected(null)}/>:<section className="artist-modal" role="dialog" aria-modal="true" aria-label={selected.stage} onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setSelected(null)} aria-label="Закрыть"><X/></button><Cover key={selected.id+'-'+(selected.profileImage||selected.image)} src={selected.profileImage?selected.profileImage+'?v=2':selected.image} initials={selected.initials} alt={selected.stage}/><div className="artist-modal-body"><span className="eyebrow">{selected.isHost?'HOST / SHOW PRESENTER':`CONTESTANT / ${selected.number}`}</span><h2 className="glitch-heading" data-text={selected.stage}>{selected.stage}</h2><p className="modal-realname">{selected.name}</p><div className="modal-rule"/><p>{selected.description}</p><strong>{selected.subtitle}</strong></div></section>}</div>}
   {activeVideo&&<div className="modal-backdrop" onClick={()=>setActiveVideo(null)}><section className="video-modal" role="dialog" aria-modal="true" aria-label={activeVideo.title} onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setActiveVideo(null)} aria-label="Закрыть"><X/></button>{activeVideo.url?<video controls playsInline autoPlay src={activeVideo.url}/>:<div className="video-unavailable"><Play size={42}/><h3>COMING SOON</h3><p>Видео ещё не опубликовано.</p></div>}<h3>{activeVideo.title}</h3></section></div>}
   {galleryIndex!==null&&<div className="modal-backdrop" onClick={()=>setGalleryIndex(null)}><section className="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фотографии" onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setGalleryIndex(null)} aria-label="Закрыть"><X/></button><Cover src={gallery[galleryIndex].image} initials={String(galleryIndex+1).padStart(2,'0')} alt={gallery[galleryIndex].label}/><div className="lightbox-controls"><button onClick={()=>setGalleryIndex((galleryIndex+gallery.length-1)%gallery.length)} aria-label="Предыдущее"><ChevronLeft/></button><span>{gallery[galleryIndex].label} — {galleryIndex+1}/{gallery.length}</span><button onClick={()=>setGalleryIndex((galleryIndex+1)%gallery.length)} aria-label="Следующее"><ChevronRight/></button></div></section></div>}
  </div>
@@ -189,6 +189,47 @@ function BattleMatch({number,name,left,right,final=false}){
  </article>
 }
 function HostFeature({onClick}){return <section className="host-feature" aria-label="Ведущая шоу"><div className="host-feature-heading"><span>05 / THE HOST</span><span>THE ONE HOLDING THE MIC ✳</span></div><button className="host-card" onClick={onClick}><div className="host-portrait"><Cover src={host.image} alt="Поппи Эмерсон" initials="PE"/></div><div className="host-content"><span className="host-role">NOT A CONTESTANT — THE HOST</span><h3 className="glitch-heading" data-text="POPPY EMERSON">POPPY EMERSON</h3><p>Пенелопа (Поппи) Эмерсон</p><span className="host-caption">SHE RUNS THE SHOW.</span><span className="host-action">ПОЗНАКОМИТЬСЯ С ВЕДУЩЕЙ <ArrowRight size={17}/></span></div></button></section>}
+function DexEditorialProfile({dex,onClose}){
+ const views=[
+  {id:'portrait',image:dex.profileImage||dex.image,label:'PORTRAIT',position:'center 24%'},
+  {id:'stage',image:dex.image,label:'STAGE',position:'center center'},
+  {id:'detail',image:dex.profileImage||dex.image,label:'CLOSE-UP',position:'center 13%',zoom:true}
+ ]
+ const [active,setActive]=useState(0)
+ const view=views[active]
+ return <section className="dex-editorial-modal" role="dialog" aria-modal="true" aria-label="LIL DEX — профиль участника" onClick={e=>e.stopPropagation()}>
+  <button className="close-btn dex-editorial-close" onClick={onClose} aria-label="Закрыть профиль"><X/></button>
+  <div className="dex-editorial-index"><span>SAINTFOUR / RAP BATTLE ’27</span><span>ARTIST FILE 001 / 004</span></div>
+  <div className="dex-editorial-layout">
+   <nav className="dex-editorial-thumbs" aria-label="Фотографии Декса">
+    {views.map((shot,i)=><button type="button" key={shot.id} className={`dex-editorial-thumb ${active===i?'is-active':''}`} aria-label={`Фото ${i+1}: ${shot.label}`} aria-pressed={active===i} onClick={()=>setActive(i)}><img src={shot.image} alt="" style={{objectPosition:shot.position,transform:shot.zoom?'scale(1.45)':'none'}}/><span>{String(i+1).padStart(2,'0')}</span></button>)}
+    <span className="dex-editorial-photo-note">03 / SHOTS</span>
+   </nav>
+   <div className="dex-editorial-photo" aria-live="polite" aria-label={`Фотография ${active+1}`}>
+    <img key={view.id} src={view.image} alt={`Декс Хоук — ${view.label.toLowerCase()}`} style={{objectPosition:view.position,transform:view.zoom?'scale(1.45)':'none'}}/>
+    <div className="dex-editorial-photo-shade"/>
+    <span className="dex-editorial-photo-stamp">DX / {String(active+1).padStart(2,'0')}</span>
+    <span className="dex-editorial-photo-caption">{view.label} / SAINTFOUR</span>
+   </div>
+   <div className="dex-editorial-copy">
+    <div className="dex-editorial-kicker"><span>THE CONTENDERS</span><span>01 / 04</span></div>
+    <h2>LIL <em>DEX</em></h2>
+    <p className="dex-editorial-name">DEX HAWK</p>
+    <div className="dex-editorial-rule"/>
+    <div className="dex-editorial-facts">
+     <div><span>ROLE</span><strong>THE WILD CARD</strong></div>
+     <div><span>STAGE NAME</span><strong>LIL DEX</strong></div>
+     <div><span>CITY</span><strong>SAINTFOUR</strong></div>
+     <div><span>FIRST OPPONENT</span><strong>MC NETTI</strong></div>
+    </div>
+    <p className="dex-editorial-bio">{dex.description}</p>
+    <div className="dex-editorial-signature">NO RULES. <span>NO MERCY.</span></div>
+    <button type="button" className="dex-editorial-back" onClick={onClose}>BACK TO THE LINEUP <ArrowRight size={16}/></button>
+   </div>
+  </div>
+  <footer className="dex-editorial-footer"><span>UNOFFICIAL FILE / 001</span><span>SAINTFOUR RAP BATTLE</span></footer>
+ </section>
+}
 function ArtistCard({r,onClick}){return <button className="artist-card" onClick={onClick} style={{'--artist-color':r.color}}><Cover src={r.image} alt={r.stage} initials={r.initials}/><div className="artist-vignette"/><div className="artist-number">{r.number} / 04</div><div className="artist-info"><span>{r.role}</span><h3 className="glitch-label" data-text={r.stage}>{r.stage}</h3><p>{r.name}</p><div className="artist-action">VIEW PROFILE <ArrowRight size={16}/></div></div></button>}
 function MediaCard({m,onClick,available=false}){return <button className={'media-card '+(!available?'media-locked':'')} onClick={onClick} disabled={!available} aria-label={available?`Смотреть ${m.title}`:`${m.title} — премьера ${m.duration}`}><div className="media-image">{available?<Cover src={m.thumbnail} alt={m.title} initials="INT"/>:<div className="interview-locked-art" aria-hidden="true"><span className="locked-show-name">SAINTFOUR RAP BATTLE ’27</span><strong className="locked-word">INTERVIEW</strong><strong className="locked-word locked-pink">LOCKED</strong><span className="locked-premiere">PREMIERE AT 19:00 MSK</span></div>}<span className="media-type">{available?'В ЭФИРЕ':'СКОРО'}</span>{available&&<span className="play-circle"><Play fill="currentColor" size={19}/></span>}</div><div className="media-info"><span>{m.artist} <i>•</i> {m.date?'ПРЕМЬЕРА '+m.duration:m.duration}</span><h3 className="glitch-heading" data-text={m.title}>{m.title}</h3><p>{available?'СМОТРЕТЬ ИНТЕРВЬЮ':'ДОСТУПНО ПОСЛЕ ПРЕМЬЕРЫ'} <ArrowRight size={15}/></p></div></button>}
 function PageHeading({number,tag,title,intro}){return <div className="page-heading"><div className="page-kicker"><span className="red-dot"/> {number} / {tag}</div><h1>{title}</h1><p>{intro}</p><div className="page-heading-line"/></div>}
