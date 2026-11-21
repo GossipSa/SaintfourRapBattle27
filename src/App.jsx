@@ -189,22 +189,6 @@ function BattleMatch({number,name,left,right,final=false}){
  </article>
 }
 function HostFeature({onClick}){return <section className="host-feature" aria-label="Ведущая шоу"><div className="host-feature-heading"><span>05 / THE HOST</span><span>THE ONE HOLDING THE MIC ✳</span></div><button className="host-card" onClick={onClick}><div className="host-portrait"><Cover src={host.image} alt="Поппи Эмерсон" initials="PE"/></div><div className="host-content"><span className="host-role">NOT A CONTESTANT — THE HOST</span><h3 className="glitch-heading" data-text="POPPY EMERSON">POPPY EMERSON</h3><p>Пенелопа (Поппи) Эмерсон</p><span className="host-caption">SHE RUNS THE SHOW.</span><span className="host-action">ПОЗНАКОМИТЬСЯ С ВЕДУЩЕЙ <ArrowRight size={17}/></span></div></button></section>}
-function ArtistCard({r,onClick}){
- const [kittenVisible,setKittenVisible]=useState(false)
- useEffect(()=>{
-   if(!kittenVisible)return undefined
-   const timer=window.setTimeout(()=>setKittenVisible(false),3500)
-   return ()=>window.clearTimeout(timer)
- },[kittenVisible])
- const isDex=r.id==='dex'
- return <div className="artist-card" role="button" tabIndex={0} aria-label={`Открыть профиль ${r.stage}`} onClick={onClick} onKeyDown={e=>{if(e.target===e.currentTarget&&(e.key==='Enter'||e.key===' ')){e.preventDefault();onClick()}}} style={{'--artist-color':r.color}}>
-   <Cover src={r.image} alt={r.stage} initials={r.initials}/>
-   <div className="artist-vignette"/>
-   <div className="artist-number">{r.number} / 04</div>
-   {isDex&&<button type="button" className="dex-kitten-trigger" aria-label="Кто спрятался у Декса?" aria-expanded={kittenVisible} onClick={e=>{e.stopPropagation();setKittenVisible(v=>!v)}}><span aria-hidden="true">🐾</span></button>}
-   {isDex&&kittenVisible&&<div className="dex-kitten-secret" role="status" onClick={e=>e.stopPropagation()}><span className="dex-kitten-face" aria-hidden="true">🐈‍⬛</span><span className="dex-kitten-secret-text"><strong>THE REAL BOSS OF LIL DEX.</strong><small>CAUGHT LURKING BACKSTAGE</small></span></div>}
-   <div className="artist-info"><span>{r.role}</span><h3 className="glitch-label" data-text={r.stage}>{r.stage}</h3><p>{r.name}</p><div className="artist-action">VIEW PROFILE <ArrowRight size={16}/></div></div>
- </div>
-}
+function ArtistCard({r,onClick}){return <button className="artist-card" onClick={onClick} style={{'--artist-color':r.color}}><Cover src={r.image} alt={r.stage} initials={r.initials}/><div className="artist-vignette"/><div className="artist-number">{r.number} / 04</div><div className="artist-info"><span>{r.role}</span><h3 className="glitch-label" data-text={r.stage}>{r.stage}</h3><p>{r.name}</p><div className="artist-action">VIEW PROFILE <ArrowRight size={16}/></div></div></button>}
 function MediaCard({m,onClick,available=false}){return <button className={'media-card '+(!available?'media-locked':'')} onClick={onClick} disabled={!available} aria-label={available?`Смотреть ${m.title}`:`${m.title} — премьера ${m.duration}`}><div className="media-image">{available?<Cover src={m.thumbnail} alt={m.title} initials="INT"/>:<div className="interview-locked-art" aria-hidden="true"><span className="locked-show-name">SAINTFOUR RAP BATTLE ’27</span><strong className="locked-word">INTERVIEW</strong><strong className="locked-word locked-pink">LOCKED</strong><span className="locked-premiere">PREMIERE AT 19:00 MSK</span></div>}<span className="media-type">{available?'В ЭФИРЕ':'СКОРО'}</span>{available&&<span className="play-circle"><Play fill="currentColor" size={19}/></span>}</div><div className="media-info"><span>{m.artist} <i>•</i> {m.date?'ПРЕМЬЕРА '+m.duration:m.duration}</span><h3 className="glitch-heading" data-text={m.title}>{m.title}</h3><p>{available?'СМОТРЕТЬ ИНТЕРВЬЮ':'ДОСТУПНО ПОСЛЕ ПРЕМЬЕРЫ'} <ArrowRight size={15}/></p></div></button>}
 function PageHeading({number,tag,title,intro}){return <div className="page-heading"><div className="page-kicker"><span className="red-dot"/> {number} / {tag}</div><h1>{title}</h1><p>{intro}</p><div className="page-heading-line"/></div>}
