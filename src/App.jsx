@@ -165,6 +165,12 @@ function OfficialVoteCard({number,first,second,final=false}){
  </article>
 }
 function BattleMatch({number,name,left,right,final=false}){
+ const teasers = {
+  '01': {headline:'ХАОС ПРОТИВ КОНТРОЛЯ.', description:'Один привык нарушать правила. Другой — устанавливать их. Но на этой сцене ни деньги, ни репутация не дают преимущества.'},
+  '02': {headline:'АМБИЦИИ ПРОТИВ ОПЫТА.', description:'Капитан привык побеждать на площадке. Даррен — играть по собственным правилам. Кто из них сумеет захватить сцену?'},
+  '03': {headline:'ДВОЕ ОСТАНУТСЯ. ПОБЕДИТ ОДИН.', description:'Победители первых двух батлов встретятся в решающем противостоянии. Имена пока неизвестны.'},
+ }
+ const teaser=teasers[number]
  return <article className={'battle-match '+(final?'battle-match-final':'')}>
   <div className="battle-match-top"><span>VERSUS / {number}</span><span>{name}</span></div>
   <div className="battle-match-stage">
@@ -178,6 +184,7 @@ function BattleMatch({number,name,left,right,final=false}){
       <div className="battle-fighter"><img src={right.image} alt={right.stage}/><span>{right.stage}</span></div>
     </>}
   </div>
+  <div className="battle-match-teaser"><span className="battle-match-teaser-label">THE STORY / {number}</span><h3>{teaser.headline}</h3><p>{teaser.description}</p></div>
   <div className="battle-match-bottom"><strong>{final?'ФИНАЛ / СОСТАВ ОПРЕДЕЛЯЕТСЯ':'ПРОТИВОСТОЯНИЕ ПОДТВЕРЖДЕНО'}</strong><span>{final?'TO BE DECIDED':'PREMIERE TBA'}</span></div>
  </article>
 }
