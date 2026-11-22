@@ -44,7 +44,6 @@ export default function LuckySpin({onBack,onAchievements}){
    setResult(prize);setRolling(false)
   },4200)
  }
- const latestMilestone=milestones.find(m=>m.count===record.spins)
  return <section className="spin-page wrap">
   <div className="spin-top"><button type="button" onClick={onBack}><ArrowLeft size={16}/> НАЗАД НА ГЛАВНУЮ</button><span>SAINTFOUR / UNOFFICIAL ENTERTAINMENT</span></div>
   <div className="spin-heading"><span className="spin-eyebrow">WELCOME TO POPPY'S QUESTIONABLE ATTRACTION</span><h1>LUCKY <em>SPIN.</em></h1><p>Крути колесо. Выигрывай что угодно. Не рассчитывай получить это в реальной жизни.</p></div>
