@@ -125,3 +125,87 @@
 .battle-match-final .battle-match-teaser{min-height:auto;text-align:center;padding:21px 24px 23px}
 .battle-match-final .battle-match-teaser p{margin-inline:auto}
 @media(max-width:760px){.battle-match-teaser{min-height:auto;padding:15px 14px 18px}.battle-match-teaser h3{font-size:23px}.battle-match-teaser p{font-size:11.5px}.battle-match-final .battle-match-teaser{padding:17px 14px 19px}}
+
+/* Single easter-egg proof of concept: hidden in Dex's contestant number. */
+.dex-hidden-access{display:inline-block;width:max-content;max-width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;font-size:inherit;letter-spacing:inherit;text-align:left;text-transform:inherit;cursor:default}
+.dex-hidden-access:hover{color:#e9acd9;cursor:pointer}
+.dex-hidden-access:focus-visible{outline:1px solid #d78de1;outline-offset:5px}
+.secret-ticket-backdrop{z-index:300;padding:24px;overflow-y:auto;align-items:center;background:#060409ef;backdrop-filter:blur(18px)}
+.secret-ticket-overlay{position:relative;max-height:calc(100dvh - 34px);overflow-y:auto;overscroll-behavior:contain;width:min(900px,100%);padding:33px clamp(18px,4vw,48px) 29px;border:1px solid #6d467c;background:radial-gradient(ellipse at 60% 2%,#3c194cb0,transparent 52%),#110c19;box-shadow:0 30px 100px #000d,0 0 70px #8d49a326;color:#f9edff;animation:ticketEntry .55s cubic-bezier(.16,1,.3,1) both}
+.secret-ticket-close{position:absolute;z-index:3;right:17px;top:14px;display:grid;place-items:center;width:40px;height:40px;padding:0;border:1px solid #a579b3;background:#21132c;color:#f4dff9}
+.secret-ticket-unlock{display:flex;justify-content:center;align-items:center;gap:15px;padding-right:38px;font:800 10px/1.4 'DM Sans',sans-serif;letter-spacing:.22em;color:#e0a1f4;text-align:center}
+.secret-ticket-unlock-line{width:35px;height:1px;background:#9c5cab}
+.secret-ticket-reveal-title{margin:13px 0 0;text-align:center;font:900 clamp(46px,8vw,90px)/.95 'Barlow Condensed',Impact,sans-serif;font-style:italic;letter-spacing:.035em;color:#fff;text-shadow:3px 4px #71388c}
+.secret-ticket-reveal-title em{font-style:inherit;color:#f09ee9}
+.secret-ticket-reveal-sub{margin:9px 0 27px;text-align:center;font:500 12px/1.5 'DM Sans',sans-serif;color:#c8b0d5}
+.secret-ticket-main{display:grid;grid-template-columns:minmax(0,1fr) 162px;min-height:340px;filter:drop-shadow(0 16px 26px #050308aa);transform:rotate(-1.1deg);animation:ticketUnfold .85s .1s cubic-bezier(.16,1,.3,1) both}
+.secret-ticket-body{position:relative;overflow:hidden;padding:24px 30px 19px;border:1px solid #b276db;border-right:0;background:radial-gradient(ellipse at 92% 25%,#652b79 0%,transparent 52%),linear-gradient(126deg,#211230,#130e1e 80%);display:flex;flex-direction:column;min-width:0}
+.secret-ticket-body:before{content:"";position:absolute;inset:0;opacity:.15;pointer-events:none;background:repeating-linear-gradient(145deg,transparent 0 14px,#fcb8ff24 15px 16px)}
+.secret-ticket-body:after{content:"27";position:absolute;right:5px;top:25px;font:900 215px/.8 'Barlow Condensed',Impact,sans-serif;font-style:italic;color:#e69bff0d;pointer-events:none}
+.secret-ticket-brand,.secret-ticket-headline,.secret-ticket-person,.secret-ticket-details,.secret-ticket-fineprint{position:relative;z-index:1}
+.secret-ticket-brand{display:flex;justify-content:space-between;align-items:start;gap:12px;font:800 9px/1.3 'DM Sans',sans-serif;letter-spacing:.16em;color:#d9afe9}
+.secret-ticket-brand-mark{font:900 22px/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:-.04em;color:#fff}
+.secret-ticket-brand-mark span{font:700 12px/1 'DM Sans',sans-serif;color:#fd82d0}
+.secret-ticket-headline{display:flex;flex-direction:column;align-items:start;margin:24px 0 21px}
+.secret-ticket-headline>span:first-child{font:900 15px/1 'DM Sans',sans-serif;letter-spacing:.29em;color:#e9abd7}
+.secret-ticket-headline strong{margin-top:8px;font:900 clamp(48px,7.2vw,87px)/.79 'Barlow Condensed',Impact,sans-serif;font-style:italic;letter-spacing:-.008em;color:#fff;text-shadow:3px 4px 0 #74358c}
+.secret-ticket-headline strong em{font-style:inherit;color:#f47cda}
+.secret-ticket-type{margin-top:12px;font:800 9px 'DM Sans',sans-serif;letter-spacing:.2em;color:#ff9feb}
+.secret-ticket-person{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;padding-top:12px;border-top:1px solid #9c70a866}
+.secret-ticket-person span,.secret-ticket-details span{font:800 9px/1.4 'DM Sans',sans-serif;letter-spacing:.11em;color:#b58cc9}
+.secret-ticket-person strong{font:900 18px/1.15 'Barlow Condensed',Impact,sans-serif;letter-spacing:.09em;color:#fff;overflow-wrap:anywhere}
+.secret-ticket-details{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:13px}
+.secret-ticket-details>div{display:flex;flex-direction:column;gap:4px}
+.secret-ticket-details strong{font:800 12px/1.3 'DM Sans',sans-serif;color:#fce9ff}
+.secret-ticket-fineprint{margin-top:auto;padding-top:12px;font:700 8px/1.3 'DM Sans',sans-serif;letter-spacing:.11em;color:#a888b6}
+.secret-ticket-stub{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:24px 13px 19px;border:1px solid #ec9ce7;background:linear-gradient(145deg,#e9a7ee,#bc78d9 54%,#a45ac9);color:#1d1029;text-align:center}
+.secret-ticket-stub:before{content:"";position:absolute;top:0;bottom:0;left:-1px;width:2px;border-left:2px dashed #432254aa}
+.secret-ticket-stub-top{font:900 16px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.17em}
+.secret-ticket-stub-access{font:900 38px/.84 'Barlow Condensed',Impact,sans-serif;font-style:italic;transform:rotate(-90deg);width:150px;margin:28px -40px 17px}
+.secret-ticket-barcode{height:58px;width:100%;display:flex;justify-content:center;align-items:stretch;gap:2px;overflow:hidden}
+.secret-ticket-barcode i{display:block;flex:0 0 auto;background:#25112f;height:100%}
+.secret-ticket-number{font:800 9px 'DM Sans',sans-serif;letter-spacing:.08em;white-space:nowrap}
+.secret-ticket-stub-bottom{font:800 9px/1.35 'DM Sans',sans-serif;letter-spacing:.1em}
+.secret-ticket-bottom{max-width:600px;margin:28px auto 0}
+.secret-ticket-bottom label{display:block;margin-bottom:9px;color:#eed1fa;font:800 10px 'DM Sans',sans-serif;letter-spacing:.13em}
+.secret-ticket-bottom label span{color:#a98ab8}
+.secret-ticket-controls{display:flex;gap:10px}
+.secret-ticket-controls input{flex:1;min-width:0;padding:13px 15px;background:#21172d;border:1px solid #78538b;color:#fff;font:700 13px 'DM Sans',sans-serif;outline:none}
+.secret-ticket-controls input:focus{border-color:#e899e8}
+.secret-ticket-controls button{display:flex;gap:12px;align-items:center;justify-content:center;padding:12px 17px;border:1px solid #f8b2eb;background:#d38fe2;color:#220c2b;font:900 11px 'DM Sans',sans-serif;letter-spacing:.1em;white-space:nowrap}
+.secret-ticket-controls button:hover{background:#f3b9f2}
+.secret-ticket-bottom p{margin:11px 0 0;color:#ae91bf;font:400 10px/1.65 'DM Sans',sans-serif}
+@keyframes ticketEntry{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ticketUnfold{from{opacity:0;transform:translateY(25px) rotate(-4deg) scale(.91)}to{opacity:1;transform:translateY(0) rotate(0) scale(1)}}
+@media(max-width:670px){
+ .secret-ticket-backdrop{padding:8px}
+ .secret-ticket-overlay{width:100%;max-height:calc(100dvh - 16px);padding:24px 13px 23px}
+ .secret-ticket-unlock{font-size:8px;letter-spacing:.1em;gap:6px;padding:0 32px 0 0}
+ .secret-ticket-unlock-line{width:18px}
+ .secret-ticket-reveal-title{font-size:clamp(43px,13vw,65px)}
+ .secret-ticket-reveal-sub{font-size:11px;margin-bottom:22px}
+ .secret-ticket-main{grid-template-columns:minmax(0,1fr) 82px;min-height:315px;transform:none}
+ .secret-ticket-body{padding:17px 12px 15px}
+ .secret-ticket-brand{font-size:7px;letter-spacing:.08em}
+ .secret-ticket-brand-mark{font-size:17px}
+ .secret-ticket-headline{margin:27px 0 19px}
+ .secret-ticket-headline>span:first-child{font-size:10px;letter-spacing:.18em}
+ .secret-ticket-headline strong{font-size:clamp(47px,12vw,76px);line-height:.84}
+ .secret-ticket-type{font-size:7px;letter-spacing:.08em}
+ .secret-ticket-person{gap:4px 7px}
+ .secret-ticket-person span,.secret-ticket-details span{font-size:7px;letter-spacing:.04em}
+ .secret-ticket-person strong{font-size:15px}
+ .secret-ticket-details{gap:5px}
+ .secret-ticket-details strong{font-size:9px}
+ .secret-ticket-fineprint{font-size:6px}
+ .secret-ticket-stub{padding:19px 5px 13px}
+ .secret-ticket-stub-top{font-size:12px}
+ .secret-ticket-stub-access{font-size:27px;width:100px;margin:22px -18px}
+ .secret-ticket-barcode{height:47px;gap:1px}
+ .secret-ticket-number{font-size:6px;letter-spacing:0}
+ .secret-ticket-stub-bottom{font-size:7px}
+ .secret-ticket-controls{flex-wrap:wrap}
+ .secret-ticket-controls button{min-width:120px}
+}
+@media(max-width:370px){.secret-ticket-main{grid-template-columns:minmax(0,1fr) 67px}.secret-ticket-headline strong{font-size:45px}.secret-ticket-stub-access{font-size:23px}.secret-ticket-controls button{flex:1}}
+@media(prefers-reduced-motion:reduce){.secret-ticket-overlay,.secret-ticket-main{animation:none}}
