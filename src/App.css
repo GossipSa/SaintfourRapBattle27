@@ -442,3 +442,70 @@
 .sf-medallion-side-effect i,.achievement-toast.achievement-tier-3 .sf-medallion i{color:#e8d0fa}
 .achievement-toast.achievement-tier-3{border-color:#946cbe;border-left-color:#bd8bef;background:radial-gradient(ellipse at 0% 42%,#a66df42a,transparent 65%),linear-gradient(112deg,#32203f,#1b1126 75%)}
 .achievement-toast.achievement-tier-3 .achievement-toast-medal{filter:drop-shadow(0 0 7px #bd8bef48)}
+
+/* MC NETTI / POPPY'S INBOX — a deliberate hidden storyline inside the artist profile. */
+.artist-modal:has(.howard-mail-teaser){max-height:min(88dvh,900px);overflow-y:auto}
+.howard-mail-teaser{display:flex;align-items:center;gap:13px;width:100%;padding:14px 12px;margin-top:20px;border:1px solid #6c5c9d;background:radial-gradient(ellipse at 100% 0%,#6454b93d,transparent 65%),linear-gradient(110deg,#261c3d,#171224);color:#f3eafa;text-align:left;cursor:pointer;transition:border-color .2s,background .2s}
+.howard-mail-teaser:hover,.howard-mail-teaser:focus-visible{border-color:#b7a4ff;background:radial-gradient(ellipse at 100% 0%,#8067d854,transparent 65%),linear-gradient(110deg,#34234d,#20162e)}
+.howard-mail-teaser-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;color:#c6b7ff;background:#52457554;border:1px solid #7063a8}
+.howard-mail-teaser-copy{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.howard-mail-teaser-copy small{color:#b4a7e6;font:700 8px 'IBM Plex Mono',monospace;letter-spacing:.12em}
+.howard-mail-teaser-copy b{color:#f4e7ff;font:900 clamp(17px,2vw,21px)/1.08 'Barlow Condensed',Impact,sans-serif;letter-spacing:.035em}
+.howard-mail-teaser-copy>span{color:#c3b4d6;font:400 10px/1.4 'DM Sans',sans-serif}
+.howard-mail-teaser-arrow{flex:none;color:#b5a4ea}
+.howard-mail-backdrop{position:fixed;z-index:340;inset:0;display:flex;align-items:center;justify-content:center;padding:20px;background:#05040bed;backdrop-filter:blur(12px)}
+.howard-mail-dialog{width:min(630px,100%);max-height:90vh;max-height:90dvh;overflow-y:auto;background:#110f1b;border:1px solid #8073b4;box-shadow:0 21px 70px #000e,0 0 40px #7360ce26;overscroll-behavior:contain}
+.howard-mail-toolbar{position:sticky;top:0;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:15px;padding:11px 16px;border-bottom:1px solid #6d6096;background:#201a33}
+.howard-mail-toolbar>span{display:flex;align-items:center;gap:9px;color:#d9caff;font:700 10px 'IBM Plex Mono',monospace;letter-spacing:.1em}
+.howard-mail-toolbar button{display:grid;place-items:center;width:34px;height:34px;border:1px solid #70638f;background:#160f23;color:#e8d8fa}
+.howard-mail-paper{position:relative;overflow:hidden;padding:26px 30px 30px;background:radial-gradient(ellipse at 100% 0%,#5d4e903b,transparent 55%),linear-gradient(125deg,#201a2e,#14111f 68%)}
+.howard-mail-paper:before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0 7px,#eadcf005 8px 9px)}
+.howard-mail-stamp{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#c0b0df;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.11em}
+.howard-mail-stamp strong{color:#e0bcf7}
+.howard-mail-kicker{display:flex;align-items:center;gap:8px;margin-top:32px;color:#cf9de2;font:700 9px/1.4 'IBM Plex Mono',monospace;letter-spacing:.08em}
+.howard-mail-glitch{isolation:isolate;position:relative;width:fit-content;max-width:100%;margin:12px 0 23px;font:900 clamp(37px,6.5vw,62px)/.93 'Barlow Condensed',Impact,sans-serif;letter-spacing:.025em;color:#fff0ff;text-shadow:-1px 0 #8d7aee,1px 0 #e09acb}
+.howard-mail-glitch em{color:#b7a8f8;font-style:italic}
+.howard-mail-glitch:before,.howard-mail-glitch:after{content:attr(data-text);position:absolute;inset:0;pointer-events:none;opacity:0;font:inherit;letter-spacing:inherit;white-space:nowrap}
+.howard-mail-glitch:before{color:#a88bff;clip-path:inset(15% 0 68% 0);animation:howard-inbox-glitch-a 5.5s steps(1,end) infinite}
+.howard-mail-glitch:after{color:#ed9ed5;clip-path:inset(68% 0 15% 0);animation:howard-inbox-glitch-b 5.5s steps(1,end) infinite}
+@keyframes howard-inbox-glitch-a{0%,81%,85%,94%,97%,100%{opacity:0;transform:none}82%,84%{opacity:.85;transform:translate(4px,-1px)}95%,96%{opacity:.8;transform:translate(-3px,1px)}}
+@keyframes howard-inbox-glitch-b{0%,81%,86%,94%,98%,100%{opacity:0;transform:none}82%,85%{opacity:.9;transform:translate(-4px,1px)}95%,97%{opacity:.7;transform:translate(3px,-1px)}}
+.howard-mail-headers{border:1px solid #514367;background:#161221}
+.howard-mail-headers>div{display:grid;grid-template-columns:86px minmax(0,1fr);gap:12px;padding:11px 13px;border-bottom:1px solid #383044;align-items:center}
+.howard-mail-headers>div:last-child{border:0}
+.howard-mail-headers>div>span{color:#9583aa;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.11em}
+.howard-mail-headers>div>strong{min-width:0;overflow-wrap:anywhere;color:#e7dcf4;font:700 10px/1.5 'IBM Plex Mono',monospace;letter-spacing:.03em}
+.howard-mail-headers .howard-mail-redaction{color:#e5b6ef;letter-spacing:.04em}
+.howard-mail-redaction small{display:inline-block;margin-left:8px;padding:2px 4px;border:1px solid #806098;color:#cfa8e5;font:700 8px 'IBM Plex Mono',monospace}
+.howard-mail-content{padding:22px 4px 13px;color:#dfd5e9;font:400 12px/1.8 'DM Sans',sans-serif}
+.howard-mail-content p{margin:0 0 15px}
+.howard-mail-content b{color:#f1d8ff}
+.howard-mail-signature{margin-top:23px!important}
+.howard-mail-signature span{color:#a68fb2;font:700 10px 'IBM Plex Mono',monospace;letter-spacing:.055em}
+.howard-mail-alert{display:flex;align-items:flex-start;gap:11px;padding:14px;border-left:3px solid #a68deb;background:#332545;color:#dac8f1}
+.howard-mail-alert svg{flex:none;color:#c4b0fb}
+.howard-mail-alert div{display:flex;flex-direction:column;gap:5px}
+.howard-mail-alert strong{font:800 10px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#d9c2ff}
+.howard-mail-alert span{font:400 11px/1.55 'DM Sans',sans-serif}
+.howard-mail-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:7px;margin-top:20px;padding:11px 0;border-top:1px dashed #645174;color:#a89ab7;font:700 9px/1.5 'IBM Plex Mono',monospace}
+.howard-mail-bottom>span:last-child{color:#c795b3}
+.howard-mail-poppy-note{margin:13px 0 0;color:#bfaacb;font:italic 11px/1.65 'DM Sans',sans-serif}
+.sf-medallion-whos-watching,.achievement-toast.achievement-tier-4 .sf-medallion{border-color:#bdc6ff;background:radial-gradient(circle at 32% 23%,#b2baf5,#7178c2 35%,#36396c 69%,#17172b 95%);color:#f0f2ff;box-shadow:inset 0 0 0 3px #272a52,inset 0 0 0 5px #9ba3e4,0 2px 8px #090918aa}
+.achievement-toast.achievement-tier-4{border-color:#8389d8;border-left-color:#aab0f1;background:radial-gradient(ellipse at 0% 42%,#7e82e83b,transparent 66%),linear-gradient(112deg,#292c4b,#181528 74%)}
+.achievement-toast.achievement-tier-4 .achievement-toast-medal{filter:drop-shadow(0 0 7px #8189e04d)}
+@media(max-width:720px){
+ .howard-mail-backdrop{padding:9px}
+ .howard-mail-dialog{max-height:calc(100dvh - 18px)}
+ .howard-mail-paper{padding:20px 15px 24px}
+ .howard-mail-kicker{margin-top:23px;font-size:8px}
+ .howard-mail-glitch{font-size:clamp(32px,10vw,48px)}
+ .howard-mail-headers>div{grid-template-columns:61px minmax(0,1fr);gap:8px;padding:9px 8px}
+ .howard-mail-headers>div>span{font-size:8px}
+ .howard-mail-headers>div>strong{font-size:9px}
+ .howard-mail-redaction small{margin-left:0}
+ .howard-mail-content{font-size:11px;padding-top:17px}
+ .howard-mail-stamp{font-size:8px}
+ .howard-mail-teaser{padding:11px 9px}
+ .howard-mail-teaser-copy b{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){.howard-mail-glitch:before,.howard-mail-glitch:after{animation:none;display:none}}
