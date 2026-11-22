@@ -347,7 +347,7 @@ export default function App() {
       </article>
       <article className={'achievement-item achievement-tier-6 '+(achievements.howardBlocked?'is-earned':'is-locked')}>
        <div className="achievement-emblem">{achievements.howardBlocked?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><PhoneOff size={27} strokeWidth={1.6}/><i>07</i></div>:<LockKeyhole size={27}/>}</div>
-       <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 007</span><h2>{achievements.howardBlocked?'ГОВАРД ЗАБЛОКИРОВАЛ ВАС':'UNDISCOVERED'}</h2><p>{achievements.howardBlocked?'Пять звонков Натаниэлю Говарду. Ваш номер официально внесён в чёрный список Warlock Industries.':'Секрет ещё не раскрыт.'}</p></div>
+       <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 007</span><h2>{achievements.howardBlocked?'ГОВАРД ЗАБЛОКИРОВАЛ ВАС':'UNDISCOVERED'}</h2><p>{achievements.howardBlocked?'Вы так настойчиво перезванивали Натаниэлю Говарду, что ваш номер внесли в чёрный список Warlock Industries.':'Секрет ещё не раскрыт.'}</p></div>
        <div className="achievement-status">{achievements.howardBlocked?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
       </div>
