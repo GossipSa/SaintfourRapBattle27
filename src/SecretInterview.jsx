@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, Check, ChevronLeft, CircleHelp, LockKeyhole, Mic2, Phone, PhoneCall, PhoneOff, Play, RotateCcw, X } from 'lucide-react'
+import { ArrowRight, Check, CircleHelp, LockKeyhole, Mic2, Phone, PhoneCall, PhoneOff, Play, RotateCcw, X } from 'lucide-react'
 import './secret-interview.css'
 
 // The guest is the person behind the screen. No photo assets are required.
