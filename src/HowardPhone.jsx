@@ -1,3 +1,42 @@
+import { useEffect, useState } from 'react'
+import { Phone, PhoneOff, X, LockKeyhole } from 'lucide-react'
+import './HowardPhone.css'
+
+const STORE='sf27-howard-phone-v2'
+const responses=[
+ {text:'Абонент не отвечает.',status:'НЕТ ОТВЕТА'},
+ {text:'Линия занята. Попробуйте позже.',status:'ЗАНЯТО'},
+ {text:'Слушаю? ... Вы снова?',status:'ВЫЗОВ ЗАВЕРШЁН'},
+ {text:'Я занят. Не звоните сюда больше.',status:'СОЕДИНЕНИЕ ПРЕРВАНО'},
+ {text:'Это служебный номер. Прошу вас больше его не набирать.',status:'ВЫЗОВ ЗАВЕРШЁН'},
+ {text:'У вас, очевидно, слишком много свободного времени.',status:'СОЕДИНЕНИЕ ПРЕРВАНО'},
+ {text:'Вы ошиблись номером. Повторно.',status:'ВЫЗОВ ЗАВЕРШЁН'},
+ {text:'Абонент временно недоступен.',status:'НЕТ ОТВЕТА'},
+ {text:'Если это шутка, она затянулась.',status:'СОЕДИНЕНИЕ ПРЕРВАНО'},
+ {text:'Откуда у вас вообще этот номер?',status:'ВЫЗОВ ЗАВЕРШЁН'},
+]
+function readState(){try{const data=JSON.parse(localStorage.getItem(STORE)||'{}');return {calls:Math.max(0,Number(data.calls)||0),introDone:Boolean(data.introDone),blocked:Boolean(data.blocked),limit:Number(data.limit)||0}}catch{return {calls:0,introDone:false,blocked:false,limit:0}}}
+function saveState(state){try{localStorage.setItem(STORE,JSON.stringify(state))}catch{/* storage disabled */}}
+export default function HowardPhone({onBlocked}){
+ const [visible,setVisible]=useState(false)
+ const [opened,setOpened]=useState(false)
+ const [progress,setProgress]=useState(readState)
+ const [reply,setReply]=useState(null)
+ const [mode,setMode]=useState('incoming')
+ const [dismissed,setDismissed]=useState(false)
+ useEffect(()=>{
+  if(sessionStorage.getItem('sf27-howard-seen'))return
+  const t=window.setTimeout(()=>{
+   if(document.visibilityState==='visible'){setVisible(true);sessionStorage.setItem('sf27-howard-seen','1')}
+  },20000+Math.round(Math.random()*20000))
+  return()=>clearTimeout(t)
+ },[])
+ useEffect(()=>{
+  if(!opened)return
+  const key=e=>{if(e.key==='Escape'){setOpened(false);setMode('incoming')}}
+  document.addEventListener('keydown',key)
+  return()=>document.removeEventListener('keydown',key)
+ },[opened])
  const open=()=>{setOpened(true);setMode(progress.blocked?'blocked':progress.introDone?'idle':'incoming')}
  const call=()=>{
   if(progress.blocked){setMode('blocked');return}
