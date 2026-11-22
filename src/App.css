@@ -602,3 +602,13 @@
  .header .sound-toggle-header{min-width:36px;width:38px;padding:7px}
  .header .sound-toggle-header span{display:none}
 }
+
+/* Independent desktop music volume, leaving the already-quiet phone mix unchanged. */
+.header .music-volume-wrap{position:relative;display:flex;align-items:center;flex:none}
+.header .music-volume-trigger{display:grid;place-items:center;width:35px;height:34px;padding:0;border:1px solid #8b639d;background:#25172f;color:#e5d3ed;cursor:pointer}
+.header .music-volume-trigger:hover,.header .music-volume-trigger[aria-expanded="true"]{border-color:#f3b1e3;background:#58305f}
+.header .music-volume-popover{position:absolute;right:0;top:calc(100% + 12px);z-index:1300;width:235px;max-width:calc(100vw - 24px);padding:17px;background:#201627;border:1px solid #ad7fbb;box-shadow:0 18px 48px #000c;display:flex;flex-direction:column;gap:13px;border-radius:6px}
+.header .music-volume-popover label{display:flex;justify-content:space-between;gap:14px;align-items:center;color:#d9bddf;font:800 10px 'IBM Plex Mono',monospace;letter-spacing:.04em}
+.header .music-volume-popover label b{color:#fff0ff;font-size:12px}
+.header .music-volume-popover input{width:100%;accent-color:#d496e2;cursor:pointer}
+.header .music-volume-popover small{font:400 10px 'DM Sans',sans-serif;color:#a995b5}
