@@ -21,3 +21,16 @@
 @keyframes hellebore-fizz{0%{opacity:0;transform:translateY(15px) scale(.5)}30%{opacity:1}100%{opacity:0;transform:translateY(-30px) scale(1.6)}}
 @media(max-width:600px){.hellebore-toy{margin-top:17px;min-height:187px}.hellebore-toy-stage{min-height:190px;padding:26px 12px 6px;gap:27px}.hellebore-toy-button{flex-basis:71px;width:71px;height:157px}.hellebore-toy-caption strong{font-size:27px}.hellebore-toy-caption span{font-size:10px}.hellebore-toy-floor{left:20%;bottom:11px}}
 @media(prefers-reduced-motion:reduce){.hellebore-toy-button.is-opening{animation:none}.hellebore-splatter,.hellebore-toy-fizz{display:none}}
+
+/* Keep the preferred original can fully visible above the bottom of the block. */
+.hellebore-toy{overflow:visible;padding-bottom:22px}
+.hellebore-toy-stage{box-sizing:border-box;min-height:290px;padding:37px 24px 34px;overflow:visible}
+.hellebore-toy-button{flex:0 0 91px;width:91px;height:212px;overflow:visible}
+.hellebore-toy-button>img{object-fit:contain;object-position:center center}
+.hellebore-toy-floor{bottom:27px}
+@media(max-width:600px){
+ .hellebore-toy{padding-bottom:18px}
+ .hellebore-toy-stage{min-height:244px;padding:32px 12px 27px;gap:22px}
+ .hellebore-toy-button{flex:0 0 77px;width:77px;height:182px}
+ .hellebore-toy-floor{bottom:24px}
+}
