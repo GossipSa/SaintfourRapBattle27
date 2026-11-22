@@ -216,7 +216,7 @@ export default function SecretInterview({onClose,onComplete,alreadyEarned=false}
        <p>Подожди, что происходит с камерой?</p>
        <StageCue>Помехи усиливаются. Она подаётся вперёд, продолжая держать телефон у уха.</StageCue>
        <p>Сплетница, только не говори, что ты сейчас ещё и запись выключаешь!</p>
-       <p>МЫ С ТОБОЙ НЕ ДОГОВО—</p></div></div><button className="fifth-primary fifth-cut" onClick={complete}><PhoneOff size={16}/> ОБОРВАТЬ ЗАПИСЬ</button></div>}
+       <p>МЫ С ТОБОЙ НЕ ДОГОВО—</p></div><button className="fifth-primary fifth-cut" onClick={complete}><PhoneOff size={16}/> ОБОРВАТЬ ЗАПИСЬ</button></div>}
      </div>}
      {stage==='done'&&<div className="fifth-screen fifth-finished">
       <span className="fifth-kicker">[ CONNECTION LOST ] / RECORDING TERMINATED</span>
