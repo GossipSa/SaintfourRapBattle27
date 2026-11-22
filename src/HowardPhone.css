@@ -50,3 +50,30 @@
 }
 .hp-overlay .hp-exit svg{display:block;flex:none}
 @media(max-width:600px){.hp-overlay .hp-exit{top:calc(env(safe-area-inset-top,0px) + 14px);right:14px}}
+
+/* Floating CLOSED phone: place the X neatly at the phone's upper-right corner. */
+.hp-floating{width:104px;height:170px;isolation:isolate}
+.hp-floating .hp-dismiss{
+ position:absolute;
+ top:-15px;
+ right:-15px;
+ left:auto;
+ bottom:auto;
+ width:32px;
+ height:32px;
+ box-sizing:border-box;
+ padding:0;
+ margin:0;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ border-radius:50%;
+ border:1.5px solid #d9a0e9;
+ background:#1c0d27;
+ color:#fff;
+ box-shadow:0 2px 10px #0009;
+ transform:none;
+ z-index:10;
+}
+.hp-floating .hp-dismiss svg{display:block;flex:none;width:16px;height:16px;stroke-width:2;transform:none}
+@media(max-width:600px){.hp-floating .hp-dismiss{top:-15px;right:-12px}}
