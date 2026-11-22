@@ -509,3 +509,6 @@
  .howard-mail-teaser-copy b{font-size:17px}
 }
 @media(prefers-reduced-motion:reduce){.howard-mail-glitch:before,.howard-mail-glitch:after{animation:none;display:none}}
+
+/* Achievement #04 appears over the open mystery mail dialog without obscuring its close control. */
+.app:has(.howard-mail-backdrop) .achievement-toast{z-index:410}
