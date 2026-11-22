@@ -56,3 +56,35 @@
 .spin-collection-group-heading span{font:800 10px 'DM Sans',sans-serif}
 .spin-collection-group-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
 @media(max-width:390px){.spin-collection-group-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* LUCKY SPIN: animated broadcast signal glitch, without changing text layout. */
+.spin-heading .spin-glitch-title{position:relative;display:table;max-width:100%;isolation:isolate}
+.spin-glitch-base{position:relative;z-index:1}
+.spin-glitch-layer{position:absolute;inset:0;z-index:2;pointer-events:none;white-space:nowrap;opacity:0}
+.spin-glitch-red{color:#ff4da9;animation:spin-glitch-red 5.3s steps(1,end) infinite}
+.spin-glitch-blue{color:#79efff;animation:spin-glitch-blue 5.3s steps(1,end) infinite}
+.spin-glitch-red em,.spin-glitch-blue em{color:inherit}
+.spin-heading .spin-glitch-title::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;background:repeating-linear-gradient(0deg,transparent 0 5px,#f9b3e719 6px 7px);animation:spin-glitch-scan 5.3s steps(1,end) infinite}
+@keyframes spin-glitch-red{
+ 0%,12%,14%,41%,43%,71%,73%,100%{opacity:0;transform:translate(0);clip-path:inset(0)}
+ 12.3%{opacity:.92;transform:translate(-5px,1px);clip-path:inset(12% 0 63% 0)}
+ 13%{opacity:.8;transform:translate(5px,-1px);clip-path:inset(65% 0 10% 0)}
+ 41.4%{opacity:.9;transform:translate(-4px,0);clip-path:inset(43% 0 34% 0)}
+ 72%{opacity:.85;transform:translate(4px,1px);clip-path:inset(76% 0 5% 0)}
+}
+@keyframes spin-glitch-blue{
+ 0%,12%,14%,41%,43%,71%,73%,100%{opacity:0;transform:translate(0);clip-path:inset(0)}
+ 12.3%{opacity:.85;transform:translate(5px,-1px);clip-path:inset(48% 0 31% 0)}
+ 13%{opacity:.8;transform:translate(-4px,2px);clip-path:inset(16% 0 69% 0)}
+ 41.4%{opacity:.9;transform:translate(5px,0);clip-path:inset(74% 0 8% 0)}
+ 72%{opacity:.9;transform:translate(-4px,-1px);clip-path:inset(21% 0 52% 0)}
+}
+@keyframes spin-glitch-scan{
+ 0%,12%,14%,41%,43%,71%,73%,100%{opacity:0}
+ 12.3%,13%,41.4%,72%{opacity:.7}
+}
+@media(max-width:600px){
+ .spin-heading .spin-glitch-title{font-size:clamp(48px,13.5vw,78px);line-height:.96;letter-spacing:-.015em}
+ .spin-glitch-layer{white-space:nowrap}
+}
+@media(prefers-reduced-motion:reduce){.spin-glitch-layer,.spin-heading .spin-glitch-title::after{animation:none;opacity:0}}
