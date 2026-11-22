@@ -550,3 +550,26 @@
  .sound-consent-actions{grid-template-columns:1fr}
  .sound-consent-dialog h2{font-size:43px}
 }
+
+/* Fix the archived MC NETTI email close control in desktop and mobile layouts.
+   Keep icon precisely centered; do not alter other modal close buttons. */
+.howard-mail-dialog .howard-mail-toolbar{min-height:59px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.howard-mail-dialog .howard-mail-toolbar>span{min-width:0;flex:1 1 auto}
+.howard-mail-dialog .howard-mail-toolbar>button{
+ position:static;inset:auto;transform:none;margin:0;padding:0;
+ flex:0 0 40px;width:40px;height:40px;min-width:40px;min-height:40px;
+ display:flex;align-items:center;justify-content:center;
+ border:1px solid #8776ad;border-radius:0;
+ background:#1b142b;color:#f2e9ff;
+ line-height:1;box-sizing:border-box;appearance:none;
+}
+.howard-mail-dialog .howard-mail-toolbar>button:hover{border-color:#e7abd9;background:#34213e}
+.howard-mail-dialog .howard-mail-toolbar>button svg{
+ display:block;width:21px;height:21px;min-width:21px;min-height:21px;
+ flex:0 0 21px;margin:0;transform:none;stroke-width:2;
+}
+@media(max-width:720px){
+ .howard-mail-dialog .howard-mail-toolbar{padding:9px 12px;min-height:58px}
+ .howard-mail-dialog .howard-mail-toolbar>button{flex-basis:42px;width:42px;height:42px;min-width:42px;min-height:42px}
+ .howard-mail-dialog .howard-mail-toolbar>button svg{width:23px;height:23px;min-width:23px;min-height:23px;flex-basis:23px}
+}
