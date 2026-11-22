@@ -236,3 +236,56 @@
 .footer-nav .achievement-footer-link svg{color:#c496d0}
 .footer-nav .achievement-footer-link span{margin-left:3px;color:#b793c4;font-size:10px;letter-spacing:.05em}
 .mobile-nav .achievement-menu-count{margin-left:auto;color:#cda4dc;font-size:11px;letter-spacing:.06em}
+
+/* ACHIEVEMENTS / blackened steel, silver and restrained violet. */
+.achievements-page{--ach-steel:#c4c9d0;--ach-fog:#999eaa;--ach-violet:#77708e;--ach-night:#111118;color:#d5d4de}
+.achievement-page-top{color:#9995a8}
+.achievement-return{color:#c5c0d0}
+.achievement-page-hero{border:1px solid #44414c;background:radial-gradient(ellipse at 90% 0%,#47405157,transparent 62%),linear-gradient(145deg,#18171f,#101017)}
+.achievement-page-eyebrow{color:#b0aabf}
+.achievement-page-hero h1{color:#eeeef2}
+.achievement-page-hero h1 em{color:#b3a7c5}
+.achievement-page-hero p{color:#aaa6b6}
+.achievement-progress>strong{color:#e4e2e9}
+.achievement-progress>strong span{color:#6d6876}
+.achievement-track{background:#36333e}
+.achievement-track>div{background:linear-gradient(90deg,#6e657c,#c1bbc9)}
+.achievement-progress>span{color:#9e99a7}
+.achievement-item{background:linear-gradient(135deg,#17171d,#111116);border-color:#39363f}
+.achievement-item.is-earned{background:linear-gradient(120deg,#24232c,#14141a 70%);border-color:#817b8b;box-shadow:inset 2px 0 #bcb6c7}
+.achievement-emblem{background:linear-gradient(145deg,#292831,#15151c);border-color:#45414c;color:#827d8e}
+.achievement-item.is-earned .achievement-emblem{border-color:#787382;background:linear-gradient(145deg,#282631,#16151d);color:#d6d6db}
+.achievement-item-copy>span{color:#77737f}
+.achievement-item.is-earned .achievement-item-copy>span{color:#aaa5b3}
+.achievement-item-copy h2{color:#696673}
+.achievement-item.is-earned .achievement-item-copy h2{color:#e6e4e9}
+.achievement-item-copy p{color:#7f7a88}
+.achievement-item.is-earned .achievement-item-copy p{color:#b4b1bd}
+.achievement-status{color:#6f6b77}
+.achievement-item.is-earned .achievement-status{color:#c7c3ce}
+.achievement-reward{background:linear-gradient(115deg,#1b1a23,#121219);border-color:#54505c}
+.achievement-reward>div>span{color:#918b9c}
+.achievement-reward h2{color:#dad7df}
+.achievement-reward h2 svg{color:#b1aabb}
+.achievement-reward p{color:#aaa5b3}
+.achievement-reward-lock{color:#928b9a}
+.achievement-replay{border-color:#5a5360;color:#beb8c7}
+.achievement-replay:hover{background:#2d2933}
+.sf-medallion{position:relative;display:grid;place-items:center;flex:0 0 auto;width:52px;height:52px;border-radius:50%;border:1px solid #e6e3e6;background:radial-gradient(circle at 34% 26%,#666773 0%,#35343f 40%,#181920 78%);color:#ebe9ef;box-shadow:inset 0 0 0 3px #292932,inset 0 0 0 5px #85838e,0 2px 8px #08080baa}
+.sf-medallion svg{filter:drop-shadow(0 1px 1px #000);transform:rotate(-19deg)}
+.sf-medallion-rays{position:absolute;left:7px;top:5px;font:700 9px/1 serif;color:#d9d7df}
+.sf-medallion i{position:absolute;right:5px;bottom:5px;font:700 7px/1 'IBM Plex Mono',monospace;font-style:normal;color:#c7c4cf}
+.achievement-item .achievement-emblem:has(.sf-medallion){border:0;background:transparent}
+.achievement-item .sf-medallion{width:62px;height:62px}
+.achievement-item .sf-medallion svg{width:30px;height:30px}
+.achievement-item .sf-medallion i{font-size:8px}
+/* Compact metallic award notification; avoid saturated pink/neon visuals. */
+.achievement-toast{border:1px solid #716c7a;border-left:3px solid #aba7b3;background:linear-gradient(118deg,#292732,#18171f 65%,#14131a);box-shadow:0 17px 42px #000c,0 0 19px #80758a20}
+.achievement-toast:before{background:repeating-linear-gradient(135deg,transparent 0 17px,#efedf409 18px 19px)}
+.achievement-toast-medal{border:0;box-shadow:none;background:none;color:#e9e7eb}
+.achievement-toast-main .achievement-toast-copy>span{color:#ada6b6}
+.achievement-toast-copy>span i{color:#777181}
+.achievement-toast-main .achievement-toast-copy strong{color:#efedf1}
+.achievement-toast-main .achievement-toast-copy small{color:#bbb5c3}
+.achievement-toast-dismiss{color:#aaa4b0}
+@media(max-width:760px){.achievement-toast-medal{flex-basis:52px;width:52px;height:58px}.achievement-item .sf-medallion{width:52px;height:52px}.achievement-item .sf-medallion svg{width:25px;height:25px}}
