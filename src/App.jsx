@@ -8,7 +8,7 @@ import './sponsors.css'
 import SponsorsShowcase from './Sponsors.jsx'
 import HypePolls from './HypePolls.jsx'
 import SecretInterview from './SecretInterview.jsx'
-import { dexManagerPhoto } from './dex-manager-photo.js'
+const dexManagerPhoto=`${import.meta.env.BASE_URL}media/dex-kitten-manager.jpg`
 import AllAccessTicket from './AllAccessTicket.jsx'
 import BattleTicker from './LineupMarquee.jsx'
 import './lineup-marquee.css'
