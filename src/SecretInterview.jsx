@@ -188,15 +188,43 @@ export default function SecretInterview({onClose,onComplete,alreadyEarned=false}
       <span className="fifth-kicker">CALL IN PROGRESS / YOU ARE THE CREATOR</span>
       <h2 id="fifth-title">ТВОЙ <em>ЗВОНОК.</em></h2>
       <StageCue>На другом конце отвечают. Поппи замирает с телефоном у уха и нетерпеливо ждёт.</StageCue><p className="fifth-dialogue"><strong>ПОППИ</strong>ПОЧЕМУ МНЕ ЗА ЭТО НЕДОСТАТОЧНО ПЛАТЯТ?!</p>
-      {callChoice===null?<><span className="fifth-answer-kicker">СПЛЕТНИЦА НА ЛИНИИ / ЧТО ОТВЕТИМ?</span><div className="fifth-options">{callChoices.map(([label],i)=><button key={i} type="button" className="fifth-option" onClick={()=>setCallChoice(i)}><span>{String.fromCharCode(65+i)}</span><b>{label}</b><Phone size={14}/></button>)}</div></>:<div className="fifth-reaction"><span className="fifth-reaction-head"><Phone size={14}/> ПОППИ / НА ЛИНИИ</span><StageCue>{phoneActing[callChoice]}</StageCue><p>{callChoices[callChoice][1]}</p><div className="fifth-after"><span>ПОППИ / ФИНАЛ</span><StageCue>Устало откидывается в кресле, прикрывает глаза и считает до трёх.</StageCue><p>Ладно. Ты придумала батл. Я должна его вести. Мой гость даже не существует в этой студии. А зарплата у меня, судя по всему, воображаемая. Что значит «зато зрителям нравится»?!</p><StageCue>Медленно поворачивается прямо к камере, будто впервые видит зрителя по-настоящему.</StageCue><p>А, ну конечно. ЗРИТЕЛЯМ НРАВИТСЯ! Знаешь что? Раз уж этот человек сидит там и нажимает на кнопки, пусть хотя бы получит за это что-нибудь!</p><StageCue>Прижимает телефон плечом, тянется к карточкам и с недоумением замечает, что надписи на них меняются.</StageCue><p>Ачивку? В смысле ачивку? Подожди, что ты сейчас делаешь? Нет, только не говори, что ты опять что-то добавляешь на сайт!</p><StageCue>В кадре пробегает помеха. Поппи резко подаётся вперёд и машет свободной рукой.</StageCue><p>ЭЙ! Я ВООБЩЕ-ТО ЕЩЁ РАЗГОВАРИВАЮ!</p></div><button className="fifth-primary fifth-cut" onClick={complete}><PhoneOff size={16}/> ОБОРВАТЬ ЗАПИСЬ</button></div>}
+      {callChoice===null?<><span className="fifth-answer-kicker">СПЛЕТНИЦА НА ЛИНИИ / ЧТО ОТВЕТИМ?</span><div className="fifth-options">{callChoices.map(([label],i)=><button key={i} type="button" className="fifth-option" onClick={()=>setCallChoice(i)}><span>{String.fromCharCode(65+i)}</span><b>{label}</b><Phone size={14}/></button>)}</div></>:<div className="fifth-reaction"><span className="fifth-reaction-head"><Phone size={14}/> ПОППИ / НА ЛИНИИ</span><StageCue>{phoneActing[callChoice]}</StageCue><p>{callChoices[callChoice][1]}</p><div className="fifth-after fifth-final-scene"><span>ПОППИ / ВНЕ СЦЕНАРИЯ</span>
+       <StageCue>Откидывается в кресле. На мгновение закрывает глаза и начинает загибать пальцы, перечисляя претензии.</StageCue>
+       <p>Так, подожди. Давай ещё раз.</p>
+       <p>Ты организовала батл. Я должна его вести. Мой сегодняшний гость вообще не существует в этой студии. А зарплата у меня, судя по всему, воображаемая.</p>
+       <StageCue>Замолкает, слушая ответ на другом конце провода. Недоверчиво приподнимает бровь.</StageCue>
+       <p>Что?..</p>
+       <StageCue>Пауза. Поппи чуть отстраняет телефон от уха.</StageCue>
+       <p>Что значит «зато зрителям нравится»?</p>
+       <StageCue>Медленно поворачивается к камере, разводит руками.</StageCue>
+       <p>А, ну конечно! ЗРИТЕЛЯМ НРАВИТСЯ! А мне, между прочим, тоже хотелось бы, чтобы мне что-нибудь нравилось. Например, мой банковский счёт!</p>
+       <StageCue>Снова слушает Сплетницу. Хмурится, проверяет экран телефона и прикладывает его к уху обратно.</StageCue>
+       <p>Подожди… Ты вообще меня слушаешь?</p>
+       <StageCue>На другом конце что-то отвечают. Поппи выпрямляется.</StageCue>
+       <p>В смысле, ты сейчас на сайте?.. Я тут с тобой серьёзно разговариваю, а ты что делаешь?!</p>
+       <StageCue>Тишина. Поппи моргает, не веря услышанному.</StageCue>
+       <p>Какую ещё ачивку?!</p>
+       <div className="fifth-live-update" role="status" aria-label="Сплетница создаёт достижение"><div className="fifth-live-update-top"><span>SYSTEM / LIVE UPDATE</span><b>ACHIEVEMENT 005</b></div><strong>CREATING ACHIEVEMENT...</strong><div className="fifth-live-progress"><span/></div><small>AUTHOR OVERRIDE / GOSSIP SAINTFOUR</small></div>
+       <StageCue>Смотрит то на экран телефона, то прямо в объектив.</StageCue>
+       <p>Нет, стой. Ты хочешь сказать, что за ответы на мои вопросы этому человеку дадут награду?!</p>
+       <p>А мне за проведение интервью что дадут?</p>
+       <StageCue>Пауза. Поппи слушает ответ. Лицо медленно вытягивается.</StageCue>
+       <p>Опыт?!</p>
+       <StageCue>Закрывает глаза и медленно выдыхает.</StageCue>
+       <p>Замечательно. Ему ачивка, мне опыт. Обожаю свою работу.</p>
+       <StageCue>В изображении пробегают помехи. Поппи резко поднимает голову.</StageCue>
+       <p>Подожди, что происходит с камерой?</p>
+       <StageCue>Помехи усиливаются. Она подаётся вперёд, продолжая держать телефон у уха.</StageCue>
+       <p>Сплетница, только не говори, что ты сейчас ещё и запись выключаешь!</p>
+       <p>МЫ С ТОБОЙ НЕ ДОГОВО—</p></div></div><button className="fifth-primary fifth-cut" onClick={complete}><PhoneOff size={16}/> ОБОРВАТЬ ЗАПИСЬ</button></div>}
      </div>}
      {stage==='done'&&<div className="fifth-screen fifth-finished">
       <span className="fifth-kicker">[ CONNECTION LOST ] / RECORDING TERMINATED</span>
       <div className="fifth-unlock-symbol"><LockKeyhole size={33}/></div>
       <h2 id="fifth-title">ACHIEVEMENT <em>UNLOCKED.</em></h2>
       <span className="fifth-reward-index">005 / THE FIFTH CHAIR</span>
-      <p>Ты прошёл интервью с Пенелопой Эмерсон, сломал четвёртую стену и оставил ведущую с вопросами к работодателю.</p>
-      <span className="fifth-afterword">Где-то в Сентфоре Поппи всё ещё ждёт свой гонорар.</span>
+      <p>Ты получил награду. Поппи — профессиональный опыт.</p>
+      <span className="fifth-afterword">Поппи всё ещё пытается дозвониться до Сплетницы.</span>
       <button className="fifth-primary" onClick={onClose}>ЗАБРАТЬ АЧИВКУ <Check size={16}/></button><button className="fifth-replay" onClick={restart}><RotateCcw size={14}/> ПРОЙТИ ЕЩЁ РАЗ</button>
      </div>}
     </div>
