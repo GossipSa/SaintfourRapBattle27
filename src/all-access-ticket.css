@@ -59,3 +59,22 @@
 .allticket-poppy-joke{color:#efd7f7}
 .allticket-flip{border:1px solid #b58ade;background:#32204d;color:#f5dbff}
 .allticket-flip:hover,.allticket-flip:focus-visible{background:#493068;border-color:#e8befd}
+
+/* Mobile ticket close button: override global button/icon transforms and prevent displacement. */
+.allticket-modal .allticket-header>button{
+ position:static;inset:auto;transform:none;float:none;margin:0;padding:0;
+ display:flex;align-items:center;justify-content:center;
+ flex:0 0 40px;width:40px;height:40px;min-width:40px;min-height:40px;
+ line-height:1;box-sizing:border-box;appearance:none;border-radius:5px;
+ background:#362345;border:1px solid #ac7ebd;color:#fff0ff;cursor:pointer
+}
+.allticket-modal .allticket-header>button svg{
+ position:static;display:block;flex:0 0 20px;width:20px;height:20px;
+ min-width:20px;min-height:20px;margin:0;padding:0;transform:none;stroke-width:2
+}
+.allticket-modal .allticket-header>button:hover,.allticket-modal .allticket-header>button:focus-visible{background:#5a376b;border-color:#dfb1e9}
+@media(max-width:600px){
+ .allticket-modal .allticket-header{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;padding:10px 12px}
+ .allticket-modal .allticket-header>span{flex:1;min-width:0;font-size:9px;letter-spacing:.35px;line-height:1.4}
+ .allticket-modal .allticket-header>button{flex-basis:40px;width:40px;height:40px;min-width:40px;min-height:40px}
+}
