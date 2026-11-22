@@ -48,7 +48,7 @@ export default function LuckySpin({onBack,onAchievements}){
  }
  return <section className="spin-page wrap">
   <div className="spin-top"><button type="button" onClick={onBack}><ArrowLeft size={16}/> НАЗАД НА ГЛАВНУЮ</button><span>SAINTFOUR / UNOFFICIAL ENTERTAINMENT</span></div>
-  <div className="spin-heading"><span className="spin-eyebrow">WELCOME TO POPPY'S QUESTIONABLE ATTRACTION</span><h1>LUCKY <em>SPIN.</em></h1><p>Крути колесо. Выигрывай что угодно. Не рассчитывай получить это в реальной жизни.</p></div>
+  <div className="spin-heading"><span className="spin-eyebrow">WELCOME TO POPPY'S QUESTIONABLE ATTRACTION</span><h1 className="spin-glitch-title" aria-label="LUCKY SPIN."><span className="spin-glitch-base">LUCKY <em>SPIN.</em></span><span className="spin-glitch-layer spin-glitch-red" aria-hidden="true">LUCKY <em>SPIN.</em></span><span className="spin-glitch-layer spin-glitch-blue" aria-hidden="true">LUCKY <em>SPIN.</em></span></h1><p>Крути колесо. Выигрывай что угодно. Не рассчитывай получить это в реальной жизни.</p></div>
   <div className="spin-layout">
    <div className="spin-machine">
     <div className="spin-machine-label"><span>THE WHEEL OF VERY DUBIOUS FORTUNE</span><span>NO REFUNDS / NO QUESTIONS</span></div>
