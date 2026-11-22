@@ -43,31 +43,89 @@ const gallery = [
   { image:`${import.meta.env.BASE_URL}media/gallery-03.jpg`, label:'AFTER THE ROUND / 003' },
   { image:`${import.meta.env.BASE_URL}media/gallery-04.jpg`, label:'BEHIND THE SCENES / 004' },
 ]
-// Lightweight, original sound effects generated locally; no external audio, network or autoplay.
+// Original, locally synthesized hip-hop battle stingers (no external samples or autoplay).
 const soundPrefKey='sf27-sound-consent-v1'
 function playSiteTone(context,kind='unlock'){
  try{
-  const now=context.currentTime+0.015
-  const notes=kind==='open' ? [{f:440,t:0,d:.065},{f:590,t:.085,d:.12}] : kind==='enable' ? [{f:520,t:0,d:.075},{f:780,t:.09,d:.14}] : [{f:392,t:0,d:.085},{f:523.25,t:.11,d:.095},{f:784,t:.235,d:.21}]
-  const master=context.createGain()
-  master.gain.value=.17
-  master.connect(context.destination)
-  notes.forEach(({f,t,d},i)=>{
-   const oscillator=context.createOscillator()
-   const envelope=context.createGain()
-   oscillator.type=kind==='unlock'?(i===notes.length-1?'sine':'triangle'):'sine'
-   oscillator.frequency.setValueAtTime(f,now+t)
-   oscillator.frequency.exponentialRampToValueAtTime(f*1.02,now+t+d)
-   envelope.gain.setValueAtTime(.0001,now+t)
-   envelope.gain.exponentialRampToValueAtTime(.24,now+t+.012)
-   envelope.gain.exponentialRampToValueAtTime(.0001,now+t+d)
-   oscillator.connect(envelope)
-   envelope.connect(master)
-   oscillator.start(now+t)
-   oscillator.stop(now+t+d+.02)
-  })
- }catch{/* browsers without sound support stay silent */}
+  const t=context.currentTime+.025
+  const out=context.createGain()
+  out.gain.value=.57
+  const limiter=context.createDynamicsCompressor()
+  limiter.threshold.value=-13
+  limiter.knee.value=15
+  limiter.ratio.value=9
+  limiter.attack.value=.003
+  limiter.release.value=.14
+  out.connect(limiter)
+  limiter.connect(context.destination)
+  const envelope=(at,peak,attack,decay)=>{
+   const gain=context.createGain()
+   gain.gain.setValueAtTime(.0001,t+at)
+   gain.gain.linearRampToValueAtTime(peak,t+at+attack)
+   gain.gain.exponentialRampToValueAtTime(.0001,t+at+attack+decay)
+   gain.connect(out)
+   return gain
+  }
+  const noiseBuffer=context.createBuffer(1,Math.floor(context.sampleRate*.65),context.sampleRate)
+  const noise=noiseBuffer.getChannelData(0)
+  // Fresh non-looping transient, like a tiny vinyl/crowd texture.
+  for(let i=0;i<noise.length;i++)noise[i]=(Math.random()*2-1)
+  const kick=(at,power=1)=>{
+   const osc=context.createOscillator()
+   osc.type='sine'
+   osc.frequency.setValueAtTime(155,t+at)
+   osc.frequency.exponentialRampToValueAtTime(52,t+at+.095)
+   osc.frequency.exponentialRampToValueAtTime(43,t+at+.25)
+   osc.connect(envelope(at,.54*power,.002,.24))
+   osc.start(t+at);osc.stop(t+at+.255)
+  }
+  const clap=(at,power=1)=>{
+   const src=context.createBufferSource()
+   src.buffer=noiseBuffer
+   const filter=context.createBiquadFilter()
+   filter.type='highpass';filter.frequency.value=1150
+   src.connect(filter)
+   filter.connect(envelope(at,.23*power,.002,.115))
+   src.start(t+at);src.stop(t+at+.13)
+  }
+  const scratch=(at,power=1)=>{
+   const source=context.createBufferSource()
+   source.buffer=noiseBuffer
+   const band=context.createBiquadFilter()
+   band.type='bandpass';band.Q.value=1.4
+   band.frequency.setValueAtTime(2300,t+at)
+   band.frequency.exponentialRampToValueAtTime(430,t+at+.13)
+   band.frequency.exponentialRampToValueAtTime(1400,t+at+.22)
+   source.connect(band)
+   band.connect(envelope(at,.22*power,.006,.22))
+   source.start(t+at);source.stop(t+at+.23)
+  }
+  const horn=(at,power=1)=>{
+   for(const detune of [-7,8]){
+    const osc=context.createOscillator()
+    const tone=context.createBiquadFilter()
+    osc.type='sawtooth'
+    osc.frequency.setValueAtTime(196,t+at)
+    osc.frequency.exponentialRampToValueAtTime(218,t+at+.095)
+    osc.detune.value=detune
+    tone.type='lowpass'
+    tone.frequency.setValueAtTime(950,t+at)
+    tone.frequency.exponentialRampToValueAtTime(470,t+at+.27)
+    osc.connect(tone)
+    tone.connect(envelope(at,.085*power,.018,.26))
+    osc.start(t+at);osc.stop(t+at+.3)
+   }
+  }
+  if(kind==='unlock'){
+   kick(0,1);scratch(.03,.7);clap(.175,.85);kick(.31,.76);horn(.34,.82);clap(.49,.72)
+  }else if(kind==='enable'){
+   scratch(0,.6);kick(.055,.8);clap(.2,.7);horn(.22,.65)
+  }else{
+   scratch(0,.7);kick(.09,.62);clap(.13,.45)
+  }
+ }catch{/* Web Audio unsupported: remain silent without disrupting the site */}
 }
+
 const hypePollIds=['scandal','punchlines','surprise','interview']
 function completedHypeVotes(votes){
  return Boolean(votes&&typeof votes==='object'&&hypePollIds.every(id=>typeof votes[id]==='string'&&votes[id].length>0))
