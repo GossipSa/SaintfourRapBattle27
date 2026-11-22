@@ -43,6 +43,10 @@ const gallery = [
   { image:`${import.meta.env.BASE_URL}media/gallery-03.jpg`, label:'AFTER THE ROUND / 003' },
   { image:`${import.meta.env.BASE_URL}media/gallery-04.jpg`, label:'BEHIND THE SCENES / 004' },
 ]
+const hypePollIds=['scandal','punchlines','surprise','interview']
+function completedHypeVotes(votes){
+ return Boolean(votes&&typeof votes==='object'&&hypePollIds.every(id=>typeof votes[id]==='string'&&votes[id].length>0))
+}
 const nav = [
   { id:'home', name:'Главная', Icon:Home },
   { id:'artists', name:'Участники', Icon:Mic2 },
@@ -67,6 +71,35 @@ export default function App() {
    try { const saved=JSON.parse(window.localStorage.getItem('sf27-achievements-v1')||'{}'); return saved&&typeof saved==='object'?saved:{} } catch { return {} }
  })
  const [achievementToast,setAchievementToast]=useState(null)
+ const unlockedCount=Number(Boolean(achievements.earlyBird))+Number(Boolean(achievements.loyalOne))
+ const unlockLoyalOne=(votes)=>{
+   if(!completedHypeVotes(votes)||achievements.loyalOne)return
+   setAchievements(prev=>{
+     if(prev.loyalOne)return prev
+     const next={...prev,loyalOne:true}
+     try{window.localStorage.setItem('sf27-achievements-v1',JSON.stringify(next))}catch{/* private mode */}
+     return next
+   })
+   setAchievementToast('loyalOne')
+ }
+ useEffect(()=>{
+   if(achievements.loyalOne)return
+   try{
+     const saved=JSON.parse(window.localStorage.getItem('sfvs-hype-server-votes-v1')||'{}')
+     if(completedHypeVotes(saved)){
+       const t=window.setTimeout(()=>{
+         setAchievements(prev=>{
+           if(prev.loyalOne)return prev
+           const next={...prev,loyalOne:true}
+           try{window.localStorage.setItem('sf27-achievements-v1',JSON.stringify(next))}catch{/* private mode */}
+           return next
+         })
+         setAchievementToast('loyalOne')
+       },2200)
+       return ()=>window.clearTimeout(t)
+     }
+   }catch{/* missing vote cache */}
+ },[achievements.loyalOne])
  useEffect(()=>{
    // Moscow time: first interview premiere (03 Dec 2026, 19:00 MSK).
    const beforeFirstPremiere=Date.now()<Date.parse('2026-12-03T19:00:00+03:00')
@@ -126,19 +159,19 @@ export default function App() {
  return <div className="app">
   <div className="top-strip"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="top-right"><span className="live-dot"/> THE UNDERGROUND IS CALLING</span></div>
   <header className="header"><button className="logo" onClick={()=>go('home')} aria-label="На главную"><span className="logo-mark">SF<span>✳</span></span><span className="logo-type">SAINTFOUR<strong>RAP BATTLE <i>’27</i></strong></span></button><nav className="desktop-nav" aria-label="Навигация">{nav.map(n=><button key={n.id} className={page===n.id?'active':''} onClick={()=>go(n.id)}>{n.name}</button>)}</nav><div className="header-actions"><span className="edition">VOL. 001 / 2027</span><button className="mobile-menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Меню">{menuOpen?<X/>:<Menu/>}</button></div></header>
-  {menuOpen&&<nav className="mobile-nav" aria-label="Мобильная навигация">{nav.map(n=><button key={n.id} onClick={()=>go(n.id)}><n.Icon size={17}/>{n.name}<ArrowRight size={16}/></button>)}{achievements.earlyBird&&<button onClick={()=>go("achievements")}><Trophy size={17}/>Достижения <span className="achievement-menu-count">1 / 5</span><ArrowRight size={16}/></button>}</nav>}
+  {menuOpen&&<nav className="mobile-nav" aria-label="Мобильная навигация">{nav.map(n=><button key={n.id} onClick={()=>go(n.id)}><n.Icon size={17}/>{n.name}<ArrowRight size={16}/></button>)}{unlockedCount>0&&<button onClick={()=>go("achievements")}><Trophy size={17}/>Достижения <span className="achievement-menu-count">{unlockedCount} / 5</span><ArrowRight size={16}/></button>}</nav>}
   <main>
   {page==='achievements'&&<section className="achievements-page wrap">
     <div className="achievement-page-top"><button type="button" onClick={()=>go('home')} className="achievement-return"><ArrowRight size={16}/> НАЗАД НА ГЛАВНУЮ</button><span>SAINTFOUR / SECRET ACCESS</span></div>
     <div className="achievement-page-hero"><span className="achievement-page-eyebrow">THE UNDERGROUND HAS SECRETS</span><h1 className="achievement-title-glitch" data-text="YOUR ACHIEVEMENTS.">YOUR <em>ACHIEVEMENTS.</em></h1><p>Исследуй Saintfour Rap Battle, участвуй в жизни шоу и собирай достижения. Некоторые находятся на виду. Другие придётся поискать.</p>
-     <div className="achievement-progress"><strong>{achievements.earlyBird?1:0} <span>/ 05</span></strong><div className="achievement-track"><div style={{width:achievements.earlyBird?'20%':'0%'}}/></div><span>DISCOVERED</span></div>
+     <div className="achievement-progress"><strong>{unlockedCount} <span>/ 05</span></strong><div className="achievement-track"><div style={{width:`${unlockedCount*20}%`}}/></div><span>DISCOVERED</span></div>
     </div>
-    <div className="achievement-category-nav" aria-label="Категории достижений"><a href="#sf-achievement-active" onClick={e=>{e.preventDefault();document.getElementById('sf-achievement-active')?.scrollIntoView({behavior:'smooth',block:'start'})}}>ЗА АКТИВНОСТЬ <span>{achievements.earlyBird?'1':'0'} / 2</span></a><a href="#sf-achievement-secrets" onClick={e=>{e.preventDefault();document.getElementById('sf-achievement-secrets')?.scrollIntoView({behavior:'smooth',block:'start'})}}>СЕКРЕТНЫЕ <span>0 / 3</span></a></div>
+    <div className="achievement-category-nav" aria-label="Категории достижений"><a href="#sf-achievement-active" onClick={e=>{e.preventDefault();document.getElementById('sf-achievement-active')?.scrollIntoView({behavior:'smooth',block:'start'})}}>ЗА АКТИВНОСТЬ <span>{unlockedCount} / 2</span></a><a href="#sf-achievement-secrets" onClick={e=>{e.preventDefault();document.getElementById('sf-achievement-secrets')?.scrollIntoView({behavior:'smooth',block:'start'})}}>СЕКРЕТНЫЕ <span>0 / 3</span></a></div>
     <section className="achievement-category" id="sf-achievement-active">
-      <div className="achievement-category-heading"><div><span className="achievement-category-kicker">01 / THE PARTICIPANTS</span><h2>ЗА <em>АКТИВНОСТЬ.</em></h2><p>Посещай сайт, участвуй в голосованиях и следи за премьерами.</p></div><span className="achievement-category-count">{achievements.earlyBird?'01':'00'} <i>/ 02</i></span></div>
+      <div className="achievement-category-heading"><div><span className="achievement-category-kicker">01 / THE PARTICIPANTS</span><h2>ЗА <em>АКТИВНОСТЬ.</em></h2><p>Посещай сайт, участвуй в голосованиях и следи за премьерами.</p></div><span className="achievement-category-count">{String(unlockedCount).padStart(2,'0')} <i>/ 02</i></span></div>
       <div className="achievement-collection">
         <article className={'achievement-item achievement-tier-1 '+(achievements.earlyBird?'is-earned':'is-locked')}><div className="achievement-emblem">{achievements.earlyBird?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Ticket size={27} strokeWidth={1.6}/><i>01</i></div>:<LockKeyhole size={27}/>}</div><div className="achievement-item-copy"><span>ACHIEVEMENT / 001</span><h2>{achievements.earlyBird?'EARLY BIRD':'UNDISCOVERED'}</h2><p>{achievements.earlyBird?'Ты был здесь ещё до первой премьеры. Похоже, ты знаешь, где начинается самое интересное.':'Его время ещё придёт.'}</p></div><div className="achievement-status">{achievements.earlyBird?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div></article>
-        <article className="achievement-item achievement-tier-2 is-locked"><div className="achievement-emblem"><LockKeyhole size={27}/></div><div className="achievement-item-copy"><span>ACHIEVEMENT / 002</span><h2>THE LOYAL ONE</h2><p>Прими участие во всех предварительных голосованиях. Доступно позднее.</p></div><div className="achievement-status">LOCKED</div></article>
+        <article className={'achievement-item achievement-tier-2 '+(achievements.loyalOne?'is-earned':'is-locked')}><div className="achievement-emblem">{achievements.loyalOne?<div className="sf-medallion sf-medallion-loyal"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Vote size={27} strokeWidth={1.6}/><i>02</i></div>:<LockKeyhole size={27}/>}</div><div className="achievement-item-copy"><span>ACHIEVEMENT / 002</span><h2>THE LOYAL ONE</h2><p>{achievements.loyalOne?'Все четыре предварительных голосования пройдены. У Сентфора появился настоящий преданный фанат.':'Прими участие во всех четырёх голосованиях PRE-BATTLE HYPE.'}</p></div><div className="achievement-status">{achievements.loyalOne?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div></article>
       </div>
     </section>
     <section className="achievement-category achievement-category-secrets" id="sf-achievement-secrets">
@@ -147,8 +180,8 @@ export default function App() {
         {[3,4,5].map(n=><article className={`achievement-item is-locked achievement-tier-${n}`} key={n}><div className="achievement-emblem"><LockKeyhole size={27}/></div><div className="achievement-item-copy"><span>ACHIEVEMENT / {String(n).padStart(3,'0')}</span><h2>UNDISCOVERED</h2><p>Секрет ещё не раскрыт.</p></div><div className="achievement-status">LOCKED</div></article>)}
       </div>
     </section>
-    <div className="achievement-reward"><div><span>FINAL REWARD / COLLECTION 01</span><h2><Ticket size={25}/> ALL ACCESS TICKET</h2><p>Коллекционный билет на шоу откроется, когда ты соберёшь всю первую коллекцию. Само шоу бесплатно для всех.</p></div><span className="achievement-reward-lock"><LockKeyhole size={17}/> LOCKED / {achievements.earlyBird?'1':'0'} OF 5</span></div>
-    <div className="achievement-testing">{achievements.earlyBird&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('earlyBird');go('home')}}><Sparkles size={15}/> ПОВТОРИТЬ УВЕДОМЛЕНИЕ</button>}<p className="achievement-local-note">Пока достижения сохраняются только в этом браузере. Это первая тестовая версия механики.</p></div>
+    <div className="achievement-reward"><div><span>FINAL REWARD / COLLECTION 01</span><h2><Ticket size={25}/> ALL ACCESS TICKET</h2><p>Коллекционный билет на шоу откроется, когда ты соберёшь всю первую коллекцию. Само шоу бесплатно для всех.</p></div><span className="achievement-reward-lock"><LockKeyhole size={17}/> LOCKED / {unlockedCount} OF 5</span></div>
+    <div className="achievement-testing"><div className="achievement-replay-row">{achievements.earlyBird&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('earlyBird');go('home')}}><Sparkles size={15}/> ПОВТОРИТЬ EARLY BIRD</button>}{achievements.loyalOne&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('loyalOne');go('home')}}><Vote size={15}/> ПОВТОРИТЬ THE LOYAL ONE</button>}</div><p className="achievement-local-note">Пока достижения сохраняются только в этом браузере. Это первая тестовая версия механики.</p></div>
    </section>}
   {page==='home'&&<>
    <CreditsTicker/>
@@ -172,7 +205,7 @@ export default function App() {
   {page==='gallery'&&<section className="inner-page wrap"><PageHeading number="03" tag="THE ARCHIVE" title={<><span className="glitch-line" data-text="FREEZE">FREEZE</span><br/><em className="glitch-line" data-text="THE MOMENT.">THE MOMENT.</em></>} intro="Фотографии со сцены, бэкстейджа и съёмок. Настоящие кадры добавим по мере готовности."/><div className="gallery-grid">{gallery.map((g,i)=><button className={'gallery-tile tile-'+i} key={g.label} onClick={()=>setGalleryIndex(i)}><Cover src={g.image} alt={g.label} initials={String(i+1).padStart(2,'0')}/><span>{g.label} <ArrowRight size={16}/></span></button>)}</div></section>}
   {page==='sponsors'&&<section className="inner-page wrap sponsors-page"><PageHeading number="06" tag="POWERED BY" title={<><span className="glitch-heading" data-text="BACKED BY">BACKED BY</span><br/><em className="glitch-heading" data-text="THE CULTURE.">THE CULTURE.</em></>} intro="WARLOCK, BLACK HELLEBORE ENERGY и GOSSIP SAINTFOUR — бренды и партнёры нашего фанатского рэп-шоу."/><SponsorsShowcase/></section>}
   {page==='polls'&&<section className="inner-page wrap official-voting-page"><PageHeading number="04" tag="YOUR VOTE MATTERS" title={<><span className="glitch-line" data-text="WHO WINS?">WHO WINS?</span><br/><em className="glitch-line" data-text="YOU DECIDE.">YOU DECIDE.</em></>} intro="Прогнозы до премьеры уже открыты! А официальные голосования за победителей начнутся после выхода соответствующих выпусков."/>
-    <HypePolls/>
+    <HypePolls onVotesChanged={unlockLoyalOne}/>
     <div className="official-voting-intro" aria-labelledby="official-voting-title">
       <div className="official-voting-intro-copy"><span className="official-voting-kicker"><span className="official-voting-live-dot"/> THE MAIN EVENT / COMING SOON</span><h2 id="official-voting-title">OFFICIAL <em>VOTING.</em></h2><p>Прогнозы закончились. Теперь решать тебе, кто пройдёт дальше. Голосование откроется после выхода каждого батла.</p></div>
       <div className="official-voting-seal" aria-hidden="true"><span>SF</span><strong>VS</strong><small>THE VERDICT</small></div>
@@ -186,9 +219,9 @@ export default function App() {
     <div className="vote-explanation"><div><strong>КАК ПРОХОДИТ ГОЛОСОВАНИЕ?</strong><p>После выхода батла появятся голосования на сайте и в Telegram. Они будут открыты в течение 48 часов. Победители первых двух батлов проходят в финал.</p></div><div><strong>КОГДА МОЖНО ГОЛОСОВАТЬ?</strong><p>Пока официальные голосования закрыты. Они откроются после премьер соответствующих выпусков — тогда и можно будет отдать свой голос за победителя.</p></div></div>
   </section>}
   </main>
-  <footer className="footer"><div className="wrap footer-main"><div><span className="footer-logo">SAINTFOUR</span><p>RAP BATTLE <b>’27</b></p><small>AN ORIGINAL GOSSIP SAINTFOUR PROJECT</small></div><div className="footer-nav">{nav.slice(1).map(n=><button key={n.id} onClick={()=>go(n.id)}>{n.name}</button>)}{achievements.earlyBird&&<button className="achievement-footer-link" onClick={()=>go('achievements')}><Trophy size={14}/> Достижения <span>1/5</span></button>}</div><div className="footer-stamp"><Radio size={23}/><span>UNDERGROUND<br/>NEVER DIES.</span></div></div><div className="wrap footer-bottom"><span>© {2027} GOSSIP SAINTFOUR. FAN PROJECT.</span><span>MADE FOR THE CULTURE. NOT FOR THE CLOUT.</span></div></footer>
+  <footer className="footer"><div className="wrap footer-main"><div><span className="footer-logo">SAINTFOUR</span><p>RAP BATTLE <b>’27</b></p><small>AN ORIGINAL GOSSIP SAINTFOUR PROJECT</small></div><div className="footer-nav">{nav.slice(1).map(n=><button key={n.id} onClick={()=>go(n.id)}>{n.name}</button>)}{unlockedCount>0&&<button className="achievement-footer-link" onClick={()=>go('achievements')}><Trophy size={14}/> Достижения <span>{unlockedCount}/5</span></button>}</div><div className="footer-stamp"><Radio size={23}/><span>UNDERGROUND<br/>NEVER DIES.</span></div></div><div className="wrap footer-bottom"><span>© {2027} GOSSIP SAINTFOUR. FAN PROJECT.</span><span>MADE FOR THE CULTURE. NOT FOR THE CLOUT.</span></div></footer>
   <nav className="bottom-nav" aria-label="Быстрая навигация">{nav.filter(n=>['home','artists','battles','interviews','polls'].includes(n.id)).map(n=><button key={n.id} onClick={()=>go(n.id)} className={page===n.id?'active':''}><n.Icon size={19}/><span>{n.name}</span></button>)}</nav>
-  {achievementToast&&<div className="achievement-toast achievement-tier-1" role="status" aria-live="polite"><button className="achievement-toast-main" type="button" onClick={()=>{setAchievementToast(null);go('achievements')}}><div className="achievement-toast-medal"><div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Ticket size={23} strokeWidth={1.6}/><i>01</i></div></div><div className="achievement-toast-copy"><span>NEW ACHIEVEMENT <i>01 / 05</i></span><strong>EARLY BIRD</strong><small>Ты успел до первой премьеры <ArrowRight size={13}/></small></div></button><button type="button" className="achievement-toast-dismiss" aria-label="Закрыть уведомление" onClick={()=>setAchievementToast(null)}><X size={16}/></button></div>}
+  {achievementToast&&<div className={`achievement-toast achievement-tier-${achievementToast==='loyalOne'?2:1}`} role="status" aria-live="polite"><button className="achievement-toast-main" type="button" onClick={()=>{setAchievementToast(null);go('achievements')}}><div className="achievement-toast-medal"><div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span>{achievementToast==='loyalOne'?<Vote size={23} strokeWidth={1.6}/>:<Ticket size={23} strokeWidth={1.6}/>}<i>{achievementToast==='loyalOne'?'02':'01'}</i></div></div><div className="achievement-toast-copy"><span>NEW ACHIEVEMENT <i>{achievementToast==='loyalOne'?'02':'01'} / 05</i></span><strong>{achievementToast==='loyalOne'?'THE LOYAL ONE':'EARLY BIRD'}</strong><small>{achievementToast==='loyalOne'?'Все четыре голоса учтены':'Ты успел до первой премьеры'} <ArrowRight size={13}/></small></div></button><button type="button" className="achievement-toast-dismiss" aria-label="Закрыть уведомление" onClick={()=>setAchievementToast(null)}><X size={16}/></button></div>}
   {selected&&<div className="modal-backdrop" onClick={()=>setSelected(null)}><section className="artist-modal" role="dialog" aria-modal="true" aria-label={selected.stage} onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setSelected(null)} aria-label="Закрыть"><X/></button><Cover key={selected.id+'-'+(selected.profileImage||selected.image)} src={selected.profileImage?selected.profileImage+'?v=2':selected.image} initials={selected.initials} alt={selected.stage}/><div className="artist-modal-body"><span className="eyebrow">{selected.isHost?'HOST / SHOW PRESENTER':`CONTESTANT / ${selected.number}`}</span><h2 className="glitch-heading" data-text={selected.stage}>{selected.stage}</h2><p className="modal-realname">{selected.name}</p><div className="modal-rule"/><p>{selected.description}</p><strong>{selected.subtitle}</strong></div></section></div>}
   {activeVideo&&<div className="modal-backdrop" onClick={()=>setActiveVideo(null)}><section className="video-modal" role="dialog" aria-modal="true" aria-label={activeVideo.title} onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setActiveVideo(null)} aria-label="Закрыть"><X/></button>{activeVideo.url?<video controls playsInline autoPlay src={activeVideo.url}/>:<div className="video-unavailable"><Play size={42}/><h3>COMING SOON</h3><p>Видео ещё не опубликовано.</p></div>}<h3>{activeVideo.title}</h3></section></div>}
   {galleryIndex!==null&&<div className="modal-backdrop" onClick={()=>setGalleryIndex(null)}><section className="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фотографии" onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setGalleryIndex(null)} aria-label="Закрыть"><X/></button><Cover src={gallery[galleryIndex].image} initials={String(galleryIndex+1).padStart(2,'0')} alt={gallery[galleryIndex].label}/><div className="lightbox-controls"><button onClick={()=>setGalleryIndex((galleryIndex+gallery.length-1)%gallery.length)} aria-label="Предыдущее"><ChevronLeft/></button><span>{gallery[galleryIndex].label} — {galleryIndex+1}/{gallery.length}</span><button onClick={()=>setGalleryIndex((galleryIndex+1)%gallery.length)} aria-label="Следующее"><ChevronRight/></button></div></section></div>}
