@@ -36,3 +36,15 @@
  .spin-wheel-shell{transform:none;margin:13px auto 7px}
  .spin-wheel-shell,.spin-wheel{--wheel-size:min(65vw,235px)}
 }
+
+.spin-achievement-toast{position:fixed;z-index:120;right:18px;bottom:94px;width:min(390px,calc(100vw - 28px));background:linear-gradient(125deg,#36203e,#1b1023);border:1px solid #d38dc8;box-shadow:0 14px 55px #08050bc9,0 0 28px #c34ea344;display:flex;align-items:flex-start;padding:12px 10px 12px 13px;animation:spin-toast-in .35s ease-out}
+.spin-achievement-toast-main{background:none;border:0;color:#fff;text-align:left;display:flex;align-items:center;gap:13px;flex:1;min-width:0;cursor:pointer;padding:0}
+.spin-achievement-toast-icon{width:52px;height:52px;border-radius:50%;border:2px solid #dfa6d8;display:grid;place-items:center;color:#f4c6e9;flex-shrink:0;background:#47254d}
+.spin-achievement-toast-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
+.spin-achievement-toast-copy small{color:#e4a6d5;font:800 9px 'DM Sans',sans-serif;letter-spacing:.09em}
+.spin-achievement-toast-copy strong{font:900 22px/1 'Barlow Condensed',Impact,sans-serif}
+.spin-achievement-toast-copy>span{color:#d5c0d8;font:400 11px/1.4 'DM Sans',sans-serif}
+.spin-achievement-toast-copy em{color:#f5b9e4;font:800 10px 'DM Sans',sans-serif;font-style:normal}
+.spin-achievement-toast-close{background:none;border:0;color:#e5c1df;font-size:23px;cursor:pointer;line-height:1;padding:0 3px}
+@keyframes spin-toast-in{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@media(max-width:850px){.spin-achievement-toast{bottom:82px;right:10px;width:calc(100vw - 20px)}}
