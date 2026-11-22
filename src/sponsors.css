@@ -157,3 +157,40 @@
 /* Natural paragraph breaks and discreet corporate disclaimer in partner profiles */
 .sponsor-modal-content .sponsor-details-description{white-space:pre-line}
 .sponsor-partner-note{border-left:2px solid #9b79ae;padding:9px 0 9px 14px;margin:3px 0 23px;font:500 11px/1.65 'IBM Plex Mono',monospace;color:#bea9cc}
+
+/* Hidden partner secret: a discreet product batch stamp under the energy advert. */
+.sponsor-product-batch{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 2px 0;color:#866d98;font:700 8px 'IBM Plex Mono',monospace;letter-spacing:.12em}
+.sponsor-product-batch button{padding:4px 0 4px 10px;border:0;background:transparent;color:#9b7b9f;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;cursor:pointer}
+.sponsor-product-batch button span{opacity:.5;margin-left:2px}
+.sponsor-product-batch button:hover,.sponsor-product-batch button:focus-visible{color:#f3a7eb;text-shadow:0 0 9px #e98ade67}
+.hellebore-classified{margin:15px 0 6px;border:1px solid #9d71c5;background:radial-gradient(ellipse at 16% 25%,#59347576,transparent 64%),linear-gradient(125deg,#25182e,#0e0c18);box-shadow:0 8px 24px #0008;animation:hellebore-secret-open .28s ease-out both}
+.hellebore-classified-top{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:12px 15px;border-bottom:1px solid #655177;color:#d6b3e7;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.09em}
+.hellebore-classified-top>span{display:flex;align-items:center;gap:8px}
+.hellebore-classified-top button{display:grid;place-items:center;border:0;background:transparent;color:#d6b3e7;padding:3px}
+.hellebore-classified-content{display:flex;align-items:center;gap:23px;padding:22px 20px 17px}
+.hellebore-experimental-can{position:relative;flex:0 0 87px;height:165px;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:4px;border:1px solid #b793d8;border-radius:15px 15px 17px 17px;background:linear-gradient(90deg,#120d1d,#543772 25%,#120e24 48%,#6a3d86 82%,#1b112a);transform:rotate(-8deg);box-shadow:8px 12px 18px #0009,0 0 24px #9764d63a;color:#fff6ff}
+.hellebore-experimental-can:before{content:"";position:absolute;top:-2px;left:10%;width:80%;height:9px;border:1px solid #bda0d6;border-radius:50%;background:linear-gradient(#a48ab4,#352044)}
+.hellebore-experimental-can span{font:900 18px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.1em;color:#e1ccff}
+.hellebore-experimental-can strong{font:900 69px/.88 'Barlow Condensed',Impact,sans-serif;color:#fff1ff}
+.hellebore-experimental-can small{font:700 7px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#d5b8f0}
+.hellebore-classified-content>div:last-child{min-width:0}
+.hellebore-classified-kicker{color:#cda9eb;font:700 8px 'IBM Plex Mono',monospace;letter-spacing:.11em}
+.hellebore-classified-content h4{margin:10px 0 9px;color:#fff2ff;font:900 clamp(24px,3vw,35px)/.96 'Barlow Condensed',Impact,sans-serif}
+.hellebore-classified-content h4 em{color:#d7a5fa;font-style:italic}
+.hellebore-classified-content p{font:400 12px/1.65 'DM Sans',sans-serif;color:#d0bbd8;margin:0 0 15px}
+.hellebore-classified-footer{display:block;color:#c49bd1;font:700 8px/1.5 'IBM Plex Mono',monospace;letter-spacing:.06em}
+.hellebore-classified-return{display:flex;align-items:center;gap:8px;width:100%;padding:11px 17px;border:0;border-top:1px solid #594369;background:#261932;color:#deafdf;text-align:left;font:700 9px 'IBM Plex Mono',monospace;letter-spacing:.07em}
+.hellebore-classified-return:hover{background:#372040}
+@keyframes hellebore-secret-open{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:540px){
+ .hellebore-classified-top{padding:10px;font-size:8px}
+ .hellebore-classified-content{gap:13px;padding:19px 11px 16px}
+ .hellebore-experimental-can{flex-basis:62px;height:124px;border-radius:10px}
+ .hellebore-experimental-can span{font-size:13px}
+ .hellebore-experimental-can strong{font-size:47px}
+ .hellebore-experimental-can small{font-size:5.5px;letter-spacing:0}
+ .hellebore-classified-content h4{font-size:25px}
+ .hellebore-classified-content p{font-size:10px}
+ .hellebore-classified-footer{font-size:7px}
+}
+@media(prefers-reduced-motion:reduce){.hellebore-classified{animation:none}}
