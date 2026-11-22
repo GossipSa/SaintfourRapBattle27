@@ -169,7 +169,7 @@ function SponsorModal({sponsor,onClose,onSecretFound}) {
   </div>
 }
 
-export default function SponsorsShowcase({onSecretFound}) {
+export default function SponsorsShowcase({onSecretFound,onBonusUnlock,bonusUnlocked=false}) {
   const [selected,setSelected]=useState(null)
   const close=()=>setSelected(null)
   return <div className="sponsors-showcase">
@@ -178,7 +178,7 @@ export default function SponsorsShowcase({onSecretFound}) {
       {sponsors.map(s=><SponsorCard key={s.id} sponsor={s} onOpen={setSelected}/>)}
     </div>
     <div className="sponsors-note"><span className="red-dot"/> PARTNERS / SAINTFOUR RAP BATTLE ’27 <span>GOSSIP SAINTFOUR ORIGINAL PROJECT</span></div>
-    <ShakeCan/>
+    <ShakeCan onBonusUnlock={onBonusUnlock} bonusUnlocked={bonusUnlocked}/>
     {selected&&<SponsorModal sponsor={selected} onClose={close} onSecretFound={onSecretFound}/>}
   </div>
 }
