@@ -80,7 +80,7 @@ export default function HowardPhone({onBlocked}){
          mode==='mistake'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong>Прошу прощения. Кажется, я ошибся номером.</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:
          mode==='answer'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong>{reply?.text}</strong><small>{reply?.status}</small></>:
          mode==='idle'?<><PhoneOff size={27}/><strong>ВЫЗОВ ЗАВЕРШЁН</strong><small>НАБЕРИТЕ ЕЩЁ РАЗ</small></>:
-         <><span className="hp-screen-kicker">ВХОДЯЩИЙ ВЫЗОВ</span><Phone className="hp-ring" size={29}/><strong>Натаниэль<br/>Говард</strong><small>НЕИЗВЕСТНЫЙ НОМЕР</small></>}
+         <><span className="hp-screen-kicker">ВХОДЯЩИЙ ВЫЗОВ</span><Phone className="hp-ring" size={29}/><strong>НЕИЗВЕСТНЫЙ<br/>НОМЕР</strong><small>ВХОДЯЩИЙ ВЫЗОВ</small></>}
        </div>
        <div className="hp-screen-bottom"><span>{mode==='incoming'?'ANSWER':'SAINTFOUR'}</span><span>{mode==='incoming'?'DECLINE':'27 / 27'}</span></div>
       </div>
@@ -97,7 +97,7 @@ export default function HowardPhone({onBlocked}){
       <span className="hp-bottom-mark">MOTOR / SF EDITION</span>
      </div>
     </div>
-    <div className="hp-caption">{mode==='blocked'?'Натаниэль Говард заблокировал ваш номер.':mode==='final'?'Достижение открыто: «ГОВАРД ЗАБЛОКИРОВАЛ ВАС»':mode==='incoming'?'Кто-то звонит вам по ошибке…':mode==='mistake'?'Звонок оборвался. Но номер остался в журнале.':'Можно попробовать перезвонить.'}</div>
+    <div className="hp-caption">{mode==='blocked'?'Натаниэль Говард заблокировал ваш номер.':mode==='final'?'Достижение открыто: «ГОВАРД ЗАБЛОКИРОВАЛ ВАС»':mode==='incoming'?'Неизвестный номер. Ответить на вызов?':mode==='mistake'?'Звонок оборвался. Но номер остался в журнале.':'Можно попробовать перезвонить.'}</div>
     {(mode==='answer'||mode==='idle'||mode==='mistake')&&<button type="button" className="hp-redial" onClick={()=>{if(mode==='mistake'){setMode('idle')}else{call()}}}>ПОЗВОНИТЬ ЕЩЁ РАЗ ↗</button>}
     {mode==='final'&&<button type="button" className="hp-redial" onClick={()=>setMode('blocked')}>ПОСМОТРЕТЬ ЧЁРНЫЙ СПИСОК ↗</button>}
    </div>
