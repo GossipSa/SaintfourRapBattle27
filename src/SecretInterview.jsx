@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, Check, CircleHelp, LockKeyhole, Mic2, Phone, PhoneCall, PhoneOff, Play, RotateCcw, X } from 'lucide-react'
+import { ArrowRight, Check, LockKeyhole, Phone, PhoneCall, PhoneOff, Play, RotateCcw, X } from 'lucide-react'
 import './secret-interview.css'
 
 // The guest is the person behind the screen. No photo assets are required.
@@ -129,6 +129,10 @@ export default function SecretInterview({onClose,onComplete,alreadyEarned=false}
   return ()=>{document.body.style.overflow=original}
  },[])
  const question=questions[index]
+ // The same seven photo assets follow the seven dramatic beats of the existing script.
+ const photoIndex=stage==='intro'?'01':stage==='questions'?['02','05','03','06','04'][index]:stage==='done'?'01':'07'
+ const photoAlt=stage==='intro'?'Поппи ожидает неизвестного гостя напротив пустого кресла':stage==='questions'?['Поппи уверенно ведёт интервью','Поппи задумчиво изучает пустое кресло','Поппи недоверчиво смотрит на зрителя','Поппи потрясена рассказом о происхождении шоу','Поппи раздражённо готовится позвонить организатору'][index]:'Поппи возмущённо разговаривает по телефону'
+ const photoUrl=`${import.meta.env.BASE_URL}media/fifth-chair/poppy-${photoIndex}.jpg`
  const choose=(i)=>setChoice(i)
  const next=()=>{
   if(choice===null)return
@@ -151,13 +155,7 @@ export default function SecretInterview({onClose,onComplete,alreadyEarned=false}
    <div className="fifth-layout">
     <div className="fifth-visual">
      <div className="fifth-scene">
-      <span className="fifth-scene-led fifth-scene-led-left" aria-hidden="true"/>
-      <span className="fifth-scene-led fifth-scene-led-right" aria-hidden="true"/>
-      <div className="fifth-stage-brand">SAINTFOUR <strong>RAP BATTLE ’27</strong></div>
-      <div className="fifth-chairs" aria-hidden="true">
-       <div className="fifth-chair fifth-chair-poppy"><div className="fifth-chair-back"/><div className="fifth-chair-seat"/><div className="fifth-chair-arm arm-left"/><div className="fifth-chair-arm arm-right"/><div className="fifth-chair-leg leg-left"/><div className="fifth-chair-leg leg-right"/><span className="fifth-chair-mark"><Mic2 size={26}/><b>POPPY</b></span></div>
-       <div className="fifth-chair fifth-chair-guest"><div className="fifth-chair-back"/><div className="fifth-chair-seat"/><div className="fifth-chair-arm arm-left"/><div className="fifth-chair-arm arm-right"/><div className="fifth-chair-leg leg-left"/><div className="fifth-chair-leg leg-right"/><span className="fifth-chair-mark"><CircleHelp size={25}/><b>GUEST: ???</b></span></div>
-      </div>
+      <img key={photoIndex} className="fifth-scene-photo" src={photoUrl} alt={photoAlt} decoding="async" fetchPriority={stage==='intro'?'high':'auto'}/>
       <div className="fifth-stage-caption"><span>CAM 01 / INTERVIEW ROOM</span><span>{stage==='intro'?'STANDBY':stage==='done'?'SIGNAL LOST':'LIVE'}</span></div>
      </div>
      <div className="fifth-visual-meta"><span>POPPY EMERSON</span><span>GUEST NOT FOUND <i>●</i></span></div>
