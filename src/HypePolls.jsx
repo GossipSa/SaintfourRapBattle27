@@ -27,7 +27,7 @@ function getVoterId(){
   if (!id || !/^[0-9a-f-]{36}$/i.test(id)) { id = crypto.randomUUID(); localStorage.setItem(voterKey,id) }
   return id
 }
-export default function HypePolls(){
+export default function HypePolls({onVotesChanged}){
   const [votes,setVotes] = useState(readVotes)
   const [results,setResults] = useState(null)
   const [pending,setPending] = useState(null)
@@ -60,6 +60,7 @@ export default function HypePolls(){
       const next={...votes,[poll.id]:data.choice}
       setVotes(next);setResults(data.results)
       try{localStorage.setItem(voteKey,JSON.stringify(next))}catch{/* session vote remains visible */}
+      onVotesChanged?.(next)
     }catch{setError('Не удалось сохранить голос. Попробуй ещё раз.')}
     finally{setPending(null)}
   }
