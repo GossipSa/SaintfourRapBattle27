@@ -5,38 +5,12 @@ import './lucky-spin.css'
 
 const storageKey='sf27-lucky-spin-v2'
 const milestones=[
- {count:1,title:"НУ, ПОНЕСЛАСЬ",description:"Ты только что потратил время на абсолютно бесполезную рулетку."},
- {count:10,title:"ДЕСЯТЬ РАЗ НЕ СЧИТАЕТСЯ",description:"Поппи сказала «один разок». Ты услышала «десять»."},
- {count:25,title:"ПОППИ НАЧИНАЕТ ПЕРЕЖИВАТЬ",description:"Даже организатор шоу не ожидала такого энтузиазма."},
- {count:50,title:"ПАЛЕЦ НА АВТОПИЛОТЕ",description:"Твой палец уже знает кнопку лучше, чем дорогу домой."},
- {count:100,title:"ПРОФЕССИОНАЛЬНЫЙ БЕЗДЕЛЬНИК",description:"Сто прокруток. Ноль материальных призов."},
- {count:150,title:"ДЕКС СТАВИТ НА ТЕБЯ",description:"LIL DEX уверен, что ты докрутишь до конца. Какого конца — он не уточнил."},
- {count:250,title:"РУЛЕТКА ЗНАЕТ ТЕБЯ ПО ИМЕНИ",description:"Возможно, вам уже пора познакомиться лично."},
- {count:333,title:"ТРИ ТРОЙКИ, НОЛЬ СМЫСЛА",description:"Говорят, это счастливое число. Говард требует доказательств."},
- {count:500,title:"ПОЛТЫСЯЧИ В ПУСТОТУ",description:"Поппи уже хотела выдать тебе грамоту. Принтер отказался."},
- {count:666,title:"СЕНТФОРСКАЯ ЧЕРТОВЩИНА",description:"Даже башня Старого Сентфора смотрит на тебя с подозрением."},
- {count:777,title:"ДЖЕКПОТ БЕЗ ДЖЕКПОТА",description:"Три семёрки! Твой выигрыш — возможность крутить дальше."},
- {count:1000,title:"ГОВАРД ТРЕБУЕТ ЗАКРЫТЬ САЙТ",description:"Юридический отдел Warlock направил официальную претензию."},
- {count:1500,title:"КОТЁНОК ДЕКСА УСТАЛ",description:"Маленький менеджер LIL DEX уснул на твоей статистике."},
- {count:2000,title:"ДВЕ ТЫСЯЧИ ПРИЧИН ОСТАТЬСЯ",description:"Ни одной рациональной. Но кто вообще просил рациональные?"},
- {count:3000,title:"РУДИ СБИЛСЯ СО СЧЁТА",description:"Капитан баскетбольной команды признаёт поражение в подсчёте."},
- {count:5000,title:"ПОППИ ОТКРЫЛА ДЕЛО",description:"Папка называется «Человек, который не умеет останавливаться»."},
- {count:7500,title:"СЕРВЕР ТЕБЯ ПОМНИТ",description:"Даже если ты уйдёшь, рулетка будет ждать. Очень неловко."},
- {count:10000,title:"ЗДРАВСТВУЙ, БЕСКОНЕЧНОСТЬ",description:"Десять тысяч прокруток. Теперь у тебя официально нет потолка."},
- {count:15000,title:"ГОВАРД СМЕНИЛ НОМЕР",description:"Не помогло. Ты всё ещё здесь и всё ещё крутишь."},
- {count:25000,title:"СЕНТФОРСКАЯ ЛЕГЕНДА",description:"В школе уже рассказывают о тебе страшилки на переменах."},
- {count:50000,title:"ПОППИ ВЫШЛА В ОТПУСК",description:"Рулетка осталась. Похоже, она теперь организатор шоу."},
- {count:100000,title:"СТО ТЫСЯЧ НИЧЕГО",description:"Ты могла бы получить диплом. Но получила ещё один виртуальный приз."},
- {count:250000,title:"WARLOCK НЕ НАШЁЛ ОБЪЯСНЕНИЯ",description:"Лаборатория изучила статистику и тихо закрыла отчёт."},
- {count:500000,title:"ПОЛМИЛЛИОНА ОБОРОТОВ",description:"Колесо просит профсоюз, отпуск и смазку для подшипников."},
- {count:1000000,title:"МИЛЛИОН. ТЫ СЕРЬЁЗНО?",description:"Поппи не верит. Декс уважает. Говард отказался комментировать."}
+ {count:1,title:'НУ, ПОНЕСЛАСЬ',description:'Ты только что потратил время на абсолютно бесполезную рулетку.'},
+ {count:25,title:'ПОППИ НАЧИНАЕТ ПЕРЕЖИВАТЬ',description:'Даже организатор шоу не ожидала такого энтузиазма.'},
+ {count:100,title:'ПРОФЕССИОНАЛЬНЫЙ БЕЗДЕЛЬНИК',description:'Сто прокруток. Ноль материальных призов.'},
+ {count:250,title:'РУЛЕТКА ЗНАЕТ ТЕБЯ ПО ИМЕНИ',description:'Возможно, вам уже пора познакомиться лично.'},
+ {count:1000,title:'ГОВАРД ТРЕБУЕТ ЗАКРЫТЬ САЙТ',description:'Юридический отдел Warlock направил официальную претензию.'}
 ]
-const infinityStart=10000
-const infinityStep=10000
-const infinityLevel=spins=>spins>=infinityStart?Math.floor((spins-infinityStart)/infinityStep)+1:0
-const infinityTitle=level=>`∞ / УРОВЕНЬ ${level}`
-const infinityDescription=level=>`Бесконечность, круг ${level}. Поппи перестала считать, но колесо не сдаётся. Следующий круг — ещё через 10 000 прокруток.`
-
 const categoryWeights={'Декс':8,'Руди':8,'Говард':8,'Даррен':8,'Надин':9,'Поппи':9,'Батл / закулисье':9,'Warlock / архив':7,'Школа Сентфора':6,'BLACK HELLEBORE':8,'Сплетница Сентфора':7,'Saintfour / город':7,'Фанат / зритель':6}
 function drawPrize(){const n=Math.random()*100;let cursor=0;let category='Фанат / зритель';for(const [name,weight] of Object.entries(categoryWeights)){cursor+=weight;if(n<cursor){category=name;break}}const choices=spinPrizes.filter(p=>p.group===category);return choices[Math.floor(Math.random()*choices.length)]}
 const wheelIcons=[Cigarette,Flower2,CircleDot,Zap,Cat,Disc3,Flame,Music2,Mic2,Crown,Star,Diamond]
@@ -62,10 +36,8 @@ export default function LuckySpin({onBack,onAchievements}){
   timer.current=setTimeout(()=>{
    const nextSpin=record.spins+1
    const milestone=milestones.find(m=>m.count===nextSpin)
-   const infinityUnlocked=nextSpin>=infinityStart&&(nextSpin-infinityStart)%infinityStep===0
-   const infinityAchievement=infinityUnlocked?{title:infinityTitle(infinityLevel(nextSpin)),description:infinityDescription(infinityLevel(nextSpin))}:null
    const secretNew=!record.secret&&record.history.length>=2&&record.history[0].id===prize.id&&record.history[1].id===prize.id
-   if(milestone||secretNew||infinityAchievement){setAchievementNotice(infinityAchievement|| (milestone?{title:milestone.title,description:milestone.description}:{title:'НЕВЕРОЯТНОЕ УПОРСТВО',description:'Три одинаковых приза подряд. Поппи подозревает вмешательство Warlock.'}));clearTimeout(noticeTimer.current);noticeTimer.current=setTimeout(()=>setAchievementNotice(null),9000)}
+   if(milestone||secretNew){setAchievementNotice(milestone?{title:milestone.title,description:milestone.description}:{title:'НЕВЕРОЯТНОЕ УПОРСТВО',description:'Три одинаковых приза подряд. Поппи подозревает вмешательство Warlock.'});clearTimeout(noticeTimer.current);noticeTimer.current=setTimeout(()=>setAchievementNotice(null),9000)}
    setRecord(prev=>{
     const next={spins:prev.spins+1,history:[{id:prize.id,at:Date.now()},...prev.history].slice(0,250),found:[...new Set([...prev.found,prize.id])],secret:prev.secret||(prev.history.length>=2&&prev.history[0].id===prize.id&&prev.history[1].id===prize.id)}
     try{localStorage.setItem(storageKey,JSON.stringify(next))}catch{/* storage disabled */}
@@ -96,7 +68,7 @@ export default function LuckySpin({onBack,onAchievements}){
     <div className="spin-panel"><div className="spin-tabs"><button className={tab==='collection'?'selected':''} onClick={()=>setTab('collection')}><Gift size={15}/> КОЛЛЕКЦИЯ</button><button className={tab==='history'?'selected':''} onClick={()=>setTab('history')}>ИСТОРИЯ</button><button className={tab==='awards'?'selected':''} onClick={()=>setTab('awards')}><Trophy size={15}/> АЧИВКИ</button></div>
       {tab==='collection'&&<><p className="spin-panel-caption">Найдено {found.size} из {spinPrizes.length}. Повторы не исчезают из истории. Призы разделены по категориям.</p><div className="spin-collection">{Object.keys(categoryWeights).map(group=><div className="spin-collection-group" key={group}><div className="spin-collection-group-heading"><strong>{group.toUpperCase()}</strong><span>{spinPrizes.filter(p=>p.group===group&&found.has(p.id)).length} / {spinPrizes.filter(p=>p.group===group).length}</span></div><div className="spin-collection-group-items">{spinPrizes.filter(p=>p.group===group).map(p=><div key={p.id} className={'spin-collect-item '+(found.has(p.id)?'discovered':'')} title={found.has(p.id)?p.name:'Неизвестный приз'}><span>{p.id.slice(5).padStart(3,'0')}</span>{found.has(p.id)?<><CheckCircle2 size={15}/><strong>{p.name}</strong></>:<><LockKeyhole size={14}/><strong>???</strong></>}</div>)}</div></div>)}</div></>}
       {tab==='history'&&<><p className="spin-panel-caption">Последние 250 прокруток. Повторные призы тоже учитываются.</p><div className="spin-history">{record.history.length?record.history.map((h,i)=>{const p=spinPrizes.find(x=>x.id===h.id);return <div key={h.at+'-'+i}><span>#{record.spins-i}</span><strong>{p?.name||'Неизвестный приз'}</strong><small>{p?.group}</small></div>}):<p>Здесь пока пусто. Колесо ждёт.</p>}</div></>}
-      {tab==='awards'&&<><p className="spin-panel-caption">Отдельные достижения рулетки. На ALL ACCESS TICKET не влияют.</p><div className="spin-awards">{milestones.map(m=><div key={m.count} className={record.spins>=m.count?'earned':''}>{record.spins>=m.count?<CheckCircle2 size={19}/>:<LockKeyhole size={19}/>}<div><small>{m.count} ПРОКРУТОК</small><strong>{record.spins>=m.count?m.title:'НЕ ОТКРЫТО'}</strong><p>{record.spins>=m.count?m.description:'Продолжай крутить колесо.'}</p></div></div>)}<div className={infinityLevel(record.spins)>0?'earned':''}>{infinityLevel(record.spins)>0?<Sparkles size={19}/>:<LockKeyhole size={19}/>}<div><small>∞ / КАЖДЫЕ 10 000 ПРОКРУТОК</small><strong>{infinityLevel(record.spins)>0?infinityTitle(infinityLevel(record.spins)):'БЕСКОНЕЧНОСТЬ ЗАСЕКРЕЧЕНА'}</strong><p>{infinityLevel(record.spins)>0?infinityDescription(infinityLevel(record.spins)):'Первый бесконечный круг откроется на 10 000 прокруток. Дальше — новый уровень каждые 10 000, без конца.'}</p></div></div><div className={record.secret?'earned':''}>{record.secret?<Sparkles size={19}/>:<LockKeyhole size={19}/>}<div><small>SECRET / ???</small><strong>{record.secret?'НЕВЕРОЯТНОЕ УПОРСТВО':'ЗАСЕКРЕЧЕНО'}</strong><p>{record.secret?'Три одинаковых приза подряд. Поппи подозревает вмешательство Warlock.':'Условие неизвестно.'}</p></div></div></div></>}
+      {tab==='awards'&&<><p className="spin-panel-caption">Отдельные достижения рулетки. На ALL ACCESS TICKET не влияют.</p><div className="spin-awards">{milestones.map(m=><div key={m.count} className={record.spins>=m.count?'earned':''}>{record.spins>=m.count?<CheckCircle2 size={19}/>:<LockKeyhole size={19}/>}<div><small>{m.count} ПРОКРУТОК</small><strong>{record.spins>=m.count?m.title:'НЕ ОТКРЫТО'}</strong><p>{record.spins>=m.count?m.description:'Продолжай крутить колесо.'}</p></div></div>)}<div className={record.secret?'earned':''}>{record.secret?<Sparkles size={19}/>:<LockKeyhole size={19}/>}<div><small>SECRET / ???</small><strong>{record.secret?'НЕВЕРОЯТНОЕ УПОРСТВО':'ЗАСЕКРЕЧЕНО'}</strong><p>{record.secret?'Три одинаковых приза подряд. Поппи подозревает вмешательство Warlock.':'Условие неизвестно.'}</p></div></div></div></>}
     </div>
    </aside>
   </div>
@@ -107,5 +79,5 @@ export default function LuckySpin({onBack,onAchievements}){
 
 export function LuckySpinAchievements({onOpen}){
  const [record]=useState(load)
- return <div className="spin-achievement-bridge"><div className="spin-achievement-bridge-head"><span>LUCKY SPIN / BONUS COLLECTION</span><strong>ДОСТИЖЕНИЯ РУЛЕТКИ</strong><p>Отдельная коллекция. Не влияет на получение ALL ACCESS TICKET.</p></div><div className="spin-achievement-bridge-list">{milestones.map(m=><div key={m.count}><span>{record.spins>=m.count?<CheckCircle2 size={16}/>:<LockKeyhole size={16}/>}</span><strong>{record.spins>=m.count?m.title:'НЕИЗВЕСТНО'}</strong><small>{m.count} SPINS</small></div>)}<div><span>{infinityLevel(record.spins)>0?<Sparkles size={16}/>:<LockKeyhole size={16}/>}</span><strong>{infinityLevel(record.spins)>0?infinityTitle(infinityLevel(record.spins)):'НЕИЗВЕСТНО'}</strong><small>∞ / EVERY 10K SPINS</small></div><div><span>{record.secret?<Sparkles size={16}/>:<LockKeyhole size={16}/>}</span><strong>{record.secret?'НЕВЕРОЯТНОЕ УПОРСТВО':'НЕИЗВЕСТНО'}</strong><small>SECRET</small></div></div><button type="button" onClick={onOpen}>ПЕРЕЙТИ К РУЛЕТКЕ <ArrowRight size={15}/></button></div>
+ return <div className="spin-achievement-bridge"><div className="spin-achievement-bridge-head"><span>LUCKY SPIN / BONUS COLLECTION</span><strong>ДОСТИЖЕНИЯ РУЛЕТКИ</strong><p>Отдельная коллекция. Не влияет на получение ALL ACCESS TICKET.</p></div><div className="spin-achievement-bridge-list">{milestones.map(m=><div key={m.count}><span>{record.spins>=m.count?<CheckCircle2 size={16}/>:<LockKeyhole size={16}/>}</span><strong>{record.spins>=m.count?m.title:'НЕИЗВЕСТНО'}</strong><small>{m.count} SPINS</small></div>)}<div><span>{record.secret?<Sparkles size={16}/>:<LockKeyhole size={16}/>}</span><strong>{record.secret?'НЕВЕРОЯТНОЕ УПОРСТВО':'НЕИЗВЕСТНО'}</strong><small>SECRET</small></div></div><button type="button" onClick={onOpen}>ПЕРЕЙТИ К РУЛЕТКЕ <ArrowRight size={15}/></button></div>
 }
