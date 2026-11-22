@@ -5,7 +5,7 @@ function TickerCopy({ phrases }) {
     <span className="battle-ticker-copy">
       {phrases.map(phrase => (
         <span className="battle-ticker-phrase" key={phrase}>
-          {phrase}<b aria-hidden="true">✳</b>
+          {phrase}<b aria-hidden="true">◆</b>
         </span>
       ))}
     </span>
