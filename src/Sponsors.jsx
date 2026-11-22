@@ -1,4 +1,5 @@
 import './sponsor-tile-redesign.css'
+import ShakeCan from './ShakeCan.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, Play, Star, X, Zap, FlaskConical, ArrowLeft } from 'lucide-react'
 
@@ -177,6 +178,7 @@ export default function SponsorsShowcase({onSecretFound}) {
       {sponsors.map(s=><SponsorCard key={s.id} sponsor={s} onOpen={setSelected}/>)}
     </div>
     <div className="sponsors-note"><span className="red-dot"/> PARTNERS / SAINTFOUR RAP BATTLE ’27 <span>GOSSIP SAINTFOUR ORIGINAL PROJECT</span></div>
+    <ShakeCan/>
     {selected&&<SponsorModal sponsor={selected} onClose={close} onSecretFound={onSecretFound}/>}
   </div>
 }
