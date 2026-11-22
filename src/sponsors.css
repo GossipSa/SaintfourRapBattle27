@@ -243,3 +243,59 @@
  .hellebore-lab-notes strong{font-size:16px}
  .hellebore-classified-bottom{padding:9px 10px}
 }
+
+/* Formula Zero finishing touches — mysterious ? mark, layered berry/violet tones and signal glitch. */
+.sponsor-research-teaser{
+ border-color:#9862a0;
+ background:radial-gradient(ellipse at 95% 5%,#c3488938,transparent 48%),radial-gradient(ellipse at 15% 95%,#8c65df36,transparent 56%),linear-gradient(115deg,#382043,#21152e 66%,#221329);
+ box-shadow:inset 0 1px 0 #e09ec21a;
+}
+.sponsor-research-teaser:hover,.sponsor-research-teaser:focus-visible{
+ border-color:#ec9bcb;
+ background:radial-gradient(ellipse at 92% 2%,#d858a24a,transparent 50%),radial-gradient(ellipse at 15% 95%,#9471ed46,transparent 58%),linear-gradient(115deg,#432349,#261631 66%,#28152d);
+ box-shadow:0 0 26px #bb4b9623,inset 0 1px 0 #f6b0df25;
+}
+.sponsor-research-preview{background:radial-gradient(ellipse at 10% 18%,#bb588c70,transparent 60%),linear-gradient(155deg,#533360,#2e1b4f 60%,#191027)}
+.sponsor-research-preview:after{background:linear-gradient(0deg,#25112dda,transparent 70%),linear-gradient(125deg,#c7529a22,transparent 48%,#8767d441)}
+.sponsor-research-overlay{color:#f7d6f2;text-shadow:-2px 0 #956fea,2px 0 #f29dca,0 3px 14px #000}
+.sponsor-research-overline{color:#d8abf5}
+.sponsor-research-teaser-copy>strong em{color:#f3a2cd}
+.sponsor-research-cta{color:#eab4ff}
+.sponsor-research .hellebore-classified{
+ background:radial-gradient(ellipse at 100% 7%,#ac467d33,transparent 59%),radial-gradient(ellipse at 0% 65%,#8c60d32c,transparent 61%),linear-gradient(120deg,#291933,#141021);
+ border-color:#a875c2;
+}
+.hellebore-experimental-can{
+ border-color:#d8a1e8;
+ background:linear-gradient(94deg,#110b1c 0%,#8d3e83 20%,#32204d 45%,#9a4f9a 78%,#1c1031 100%);
+ box-shadow:8px 12px 19px #0009,0 0 27px #ae60cc53;
+}
+.hellebore-experimental-can strong{color:#fff0fe;text-shadow:-2px 0 #aa7cff,2px 0 #f38fcb}
+.hellebore-lab-notes{background:#81558c;border-color:#81558c}
+.hellebore-lab-notes>div:nth-child(1){background:linear-gradient(140deg,#36203c,#221729)}
+.hellebore-lab-notes>div:nth-child(2){background:linear-gradient(140deg,#2f2148,#21172b)}
+.hellebore-lab-notes>div:nth-child(3){background:linear-gradient(140deg,#3e2038,#25172e)}
+.hellebore-formula-glitch{position:relative;isolation:isolate;width:fit-content;max-width:100%;text-shadow:-1px 0 #9b72f0,1px 0 #ee8bcc}
+.hellebore-formula-glitch::before,.hellebore-formula-glitch::after{
+ content:attr(data-text);position:absolute;inset:0;pointer-events:none;
+ font:inherit;letter-spacing:inherit;white-space:nowrap;opacity:0;
+}
+.hellebore-formula-glitch::before{color:#f3a1d9;clip-path:inset(10% 0 64% 0);animation:hellebore-glitch-upper 5.1s steps(1,end) infinite}
+.hellebore-formula-glitch::after{color:#9475f2;clip-path:inset(69% 0 13% 0);animation:hellebore-glitch-lower 5.1s steps(1,end) infinite}
+@keyframes hellebore-glitch-upper{
+ 0%,73%,77%,91%,95%,100%{opacity:0;transform:none}
+ 74%,76%{opacity:.92;transform:translate(4px,-1px)}
+ 92%,94%{opacity:.8;transform:translate(-3px,1px)}
+}
+@keyframes hellebore-glitch-lower{
+ 0%,73%,78%,91%,96%,100%{opacity:0;transform:none}
+ 74%,77%{opacity:.83;transform:translate(-4px,1px)}
+ 92%,95%{opacity:.82;transform:translate(3px,-1px)}
+}
+@media(max-width:540px){
+ .hellebore-formula-glitch{font-size:clamp(23px,6.8vw,30px)!important}
+ .hellebore-formula-glitch::before,.hellebore-formula-glitch::after{font-size:inherit}
+}
+@media(prefers-reduced-motion:reduce){
+ .hellebore-formula-glitch::before,.hellebore-formula-glitch::after{animation:none;display:none}
+}
