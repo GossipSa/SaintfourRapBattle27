@@ -11,6 +11,8 @@ const milestones=[
  {count:250,title:'РУЛЕТКА ЗНАЕТ ТЕБЯ ПО ИМЕНИ',description:'Возможно, вам уже пора познакомиться лично.'},
  {count:1000,title:'ГОВАРД ТРЕБУЕТ ЗАКРЫТЬ САЙТ',description:'Юридический отдел Warlock направил официальную претензию.'}
 ]
+const categoryWeights={'Декс':8,'Руди':8,'Говард':8,'Даррен':8,'Надин':9,'Поппи':9,'Батл / закулисье':9,'Warlock / архив':7,'Школа Сентфора':6,'BLACK HELLEBORE':8,'Сплетница Сентфора':7,'Saintfour / город':7,'Фанат / зритель':6}
+function drawPrize(){const n=Math.random()*100;let cursor=0;let category='Фанат / зритель';for(const [name,weight] of Object.entries(categoryWeights)){cursor+=weight;if(n<cursor){category=name;break}}const choices=spinPrizes.filter(p=>p.group===category);return choices[Math.floor(Math.random()*choices.length)]}
 const wheelIcons=[Cigarette,Flower2,CircleDot,Zap,Cat,Disc3,Flame,Music2,Mic2,Crown,Star,Diamond]
 const blank={spins:0,history:[],found:[],secret:false}
 function load(){try{const s=JSON.parse(localStorage.getItem(storageKey));if(s&&Number.isFinite(s.spins)&&Array.isArray(s.history)&&Array.isArray(s.found))return {...blank,...s}}catch{/* storage disabled */}return blank}
@@ -27,7 +29,7 @@ export default function LuckySpin({onBack,onAchievements}){
  const found=new Set(record.found)
  const spin=()=>{
   if(rolling)return
-  const prize=spinPrizes[Math.floor(Math.random()*spinPrizes.length)]
+  const prize=drawPrize()
   setResult(null);setRolling(true);setAchievementNotice(null)
   const extra=1800+Math.random()*1800
   setAngle(a=>a+360*6+extra)
@@ -62,9 +64,9 @@ export default function LuckySpin({onBack,onAchievements}){
    </div>
    <aside className="spin-side">
     <div className="spin-stats"><div><span>TOTAL SPINS</span><strong>{record.spins.toLocaleString('ru-RU')}</strong></div><div><span>COLLECTED</span><strong>{found.size}<small> / {spinPrizes.length}</small></strong></div></div>
-    <div className="spin-side-intro"><span>POPPY'S DISCLAIMER / 001</span><h2>ТЫ НИЧЕГО НЕ ВЫИГРАЕШЬ. <em>НО ПОПРОБОВАТЬ СТОИТ.</em></h2><p>120 виртуальных призов. Повторы возможны. Шансы одинаковые. Ни Декс, ни Руди, ни Говард, ни Даррен не соглашались участвовать в этой затее.</p></div>
+    <div className="spin-side-intro"><span>POPPY'S DISCLAIMER / 001</span><h2>ТЫ НИЧЕГО НЕ ВЫИГРАЕШЬ. <em>НО ПОПРОБОВАТЬ СТОИТ.</em></h2><p>300 виртуальных призов в 13 категориях. Повторы возможны. Вероятность зависит от категории (6–9% на категорию), внутри неё все призы равновероятны. Ни Декс, ни Руди, ни Говард, ни Даррен не соглашались участвовать в этой затее.</p></div>
     <div className="spin-panel"><div className="spin-tabs"><button className={tab==='collection'?'selected':''} onClick={()=>setTab('collection')}><Gift size={15}/> КОЛЛЕКЦИЯ</button><button className={tab==='history'?'selected':''} onClick={()=>setTab('history')}>ИСТОРИЯ</button><button className={tab==='awards'?'selected':''} onClick={()=>setTab('awards')}><Trophy size={15}/> АЧИВКИ</button></div>
-      {tab==='collection'&&<><p className="spin-panel-caption">Найдено {found.size} из {spinPrizes.length}. Повторы не исчезают из истории.</p><div className="spin-collection">{spinPrizes.map((p,i)=><div key={p.id} className={'spin-collect-item '+(found.has(p.id)?'discovered':'')} title={found.has(p.id)?p.name:'Неизвестный приз'}><span>{String(i+1).padStart(3,'0')}</span>{found.has(p.id)?<><CheckCircle2 size={15}/><strong>{p.name}</strong></>:<><LockKeyhole size={14}/><strong>???</strong></>}</div>)}</div></>}
+      {tab==='collection'&&<><p className="spin-panel-caption">Найдено {found.size} из {spinPrizes.length}. Повторы не исчезают из истории. Призы разделены по категориям.</p><div className="spin-collection">{spinPrizes.map((p,i)=><div key={p.id} className={'spin-collect-item '+(found.has(p.id)?'discovered':'')} title={found.has(p.id)?p.name:'Неизвестный приз'}><span>{String(i+1).padStart(3,'0')}</span>{found.has(p.id)?<><CheckCircle2 size={15}/><strong>{p.name}</strong></>:<><LockKeyhole size={14}/><strong>???</strong></>}</div>)}</div></>}
       {tab==='history'&&<><p className="spin-panel-caption">Последние 250 прокруток. Повторные призы тоже учитываются.</p><div className="spin-history">{record.history.length?record.history.map((h,i)=>{const p=spinPrizes.find(x=>x.id===h.id);return <div key={h.at+'-'+i}><span>#{record.spins-i}</span><strong>{p?.name||'Неизвестный приз'}</strong><small>{p?.group}</small></div>}):<p>Здесь пока пусто. Колесо ждёт.</p>}</div></>}
       {tab==='awards'&&<><p className="spin-panel-caption">Отдельные достижения рулетки. На ALL ACCESS TICKET не влияют.</p><div className="spin-awards">{milestones.map(m=><div key={m.count} className={record.spins>=m.count?'earned':''}>{record.spins>=m.count?<CheckCircle2 size={19}/>:<LockKeyhole size={19}/>}<div><small>{m.count} ПРОКРУТОК</small><strong>{record.spins>=m.count?m.title:'НЕ ОТКРЫТО'}</strong><p>{record.spins>=m.count?m.description:'Продолжай крутить колесо.'}</p></div></div>)}<div className={record.secret?'earned':''}>{record.secret?<Sparkles size={19}/>:<LockKeyhole size={19}/>}<div><small>SECRET / ???</small><strong>{record.secret?'НЕВЕРОЯТНОЕ УПОРСТВО':'ЗАСЕКРЕЧЕНО'}</strong><p>{record.secret?'Три одинаковых приза подряд. Поппи подозревает вмешательство Warlock.':'Условие неизвестно.'}</p></div></div></div></>}
     </div>
