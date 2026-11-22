@@ -12,7 +12,6 @@ import PoppyNotebook from './PoppyNotebook.jsx'
 const dexManagerPhoto=`${import.meta.env.BASE_URL}media/dex-kitten-manager.jpg`
 import AllAccessTicket from './AllAccessTicket.jsx'
 import LuckySpin, { LuckySpinAchievements } from './LuckySpin.jsx'
-import GraffitiWall from './GraffitiWall.jsx'
 import BattleTicker from './LineupMarquee.jsx'
 import './lineup-marquee.css'
 import './hero-background.css'
@@ -68,7 +67,6 @@ const nav = [
   { id:'sponsors', name:'Партнёры', Icon:Radio },
   { id:'achievements', name:'Достижения', Icon:Trophy },
   { id:'spin', name:'Рулетка', Icon:Zap },
-  { id:'wall', name:'Стена', Icon:NotebookPen },
 ]
 function Cover({src, alt, className='', initials='', style={}}) {
   const [broken,setBroken]=useState(false)
@@ -312,7 +310,6 @@ export default function App() {
   {menuOpen&&<nav className="mobile-nav" aria-label="Мобильная навигация">{nav.map(n=><button key={n.id} onClick={()=>go(n.id)}><n.Icon size={17}/>{n.name}<ArrowRight size={16}/></button>)}</nav>}
   <main>
   {page==='spin'&&<LuckySpin onBack={()=>go('home')} onAchievements={()=>go('achievements')}/>}
-  {page==='wall'&&<GraffitiWall onBack={()=>go('home')}/> }
   {page==='achievements'&&<section className="achievements-page wrap">
     <div className="achievement-page-top"><button type="button" onClick={()=>go('home')} className="achievement-return"><ArrowRight size={16}/> НАЗАД НА ГЛАВНУЮ</button><span>SAINTFOUR / SECRET ACCESS</span></div>
     <div className="achievement-page-hero"><span className="achievement-page-eyebrow">THE UNDERGROUND HAS SECRETS</span><h1 className="achievement-title-glitch" data-text="YOUR ACHIEVEMENTS.">YOUR <em>ACHIEVEMENTS.</em></h1><p>Исследуй Saintfour Rap Battle, участвуй в жизни шоу и собирай достижения. Некоторые находятся на виду. Другие придётся поискать.</p>
