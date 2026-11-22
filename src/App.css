@@ -369,3 +369,30 @@
  .achievement-item{min-height:107px}
 }
 @media(prefers-reduced-motion:reduce){.achievement-title-glitch::before,.achievement-title-glitch::after{animation:none;display:none}}
+
+/* Mobile-only achievement toast: a slim, unobtrusive notification, desktop untouched. */
+@media(max-width:760px){
+ .achievement-toast{
+  left:auto;right:10px;bottom:calc(70px + env(safe-area-inset-bottom,0px));
+  width:min(306px,calc(100vw - 20px));min-height:0;max-width:none;
+  border-left-width:2px;box-shadow:0 9px 26px #0009,0 0 12px #955ba018;
+ }
+ .achievement-toast-main{gap:9px;padding:9px 0 9px 10px;min-width:0}
+ .achievement-toast-medal{flex:0 0 38px;width:38px;height:40px;filter:none}
+ .achievement-toast .sf-medallion{width:37px;height:37px;box-shadow:inset 0 0 0 2px #292932,inset 0 0 0 3px #85838e}
+ .achievement-toast .sf-medallion svg{width:17px;height:17px}
+ .achievement-toast .sf-medallion-rays{left:5px;top:4px;font-size:7px}
+ .achievement-toast .sf-medallion i{right:4px;bottom:4px;font-size:6px}
+ .achievement-toast-copy{gap:3px}
+ .achievement-toast-main .achievement-toast-copy>span{font-size:7px;letter-spacing:.065em;line-height:1.2;gap:5px}
+ .achievement-toast-main .achievement-toast-copy strong{font-size:21px;line-height:.95}
+ .achievement-toast-main .achievement-toast-copy small{font-size:9px;line-height:1.25;gap:4px}
+ .achievement-toast-main .achievement-toast-copy small svg{width:10px;height:10px}
+ .achievement-toast-dismiss{flex:0 0 24px;width:24px;padding:7px 5px}
+ .achievement-toast-dismiss svg{width:13px;height:13px}
+}
+@media(max-width:360px){
+ .achievement-toast{right:7px;width:min(280px,calc(100vw - 14px))}
+ .achievement-toast-main .achievement-toast-copy strong{font-size:19px}
+ .achievement-toast-main .achievement-toast-copy small{font-size:8.5px}
+}
