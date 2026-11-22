@@ -29,11 +29,11 @@ function exportTicket(number){
  }
  const panel=(y)=>{
   const g=ctx.createLinearGradient(pad,y,pad+W,y+H)
-  g.addColorStop(0,'#43284e');g.addColorStop(.65,'#24172d');g.addColorStop(1,'#3d2149')
+  g.addColorStop(0,'#7441ad');g.addColorStop(.58,'#56308f');g.addColorStop(1,'#322364')
   rect(pad,y,W,H,g)
-  ctx.lineWidth=3;ctx.strokeStyle='#e1a8e5';ctx.strokeRect(pad+2,y+2,W-4,H-4)
+  ctx.lineWidth=3;ctx.strokeStyle='#f4cfff';ctx.strokeRect(pad+2,y+2,W-4,H-4)
   for(let i=0;i<8;i++){ctx.fillStyle='rgba(235,155,236,.08)';ctx.beginPath();ctx.arc(pad+W-90-i*45,y+100+i*55,95-i*8,0,Math.PI*2);ctx.fill()}
-  ctx.setLineDash([10,12]);ctx.beginPath();ctx.moveTo(pad+930,y+28);ctx.lineTo(pad+930,y+H-28);ctx.strokeStyle='#d59fdf';ctx.stroke();ctx.setLineDash([])
+  ctx.setLineDash([10,12]);ctx.beginPath();ctx.moveTo(pad+930,y+28);ctx.lineTo(pad+930,y+H-28);ctx.strokeStyle='#edcdfa';ctx.stroke();ctx.setLineDash([])
  }
  const y1=pad,y2=H+pad*2
  rect(0,0,canvas.width,canvas.height,'#100b16')
@@ -88,7 +88,7 @@ export default function AllAccessTicket({onClose}){
   <section className="allticket-modal" role="dialog" aria-modal="true" aria-labelledby="allticket-title">
    <div className="allticket-header"><span><CheckCircle2 size={15}/> COLLECTION COMPLETE / 05 OF 05</span><button type="button" onClick={onClose} aria-label="Закрыть билет"><X size={19}/></button></div>
    <div className="allticket-page">
-    <div className="allticket-switch" role="group" aria-label="Сторона коллекционного билета"><button type="button" className={side==='front'?'is-current':''} aria-pressed={side==='front'} onClick={()=>setSide('front')}>ЛИЦЕВАЯ / 01</button><button type="button" className={side==='back'?'is-current':''} aria-pressed={side==='back'} onClick={()=>setSide('back')}>ОБРАТНАЯ / 02</button></div>
+    
     {side==='front'?<div key="front" className="allticket-paper">
      <div className="allticket-paper-left">
       <span className="allticket-overline">GOSSIP SAINTFOUR PRESENTS <Sparkles size={14}/></span>
