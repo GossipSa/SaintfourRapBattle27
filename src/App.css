@@ -573,3 +573,32 @@
  .howard-mail-dialog .howard-mail-toolbar>button{flex-basis:42px;width:42px;height:42px;min-width:42px;min-height:42px}
  .howard-mail-dialog .howard-mail-toolbar>button svg{width:23px;height:23px;min-width:23px;min-height:23px;flex-basis:23px}
 }
+
+/* Permanent sound control in the actual navigation header: visible at every breakpoint.
+   The old top-right strip is intentionally hidden on phones, so never nest SFX there. */
+.header .header-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex:0 0 auto;min-width:0}
+.header .sound-toggle-header{
+ display:inline-flex!important;position:relative;visibility:visible;opacity:1;
+ align-items:center;justify-content:center;gap:7px;
+ min-height:34px;min-width:95px;padding:8px 11px;margin:0;
+ border:1px solid #8b639d;background:#25172f;
+ color:#e5d3ed;letter-spacing:.045em;font:800 10px/1 'IBM Plex Mono',monospace;
+ white-space:nowrap;flex:0 0 auto;cursor:pointer;
+}
+.header .sound-toggle-header[aria-pressed="true"]{color:#ffe1f5;border-color:#e5a7dc;background:#512b52}
+.header .sound-toggle-header:hover,.header .sound-toggle-header:focus-visible{border-color:#f3b1e3;background:#58305f}
+.header .sound-toggle-header svg{width:16px;height:16px;flex:0 0 16px}
+@media(max-width:1100px){
+ .header .header-actions{gap:10px}
+ .header .sound-toggle-header{min-width:80px;padding:7px 8px;font-size:9px}
+}
+@media(max-width:760px){
+ .header .header-actions{gap:9px;margin-left:auto}
+ .header .sound-toggle-header{min-width:77px;min-height:38px;padding:8px;font-size:9px}
+ .header .sound-toggle-header svg{width:15px;height:15px;flex-basis:15px}
+}
+@media(max-width:380px){
+ .header .header-actions{gap:6px}
+ .header .sound-toggle-header{min-width:36px;width:38px;padding:7px}
+ .header .sound-toggle-header span{display:none}
+}
