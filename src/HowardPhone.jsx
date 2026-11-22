@@ -21,7 +21,7 @@ const data=JSON.parse(localStorage.getItem(STORE)||'{}');return {calls:Math.max(
 function saveState(state){try{localStorage.setItem(STORE,JSON.stringify(state))}catch{/* storage disabled */}}
 export default function HowardPhone({onBlocked}){
  const [visible,setVisible]=useState(()=>new URLSearchParams(window.location.search).get('resetHoward')==='1')
- const [opened,setOpened]=useState(false)
+ const [opened,setOpened]=useState(()=>new URLSearchParams(window.location.search).get('resetHoward')==='1')
  const [progress,setProgress]=useState(readState)
  const [reply,setReply]=useState(null)
  const [mode,setMode]=useState('incoming')
