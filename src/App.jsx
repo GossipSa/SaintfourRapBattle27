@@ -67,12 +67,15 @@ function SectionTitle({tag,title,action, onAction}){return <div className="secti
 export default function App() {
  const [page,setPage]=useState('home')
  const musicRef=useRef(null)
+ const initialMusicChoiceRef=useRef(null)
  const musicFadeRef=useRef(null)
  const [soundChoice,setSoundChoice]=useState(()=>{
   try{
    const value=window.localStorage.getItem(soundPrefKey)
-   return value==='on'||value==='off'?value:null
-  }catch{return null}
+   const choice=value==='on'||value==='off'?value:null
+   initialMusicChoiceRef.current=choice
+   return choice
+  }catch{initialMusicChoiceRef.current=null;return null}
  })
  const stopMusic=()=>{
   if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)
@@ -109,7 +112,7 @@ export default function App() {
   else stopMusic()
  }
  useEffect(()=>{
-  if(soundChoice==='on'){
+  if(initialMusicChoiceRef.current==='on'){
    const audio=musicRef.current
    if(audio){
     audio.volume=0
@@ -118,7 +121,7 @@ export default function App() {
    }
   }
   return ()=>{if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)}
- // On reload, browsers may require another tap before playback; the control remains available.
+  // Restored music may be blocked on reload until a user interaction.
  },[])
  const [menuOpen,setMenuOpen]=useState(false)
  const [selected,setSelected]=useState(null)
