@@ -208,9 +208,9 @@
 .rudi-letter-toolbar>button svg{display:block;width:20px;height:20px;flex:0 0 20px;margin:0;transform:none}
 .rudi-letter-toolbar>button:hover,.rudi-letter-toolbar>button:focus-visible{background:#67394e;border-color:#edb7d2}
 .rudi-letter-desk{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:clamp(15px,4vw,33px);background:radial-gradient(ellipse at 80% 15%,#7b4c684d,transparent 64%),linear-gradient(135deg,#392638,#281d31)}
-.rudi-letter-paper{position:relative;isolation:isolate;min-height:410px;padding:clamp(29px,5vw,47px) clamp(24px,6vw,58px) 35px;background:radial-gradient(ellipse at 98% 0%,#efcad4a1,transparent 33%),linear-gradient(150deg,#fff7eb,#f8eadd 72%,#f1ddd7);box-shadow:0 8px 30px #0005,0 0 0 1px #d7b6b4;color:#694b50;transform:rotate(-.5deg)}
-.rudi-letter-paper:before{content:"";position:absolute;pointer-events:none;inset:0;z-index:-1;opacity:.4;background:repeating-linear-gradient(0deg,transparent 0 31px,#e8cdd1 32px 33px)}
-.rudi-letter-fold{pointer-events:none;position:absolute;left:0;right:0;top:49%;height:1px;background:#c4a7a25e;box-shadow:0 3px 13px #b79a9070}
+.rudi-letter-paper{position:relative;isolation:isolate;min-height:410px;padding:clamp(29px,5vw,47px) clamp(24px,6vw,58px) 35px;background:radial-gradient(ellipse at 5% 8%,#ffffffc7,transparent 35%),radial-gradient(ellipse at 83% 65%,#d6c3b044,transparent 44%),linear-gradient(146deg,#fbf4e6 4%,#ede2d3 49%,#f8eddf 78%,#e8dccb);box-shadow:0 12px 28px #0006,0 0 0 1px #d1c4b1,inset 8px 9px 25px #c4b7a42b,inset -10px -12px 25px #a7917835;color:#694b50;transform:rotate(-.5deg)}
+.rudi-letter-paper:before{content:"";position:absolute;pointer-events:none;inset:0;z-index:-1;opacity:.63;background:linear-gradient(118deg,transparent 7%,#fff9e780 9%,transparent 11%,transparent 26%,#b3a38a38 27%,#fff9e881 28%,transparent 30%,transparent 72%,#a7987c30 73%,#fff8eb8c 74%,transparent 76%),linear-gradient(17deg,transparent 11%,#bbab9030 12%,#fffbee86 13%,transparent 15%,transparent 49%,#ad9e8427 50%,#fff7e66a 51%,transparent 53%,transparent 87%,#b3a08336 88%,transparent 90%)}
+.rudi-letter-fold{pointer-events:none;position:absolute;z-index:0;inset:0;background:radial-gradient(ellipse at 22% 33%,transparent 0 20%,#fff9ef66 21%,transparent 28%),radial-gradient(ellipse at 73% 71%,transparent 0 16%,#b8a58e21 20%,transparent 27%),linear-gradient(168deg,transparent 0 41%,#ae9d882b 42%,#fff9ee69 43%,transparent 45%),linear-gradient(28deg,transparent 0 61%,#b9a58b27 62%,#fffbf078 63%,transparent 65%);opacity:.85}
 .rudi-letter-topline{display:block;color:#b48790;font:700 9px/1.6 'IBM Plex Mono',monospace;letter-spacing:.13em;margin-bottom:21px}
 .rudi-letter-paper h2{font:italic 37px/1.1 'Georgia',serif;font-weight:400;color:#976176;margin:0 0 19px}
 .rudi-letter-paper h2 span{font-size:23px;margin-left:8px;color:#bf7295}
@@ -219,7 +219,7 @@
 .rudi-letter-signature{font:italic 28px 'Georgia',serif;color:#a46083;margin:15px 0 12px;text-align:right;padding-right:19px}
 .rudi-letter-signature span{font-size:23px}
 .rudi-letter-postscript{font:italic 14px/1.5 'Georgia',serif;color:#8e6372;margin:10px 0 0}
-.rudi-letter-kiss{position:absolute;right:37px;top:47px;z-index:0;width:100px;transform:rotate(-20deg);opacity:.77;filter:blur(.25px);mix-blend-mode:multiply}
+.rudi-letter-kiss{position:absolute;right:35px;top:49px;z-index:0;width:112px;transform:rotate(-17deg);opacity:.87;mix-blend-mode:multiply;pointer-events:none}
 .rudi-letter-kiss svg{display:block;width:100%;height:auto}
 .rudi-letter-footnote{display:flex;flex-direction:column;gap:5px;margin-top:17px;color:#e6c3d4;text-align:center}
 .rudi-letter-footnote span{font:700 10px 'IBM Plex Mono',monospace;letter-spacing:.03em}
@@ -230,7 +230,7 @@
  .rudi-letter-toolbar{padding:8px 11px;font-size:8.5px}
  .rudi-letter-desk{padding:15px 12px}
  .rudi-letter-paper{padding:25px 23px 27px}
- .rudi-letter-kiss{width:70px;right:19px;top:29px}
+ .rudi-letter-kiss{width:76px;right:18px;top:30px}
  .rudi-letter-paper h2{font-size:31px}
  .rudi-letter-body p{font-size:14px;line-height:1.7;margin-bottom:14px}
  .rudi-letter-signature{font-size:24px}
