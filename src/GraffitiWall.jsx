@@ -13,18 +13,19 @@ function randomColor(){return COLORS[Math.floor(Math.random()*COLORS.length)]}
 function read(){try{const a=JSON.parse(localStorage.getItem(KEY));return Array.isArray(a)?a.slice(-300):[]}catch{return []}}
 function draw(ctx,stroke,w,h){const p=stroke.points;if(!p?.length)return;ctx.strokeStyle=stroke.color;ctx.lineWidth=stroke.width;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(p[0][0]*w,p[0][1]*h);for(let i=1;i<p.length;i++)ctx.lineTo(p[i][0]*w,p[i][1]*h);if(p.length===1)ctx.lineTo(p[0][0]*w+.1,p[0][1]*h+.1);ctx.stroke()}
 export default function GraffitiWall({onBack}){
- const canvas=useRef(null),active=useRef(null),strokesRef=useRef([])
+ const canvas=useRef(null),active=useRef(null),strokesRef=useRef([]),draftRef=useRef([]),paintRef=useRef(null)
  const [strokes,setStrokes]=useState(read),[draft,setDraft]=useState([]),[color,setColor]=useState(randomColor),[width,setWidth]=useState(6),[notice,setNotice]=useState('')
  useEffect(()=>{strokesRef.current=strokes},[strokes])
+ useEffect(()=>{draftRef.current=draft;paintRef.current?.()},[draft])
  useEffect(()=>{
   const c=canvas.current;if(!c)return
-  const paint=()=>{const box=c.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);c.width=Math.round(box.width*dpr);c.height=Math.round(box.height*dpr);const ctx=c.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,box.width,box.height);[...START,...strokes,...draft].forEach(s=>draw(ctx,s,box.width,box.height))}
-  paint();const observer=new ResizeObserver(paint);observer.observe(c);return()=>observer.disconnect()
- },[strokes,draft])
+  const paint=()=>{const box=c.getBoundingClientRect();if(!box.width||!box.height)return;const dpr=Math.min(window.devicePixelRatio||1,2);const w=Math.round(box.width*dpr),h=Math.round(box.height*dpr);if(c.width!==w)c.width=w;if(c.height!==h)c.height=h;const ctx=c.getContext('2d');if(!ctx)return;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,box.width,box.height);[...START,...strokesRef.current,...draftRef.current,...(active.current?[active.current]:[])].forEach(stroke=>draw(ctx,stroke,box.width,box.height))}
+  paintRef.current=paint;paint();const observer=new ResizeObserver(paint);observer.observe(c.parentElement);return()=>{observer.disconnect();paintRef.current=null}
+ },[])
  const point=e=>{const rect=canvas.current.getBoundingClientRect();return [Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width)),Math.max(0,Math.min(1,(e.clientY-rect.top)/rect.height))]}
- const down=e=>{e.preventDefault();canvas.current.setPointerCapture(e.pointerId);active.current={color,width,points:[point(e)]};setDraft(d=>[...d,active.current])}
- const move=e=>{if(!active.current)return;const p=point(e);active.current={...active.current,points:[...active.current.points,p]};setDraft(d=>[...d.slice(0,-1),active.current])}
- const up=()=>{active.current=null}
+ const down=e=>{e.preventDefault();if(active.current)return;try{canvas.current.setPointerCapture(e.pointerId)}catch{/* unsupported capture */}active.current={color,width,points:[point(e)]};paintRef.current?.()}
+ const move=e=>{if(!active.current)return;const p=point(e);active.current.points.push(p);paintRef.current?.()}
+ const up=()=>{if(!active.current)return;const completed=active.current;active.current=null;setDraft(d=>[...d,completed])}
  const publish=()=>{if(!draft.length)return;const next=[...strokesRef.current,...draft].slice(-300);try{localStorage.setItem(KEY,JSON.stringify(next))}catch{setNotice('Не удалось сохранить рисунок в этом браузере.')}setStrokes(next);setDraft([]);setColor(randomColor());setNotice('След сохранён в этом браузере. Общую стену подключим отдельно.')}
  return <section className="graffiti-page wrap">
   <div className="graffiti-back"><button onClick={onBack}><ArrowLeft size={16}/> НАЗАД</button><span>SAINTFOUR / UNDERGROUND</span></div>
