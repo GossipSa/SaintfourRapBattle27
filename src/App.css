@@ -612,3 +612,7 @@
 .header .music-volume-popover label b{color:#fff0ff;font-size:12px}
 .header .music-volume-popover input{width:100%;accent-color:#d496e2;cursor:pointer}
 .header .music-volume-popover small{font:400 10px 'DM Sans',sans-serif;color:#a995b5}
+
+/* Testing-only achievement reset; keeps polls and other user settings intact. */
+.achievement-reset-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;padding:10px 14px;border:1px solid #735076;background:#241629;color:#dcb4df;cursor:pointer;font:800 10px/1.5 'IBM Plex Mono',monospace;letter-spacing:.045em;max-width:100%;text-align:center}
+.achievement-reset-btn:hover,.achievement-reset-btn:focus-visible{border-color:#e7a9e6;background:#432648;color:#fff1ff}
