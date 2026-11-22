@@ -28,3 +28,25 @@
  .hp-phone{zoom:.58;transform:rotate(-2deg);margin:0}
  .hp-window{gap:5px}
 }
+
+/* The circular close button belongs to the viewport, not the scaled phone. */
+.hp-overlay .hp-exit{
+ position:fixed;
+ top:calc(env(safe-area-inset-top,0px) + 18px);
+ right:18px;
+ left:auto;
+ bottom:auto;
+ width:42px;
+ height:42px;
+ padding:0;
+ margin:0;
+ box-sizing:border-box;
+ border-radius:50%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ transform:none;
+ z-index:999;
+}
+.hp-overlay .hp-exit svg{display:block;flex:none}
+@media(max-width:600px){.hp-overlay .hp-exit{top:calc(env(safe-area-inset-top,0px) + 14px);right:14px}}
