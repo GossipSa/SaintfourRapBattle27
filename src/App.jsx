@@ -45,7 +45,7 @@ const gallery = [
 ]
 // One optional low-volume background track, controlled explicitly by the visitor.
 const soundPrefKey='sf27-sound-consent-v1'
-const musicSource=`${import.meta.env.BASE_URL}media/audio/saintfour-background.m4a`
+const musicSource=`${import.meta.env.BASE_URL}media/audio/saintfour-background-quiet.m4a`
 
 const hypePollIds=['scandal','punchlines','surprise','interview']
 function completedHypeVotes(votes){
