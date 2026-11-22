@@ -19,3 +19,24 @@
 .allticket-bottom{border-top:1px solid #67496b;padding:14px 20px;display:flex;justify-content:flex-end}.allticket-dismiss{display:flex;align-items:center;justify-content:center;gap:9px;padding:11px 17px;border:1px solid #cb96d6;color:#22142a;background:#d6a1e2;font:800 11px 'DM Sans',sans-serif;cursor:pointer;border-radius:3px}.allticket-dismiss:hover{background:#edbafa}
 .achievement-reward.achievement-reward-ready{cursor:pointer;border-color:#e7b6e9;box-shadow:0 0 30px #c05ace22}.achievement-reward.achievement-reward-ready:hover{filter:brightness(1.09)}.achievement-reward-open{display:inline-flex;align-items:center;gap:7px;margin-top:10px;color:#f0c1f8;font:800 11px monospace;letter-spacing:.5px}.achievement-reward.achievement-reward-ready:focus-visible{outline:3px solid #f4abeb;outline-offset:3px}
 @media(max-width:600px){.allticket-overlay{padding:12px}.allticket-modal{max-height:calc(100dvh - 24px)}.allticket-header{padding:11px 13px}.allticket-header>span{font-size:9px;letter-spacing:.6px}.allticket-page{padding:13px}.allticket-paper{grid-template-columns:minmax(0,1fr) 79px;min-height:285px}.allticket-paper-left{padding:20px 13px}.allticket-paper h2{font-size:clamp(33px,8vw,46px);margin:20px 0 10px}.allticket-overline{font-size:8px;letter-spacing:.5px;margin-bottom:19px}.allticket-brand{font-size:14px}.allticket-brand b{font-size:18px}.allticket-sub{font-size:8px;letter-spacing:.5px;margin-bottom:15px}.allticket-paper-right{padding:14px 4px;gap:17px}.allticket-paper-right>strong{font-size:28px}.allticket-paper-right>small{font-size:7px;letter-spacing:0}.allticket-paper-right>svg{width:24px}.allticket-code{width:46px;height:46px;font-size:15px}.allticket-meta{gap:11px 16px}.allticket-meta strong{font-size:10px}.allticket-meta small{font-size:8px}.allticket-below p{font-size:12px}}
+
+/* Flip-to-read reverse side, then save both sides as a single PNG. */
+.allticket-switch{display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:15px}
+.allticket-switch button{border:1px solid #674a73;background:#22182c;color:#bfa4c9;min-height:35px;padding:9px 15px;font:800 10px 'IBM Plex Mono',monospace;letter-spacing:.05em;cursor:pointer}
+.allticket-switch button.is-current{border-color:#dfabe8;color:#ffedff;background:#59315f}
+.allticket-paper{animation:allticket-turn .34s ease-out;transform-origin:center}
+@keyframes allticket-turn{from{opacity:.38;transform:perspective(1100px) rotateY(-16deg) scale(.97)}to{opacity:1;transform:perspective(1100px) rotateY(0) scale(1)}}
+.allticket-paper-back .allticket-paper-left{padding-top:28px}
+.allticket-paper-back h2{font-size:clamp(38px,6vw,61px);margin:12px 0}
+.allticket-stamps{display:flex;flex-direction:column;gap:10px;margin:3px 0 16px}
+.allticket-stamps>div{display:flex;align-items:center;gap:10px;color:#f5d5f9}
+.allticket-stamps>div svg{color:#eab5e4;flex:none}
+.allticket-stamps strong{font:800 12px 'IBM Plex Mono',monospace;letter-spacing:.035em}
+.allticket-poppy-joke{font:italic 12px/1.5 'DM Sans',sans-serif;color:#d9b9df;margin:auto 0 0}
+.allticket-flip{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:13px;padding:12px;border:1px dashed #9e75ad;background:#281d33;color:#e7c1ef;font:800 11px 'IBM Plex Mono',monospace;cursor:pointer}
+.allticket-flip:hover{border-color:#efbde9;background:#3b2745}
+.allticket-bottom{gap:10px;flex-wrap:wrap}
+.allticket-save{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 17px;border:1px solid #dba5e9;color:#edd5f6;background:#43284e;font:800 11px 'DM Sans',sans-serif;cursor:pointer;border-radius:3px}
+.allticket-save:hover{background:#633c71}
+@media(max-width:600px){.allticket-paper-back .allticket-paper-left{padding-top:18px}.allticket-paper-back h2{font-size:32px}.allticket-stamps{gap:8px}.allticket-stamps strong{font-size:9px}.allticket-stamps>div svg{width:13px;height:13px}.allticket-poppy-joke{font-size:10px}.allticket-switch button{font-size:9px}.allticket-bottom{padding:12px}.allticket-bottom button{flex:1;font-size:10px;padding:11px 8px}}
+@media(prefers-reduced-motion:reduce){.allticket-paper{animation:none}}
