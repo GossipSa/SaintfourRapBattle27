@@ -1,0 +1,23 @@
+/* Tactile, no-achievement partner easter egg. Shared by home and partners page. */
+.hellebore-toy{position:relative;isolation:isolate;margin:27px 0 8px;min-height:230px;border-top:1px solid #42344d;overflow:hidden}
+.hellebore-toy-stage{width:min(470px,100%);margin:0 auto;min-height:233px;position:relative;display:flex;align-items:center;justify-content:center;gap:33px;padding:28px 24px 10px}
+.hellebore-toy-series{position:absolute;top:13px;left:50%;transform:translateX(-50%);font:700 9px 'IBM Plex Mono',monospace;color:#8b7797;letter-spacing:.13em;white-space:nowrap}
+.hellebore-toy-button{position:relative;isolation:isolate;z-index:2;flex:0 0 86px;width:86px;height:191px;display:grid;place-items:center;padding:0;background:transparent;border:0;cursor:pointer;transform:rotate(-8deg);transition:filter .2s}
+.hellebore-toy-button:focus-visible{outline:2px solid #e79af6;outline-offset:6px}
+.hellebore-toy-button:hover{filter:drop-shadow(0 0 16px #c055dd85)}
+.hellebore-toy-button>img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(9px 10px 10px #000c);pointer-events:none;user-select:none}
+.hellebore-toy-button.is-opening{animation:hellebore-can-shake .78s cubic-bezier(.3,0,.6,1) both}
+.hellebore-toy-floor{position:absolute;left:30%;bottom:13px;width:105px;height:14px;filter:blur(8px);border-radius:50%;background:#9d4abe3b;pointer-events:none}
+.hellebore-toy-caption{display:flex;flex-direction:column;gap:9px;align-items:flex-start;max-width:160px}
+.hellebore-toy-caption strong{font:900 clamp(23px,3vw,32px)/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.055em;color:#f2bafa;text-shadow:2px 0 #9d5db4}
+.hellebore-toy-caption span{font:600 11px/1.5 'IBM Plex Mono',monospace;color:#9f8aa9}
+.hellebore-toy-fizz{position:absolute;z-index:3;top:-7px;left:15%;width:90%;height:28px;border-radius:50%;background:radial-gradient(ellipse,#f0c8ffb0,transparent 65%);filter:blur(8px);animation:hellebore-fizz 1s both;pointer-events:none}
+.hellebore-splatter{position:fixed;inset:0;z-index:11000;pointer-events:none;overflow:hidden;contain:strict}
+.hellebore-splatter-wash{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 62%,#a33ccc22,transparent 65%);animation:hellebore-wash .95s ease-out forwards}
+.hellebore-splatter-drop{position:absolute;left:50%;top:58%;width:var(--sz);height:calc(var(--sz)*1.6);border-radius:55% 45% 55% 45%;background:linear-gradient(120deg,#f3b6ff,#ad45db 50%,#5f218a);box-shadow:0 0 12px #c54aea9c;transform:translate(-50%,-50%) scale(0);opacity:0;animation:hellebore-drop var(--dur) cubic-bezier(.15,.5,.35,1) var(--delay) both}
+@keyframes hellebore-can-shake{0%,100%{transform:rotate(-8deg)}12%,36%,62%{transform:translateX(-5px) rotate(-17deg)}24%,49%,73%{transform:translateX(6px) rotate(4deg)}88%{transform:translateY(-5px) rotate(-8deg)}}
+@keyframes hellebore-drop{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}20%{opacity:.95}70%{opacity:.86;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy) + 11vh)) scale(.6)}}
+@keyframes hellebore-wash{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+@keyframes hellebore-fizz{0%{opacity:0;transform:translateY(15px) scale(.5)}30%{opacity:1}100%{opacity:0;transform:translateY(-30px) scale(1.6)}}
+@media(max-width:600px){.hellebore-toy{margin-top:17px;min-height:187px}.hellebore-toy-stage{min-height:190px;padding:26px 12px 6px;gap:27px}.hellebore-toy-button{flex-basis:71px;width:71px;height:157px}.hellebore-toy-caption strong{font-size:27px}.hellebore-toy-caption span{font-size:10px}.hellebore-toy-floor{left:20%;bottom:11px}}
+@media(prefers-reduced-motion:reduce){.hellebore-toy-button.is-opening{animation:none}.hellebore-splatter,.hellebore-toy-fizz{display:none}}
