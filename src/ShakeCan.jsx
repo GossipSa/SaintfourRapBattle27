@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './shake-can.css'
 
-const canImage=`${import.meta.env.BASE_URL}media/sponsors/black-hellebore-can.webp`
+const canImage=`${import.meta.env.BASE_URL}media/sponsors/black-hellebore-can.webp?v=2`
 const drops=Array.from({length:30},(_,i)=>{
  const angle=i*2.39996
  const spread=32+(i%6)*15
