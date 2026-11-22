@@ -149,3 +149,44 @@
 .dex-kitten-caption p{margin:0 0 11px;font:400 13px/1.6 'DM Sans',sans-serif;color:#e7d4e6}
 .dex-kitten-caption small{font:italic 11px/1.5 'DM Sans',sans-serif;color:#c3a8c7}
 @media(max-width:480px){.dex-kitten-teaser>img{width:52px;height:52px;flex-basis:52px}.dex-kitten-teaser-copy b{font-size:11px}.dex-kitten-teaser-copy>span{font-size:10px}.dex-kitten-caption{padding:17px 18px 20px}.dex-kitten-caption h2{font-size:24px}}
+
+/* DON DARO: refined editorial rider in gold, oxblood and subtle leopard cues. */
+.daro-rider-teaser{width:100%;display:flex;align-items:center;gap:12px;margin-top:18px;padding:12px;background:linear-gradient(110deg,#2a1b27,#201821);border:1px solid #756054;border-left:3px solid #be9362;text-align:left;color:#f5e1cd;cursor:pointer;transition:background .18s,border-color .18s}
+.daro-rider-teaser:hover,.daro-rider-teaser:focus-visible{background:linear-gradient(110deg,#402333,#30212b);border-color:#d2aa78}
+.daro-rider-teaser-seal{display:grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid #c49b68;border-radius:50%;color:#f5d3a3;font:900 19px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.02em;box-shadow:inset 0 0 0 4px #34242a}
+.daro-rider-teaser-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+.daro-rider-teaser-copy small{font:800 9px 'IBM Plex Mono',monospace;letter-spacing:.05em;color:#c29e7b}
+.daro-rider-teaser-copy b{font:800 14px/1.2 'Barlow Condensed',Impact,sans-serif;letter-spacing:.07em;color:#ffe7c6}
+.daro-rider-teaser-copy>span{font:400 11px/1.5 'DM Sans',sans-serif;color:#c6abb5}
+.daro-rider-teaser-arrow{color:#cba375;flex:none}
+.daro-rider-backdrop{position:fixed;inset:0;z-index:1155;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(8,5,10,.93);backdrop-filter:blur(9px)}
+.daro-rider-dialog{display:flex;flex-direction:column;width:min(670px,100%);max-height:calc(100dvh - 36px);overflow:hidden;background:#241820;border:1px solid #ad8561;box-shadow:0 25px 110px #000c;color:#3a2530}
+.daro-rider-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 16px;flex:none;background:linear-gradient(90deg,#321823,#211720);border-bottom:1px solid #8d654c;color:#e1c397;font:800 10px/1.3 'IBM Plex Mono',monospace;letter-spacing:.08em}
+.daro-rider-toolbar>button{display:flex;align-items:center;justify-content:center;flex:0 0 39px;width:39px;height:39px;padding:0;position:static;background:#432832;color:#f8d5ae;border:1px solid #be926c;cursor:pointer;box-sizing:border-box}
+.daro-rider-toolbar>button svg{display:block;width:20px;height:20px;flex:0 0 20px;margin:0}
+.daro-rider-paper{position:relative;isolation:isolate;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;padding:clamp(23px,4vw,42px);background:radial-gradient(ellipse at 97% 5%,#f1d9a4b3,transparent 38%),linear-gradient(130deg,#f7eddb,#ede0c8 77%,#e2cdad);color:#3f2b2f}
+.daro-rider-paper::before{content:"";pointer-events:none;position:absolute;inset:0;opacity:.12;z-index:-1;background:repeating-linear-gradient(130deg,transparent 0 17px,#a27f5e 18px 19px)}
+.daro-rider-document-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font:800 10px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#644d4b;border-bottom:1px solid #bc9c7c;padding-bottom:12px}
+.daro-rider-document-top strong{color:#8e3c4d;font-size:9px}
+.daro-rider-monogram{float:right;position:relative;display:grid;place-items:center;width:81px;height:81px;margin:17px 2px 0 10px;border:2px double #ae7d42;outline:1px solid #bf9561;outline-offset:4px;color:#87424b;font:900 42px 'Barlow Condensed',Impact,sans-serif;letter-spacing:-2px;transform:rotate(7deg)}
+.daro-rider-monogram span{position:absolute;right:-9px;bottom:-11px;color:#b38a51;background:#efdfc3;font-size:20px;letter-spacing:0}
+.daro-rider-kicker{margin:23px 0 8px;color:#9b765b;font:800 9px 'IBM Plex Mono',monospace;letter-spacing:.1em}
+.daro-rider-paper h2{font:900 clamp(31px,5.5vw,49px)/.94 'Barlow Condensed',Impact,sans-serif;color:#5a2636;letter-spacing:.01em;margin:0 0 12px}
+.daro-rider-paper h2 em{font-style:normal;color:#9f6638}
+.daro-rider-intro{margin:0 0 18px;color:#745c57;font:400 12px/1.6 'DM Sans',sans-serif;max-width:430px}
+.daro-rider-rule{height:3px;background:linear-gradient(90deg,#8b374b,#c09a61,transparent);margin:15px 0 19px}
+.daro-rider-paper h3{font:900 15px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.08em;color:#682e3f;margin:0 0 9px}
+.daro-rider-list{list-style:decimal;padding:0 0 0 22px;margin:0 0 19px;color:#4b3438;font:500 13px/1.65 'DM Sans',sans-serif}
+.daro-rider-list li{padding:6px 0 6px 7px;border-bottom:1px solid #cbb89d}
+.daro-rider-list li::marker{font:800 12px 'IBM Plex Mono',monospace;color:#9c6e46}
+.daro-rider-note{padding:14px 17px;margin:17px 0 21px;background:#ead8c1;border-left:3px solid #8c4950}
+.daro-rider-note>span,.daro-rider-bottom>div>span{font:800 9px 'IBM Plex Mono',monospace;letter-spacing:.07em;color:#965266}
+.daro-rider-note p{color:#61484d;font:italic 12px/1.65 'DM Sans',sans-serif;margin:8px 0 0}
+.daro-rider-stamp{width:max-content;max-width:100%;padding:10px 17px;border:3px double #9a4f4c;transform:rotate(-7deg);margin:8px 0 21px;color:#974b4c;text-align:center;display:flex;flex-direction:column;gap:3px;opacity:.88}
+.daro-rider-stamp span{font:900 20px/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.13em}
+.daro-rider-stamp strong{font:700 9px 'IBM Plex Mono',monospace}
+.daro-rider-bottom{display:grid;grid-template-columns:1fr 1.3fr;gap:15px;padding-top:17px;border-top:1px solid #a98c71}
+.daro-rider-bottom>div{display:flex;flex-direction:column;gap:6px}
+.daro-rider-bottom strong{font:700 12px 'DM Sans',sans-serif;color:#4a3637}
+.daro-rider-bottom p{font:italic 12px/1.5 'DM Sans',sans-serif;color:#683b43;margin:0}
+@media(max-width:550px){.daro-rider-backdrop{padding:9px}.daro-rider-dialog{max-height:calc(100dvh - 18px)}.daro-rider-paper{padding:21px 17px}.daro-rider-toolbar{padding:9px 11px;font-size:9px}.daro-rider-document-top{font-size:8px}.daro-rider-monogram{width:58px;height:58px;font-size:31px}.daro-rider-paper h2{font-size:31px}.daro-rider-list{font-size:12px}.daro-rider-bottom{grid-template-columns:1fr;gap:14px}.daro-rider-teaser{padding:10px}.daro-rider-teaser-seal{width:38px;height:38px;font-size:17px}.daro-rider-teaser-copy b{font-size:13px}.daro-rider-teaser-copy>span{font-size:10px}}
