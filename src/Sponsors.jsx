@@ -1,6 +1,6 @@
 import './sponsor-tile-redesign.css'
 import { useEffect, useRef, useState } from 'react'
-import { ArrowUpRight, Play, Star, X, Zap } from 'lucide-react'
+import { ArrowUpRight, Play, Star, X, Zap, FlaskConical, ArrowLeft } from 'lucide-react'
 
 // Bespoke partner symbols, kept small and understated like the other top-row marks.
 function HelleboreMark({ size=24, className='' }) {
@@ -53,8 +53,9 @@ const mediaPaths={
   video:`${import.meta.env.BASE_URL}media/sponsors/black-hellebore.mp4`,
 }
 
-function ProductMedia() {
+function ProductMedia({onSecretFound}) {
   const [mode,setMode]=useState('photo')
+  const [classified,setClassified]=useState(false)
   const [unavailable,setUnavailable]=useState({photo:false,video:false})
   const [loaded,setLoaded]=useState({photo:false,video:false})
   const [videoReady,setVideoReady]=useState(false)
@@ -85,6 +86,12 @@ function ProductMedia() {
         {mode==='video'&&<Play size={27} aria-hidden="true" className="sponsor-video-glyph"/>}
       </div>}
     </div>
+    <div className="sponsor-product-batch"><span>PRODUCT LINE / BH-27</span><button type="button" onClick={()=>{setClassified(true);onSecretFound?.()}} aria-label="Код экспериментальной партии энергетика">LOT 00 <span>↗</span></button></div>
+    {classified&&<div className="hellebore-classified" role="region" aria-label="Секретная экспериментальная партия">
+      <div className="hellebore-classified-top"><span><FlaskConical size={14}/> INTERNAL / NOT FOR DISTRIBUTION</span><button type="button" onClick={()=>setClassified(false)} aria-label="Закрыть экспериментальную партию"><X size={16}/></button></div>
+      <div className="hellebore-classified-content"><div className="hellebore-experimental-can" aria-hidden="true"><span>BH</span><strong>00</strong><small>EXPERIMENTAL</small></div><div><span className="hellebore-classified-kicker">DISCOVERED / FORMULA ZERO</span><h4>BLACK HELLEBORE <em>00.</em></h4><p>Экспериментальная партия, которой нет в официальном каталоге. Информация о составе засекречена.</p><span className="hellebore-classified-footer">STATUS: WITHDRAWN FROM PUBLIC RELEASE</span></div></div>
+      <button type="button" className="hellebore-classified-return" onClick={()=>setClassified(false)}><ArrowLeft size={14}/> ВЕРНУТЬСЯ К РЕКЛАМЕ</button>
+    </div>}
   </div>
 }
 
@@ -111,7 +118,7 @@ function SponsorCard({sponsor,onOpen}) {
   </article>
 }
 
-function SponsorModal({sponsor,onClose}) {
+function SponsorModal({sponsor,onClose,onSecretFound}) {
   const closeRef=useRef(null)
   useEffect(()=>{
     const previous=document.activeElement
@@ -135,7 +142,7 @@ function SponsorModal({sponsor,onClose}) {
         <h3 className="glitch-heading" data-text={sponsor.heading}>{sponsor.heading}</h3>
         <p className="sponsor-details-description">{sponsor.description}</p>
         {sponsor.note&&<p className="sponsor-partner-note">{sponsor.note}</p>}
-        {sponsor.id==='energy'&&<ProductMedia/>}
+        {sponsor.id==='energy'&&<ProductMedia onSecretFound={onSecretFound}/>}
         {sponsor.url&&<a className="sponsor-channel-link" href={sponsor.url} target="_blank" rel="noopener noreferrer">ПЕРЕЙТИ В TELEGRAM <ArrowUpRight size={18}/></a>}
         <div className="sponsor-details-end"><Star size={13}/>{sponsor.aside}</div>
       </div>
@@ -143,7 +150,7 @@ function SponsorModal({sponsor,onClose}) {
   </div>
 }
 
-export default function SponsorsShowcase() {
+export default function SponsorsShowcase({onSecretFound}) {
   const [selected,setSelected]=useState(null)
   const close=()=>setSelected(null)
   return <div className="sponsors-showcase">
@@ -152,6 +159,6 @@ export default function SponsorsShowcase() {
       {sponsors.map(s=><SponsorCard key={s.id} sponsor={s} onOpen={setSelected}/>)}
     </div>
     <div className="sponsors-note"><span className="red-dot"/> PARTNERS / SAINTFOUR RAP BATTLE ’27 <span>GOSSIP SAINTFOUR ORIGINAL PROJECT</span></div>
-    {selected&&<SponsorModal sponsor={selected} onClose={close}/>}
+    {selected&&<SponsorModal sponsor={selected} onClose={close} onSecretFound={onSecretFound}/>}
   </div>
 }
