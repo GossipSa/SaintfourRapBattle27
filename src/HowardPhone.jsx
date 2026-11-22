@@ -28,19 +28,20 @@ export default function HowardPhone({onBlocked}){
  const [dismissed,setDismissed]=useState(false)
  useEffect(()=>{
   if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){sessionStorage.setItem('sf27-howard-seen','1');return}
+  if(progress.blocked)return
   if(sessionStorage.getItem('sf27-howard-seen'))return
   const t=window.setTimeout(()=>{
    if(document.visibilityState==='visible'){setVisible(true);sessionStorage.setItem('sf27-howard-seen','1')}
   },20000+Math.round(Math.random()*20000))
   return()=>clearTimeout(t)
- },[])
+ },[progress.blocked])
  useEffect(()=>{
   if(!opened)return
   const key=e=>{if(e.key==='Escape'){setOpened(false);setMode('incoming')}}
   document.addEventListener('keydown',key)
   return()=>document.removeEventListener('keydown',key)
  },[opened])
- const open=()=>{setOpened(true);setMode(progress.blocked?'blocked':progress.introDone?'idle':'incoming')}
+ const open=()=>{if(progress.blocked)return;setOpened(true);setMode(progress.introDone?'idle':'incoming')}
  const call=()=>{
   if(progress.blocked){setMode('blocked');return}
   if(!progress.introDone){
@@ -58,7 +59,7 @@ export default function HowardPhone({onBlocked}){
  const hang=()=>{setMode(progress.blocked?'blocked':progress.introDone?'idle':'incoming')}
  const close=()=>{setOpened(false);setMode('incoming')}
  const dismiss=()=>{setDismissed(true);setVisible(false);close()}
- if(!visible||dismissed)return null
+ if(!visible||dismissed||(progress.blocked&&!opened))return null
  return <>
   {!opened&&<div className="hp-floating">
     <button type="button" className="hp-closed" onClick={open} aria-label="Открыть звонящую фиолетовую раскладушку">
@@ -99,7 +100,7 @@ export default function HowardPhone({onBlocked}){
     </div>
     <div className="hp-caption">{mode==='blocked'?'Натаниэль Говард заблокировал ваш номер.':mode==='final'?'Достижение открыто: «ГОВАРД ЗАБЛОКИРОВАЛ ВАС»':mode==='incoming'?'Неизвестный номер. Ответить на вызов?':mode==='mistake'?'Звонок оборвался. Но номер остался в журнале.':'Можно попробовать перезвонить.'}</div>
     {(mode==='answer'||mode==='idle'||mode==='mistake')&&<button type="button" className="hp-redial" onClick={()=>{if(mode==='mistake'){setMode('idle')}else{call()}}}>ПОЗВОНИТЬ ЕЩЁ РАЗ ↗</button>}
-    {mode==='final'&&<button type="button" className="hp-redial" onClick={()=>setMode('blocked')}>ПОСМОТРЕТЬ ЧЁРНЫЙ СПИСОК ↗</button>}
+    {mode==='final'&&<button type="button" className="hp-redial" onClick={close}>ЗАКРЫТЬ ТЕЛЕФОН ↗</button>}
    </div>
   </div>}
  </>
