@@ -435,3 +435,10 @@
 .achievement-toast.achievement-tier-2{border-color:#bc79b0;border-left-color:#e5a4d6;background:radial-gradient(ellipse at 0% 45%,#d26bad29,transparent 65%),linear-gradient(112deg,#392037,#201225 75%)}
 .achievement-toast.achievement-tier-2 .achievement-toast-medal{filter:drop-shadow(0 0 7px #db8cb348)}
 .achievement-replay-row{display:flex;flex-wrap:wrap;gap:9px}
+
+/* Secret achievement #3 — violet-chrome reward, same compact toast proportions. */
+.sf-medallion-side-effect,.achievement-toast.achievement-tier-3 .sf-medallion{border-color:#d3b5f7;background:radial-gradient(circle at 30% 23%,#ccb2ef,#8e66c0 32%,#483663 68%,#1e1729 95%);color:#f8edff;box-shadow:inset 0 0 0 3px #3f2c58,inset 0 0 0 5px #be9be3,0 2px 8px #0b0616aa}
+.sf-medallion-side-effect .sf-medallion-rays,.achievement-toast.achievement-tier-3 .sf-medallion-rays{color:#f5dbff}
+.sf-medallion-side-effect i,.achievement-toast.achievement-tier-3 .sf-medallion i{color:#e8d0fa}
+.achievement-toast.achievement-tier-3{border-color:#946cbe;border-left-color:#bd8bef;background:radial-gradient(ellipse at 0% 42%,#a66df42a,transparent 65%),linear-gradient(112deg,#32203f,#1b1126 75%)}
+.achievement-toast.achievement-tier-3 .achievement-toast-medal{filter:drop-shadow(0 0 7px #bd8bef48)}
