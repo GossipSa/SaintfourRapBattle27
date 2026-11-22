@@ -90,7 +90,7 @@ function ProductMedia({onSecretFound}) {
       <button className="sponsor-research-teaser" type="button" onClick={()=>{setClassified(x=>!x);if(!classified)onSecretFound?.()}} aria-expanded={classified} aria-controls="hellebore-rd-file">
         <div className="sponsor-research-preview" aria-hidden="true">
           <img src={mediaPaths.photo} alt="" loading="lazy"/>
-          <span className="sponsor-research-overlay">R&D<br/>00</span>
+          <span className="sponsor-research-overlay">R&D<br/>?</span>
         </div>
         <div className="sponsor-research-teaser-copy">
           <span className="sponsor-research-overline"><FlaskConical size={12}/> BLACK HELLEBORE / LAB ARCHIVE</span>
@@ -101,7 +101,7 @@ function ProductMedia({onSecretFound}) {
       </button>
       {classified&&<div className="hellebore-classified" id="hellebore-rd-file" role="region" aria-label="Досье экспериментального энергетика">
         <div className="hellebore-classified-top"><span><FlaskConical size={14}/> R&D / FILE BH–00 / INTERNAL USE ONLY</span><button type="button" onClick={()=>setClassified(false)} aria-label="Закрыть досье"><X size={16}/></button></div>
-        <div className="hellebore-classified-content"><div className="hellebore-experimental-can" aria-hidden="true"><span>BLACK HELLEBORE</span><strong>00</strong><small>FORMULA ZERO</small></div><div><span className="hellebore-classified-kicker">PROTOTYPE / UNRELEASED</span><h4>FORMULA <em>ZERO.</em></h4><p>Тестовая линейка BLACK HELLEBORE ENERGY. Рабочее название вкуса — <b>BLACKOUT BERRY</b>. Тёмные ягоды, холодное послевкусие и слишком много вопросов к финальной версии.</p><span className="hellebore-classified-footer">STATUS: REFORMULATION REQUIRED</span></div></div>
+        <div className="hellebore-classified-content"><div className="hellebore-experimental-can" aria-hidden="true"><span>BLACK HELLEBORE</span><strong>?</strong><small>FORMULA ZERO</small></div><div><span className="hellebore-classified-kicker">PROTOTYPE / UNRELEASED</span><h4 className="hellebore-formula-glitch" data-text="FORMULA ZERO.">FORMULA <em>ZERO.</em></h4><p>Тестовая линейка BLACK HELLEBORE ENERGY. Рабочее название вкуса — <b>BLACKOUT BERRY</b>. Тёмные ягоды, холодное послевкусие и слишком много вопросов к финальной версии.</p><span className="hellebore-classified-footer">STATUS: REFORMULATION REQUIRED</span></div></div>
         <div className="hellebore-lab-notes">
           <div><span>01 / FLAVOR PROFILE</span><strong>BLACKOUT BERRY</strong><small>Тёмные ягоды · ледяная нота</small></div>
           <div><span>02 / FORMULA REV.</span><strong>BH–00 / V.03</strong><small>Рецептура на доработке</small></div>
