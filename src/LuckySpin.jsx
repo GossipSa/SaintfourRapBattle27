@@ -23,17 +23,15 @@ export default function LuckySpin({onBack}){
  const timer=useRef(null)
  useEffect(()=>()=>clearTimeout(timer.current),[])
  const found=new Set(record.found)
- const unlocked=milestones.filter(m=>record.spins>=m.count)
  const spin=()=>{
   if(rolling)return
   const prize=spinPrizes[Math.floor(Math.random()*spinPrizes.length)]
-  const nextSpins=record.spins+1
   setResult(null);setRolling(true)
   const extra=1800+Math.random()*1800
   setAngle(a=>a+360*6+extra)
   timer.current=setTimeout(()=>{
    setRecord(prev=>{
-    const next={spins:prev.spins+1,history:[{id:prize.id,at:Date.now()},...prev.history].slice(0,250),found:[...new Set([...prev.found,prize.id])],secret:prev.secret||((prev.spins+1)>=25&&new Set([...prev.found,prize.id]).size===1)}
+    const next={spins:prev.spins+1,history:[{id:prize.id,at:Date.now()},...prev.history].slice(0,250),found:[...new Set([...prev.found,prize.id])],secret:prev.secret||(prev.history.length>=2&&prev.history[0].id===prize.id&&prev.history[1].id===prize.id)}
     try{localStorage.setItem(storageKey,JSON.stringify(next))}catch{/* storage disabled */}
     return next
    })
@@ -63,7 +61,7 @@ export default function LuckySpin({onBack}){
     <div className="spin-panel"><div className="spin-tabs"><button className={tab==='collection'?'selected':''} onClick={()=>setTab('collection')}><Gift size={15}/> КОЛЛЕКЦИЯ</button><button className={tab==='history'?'selected':''} onClick={()=>setTab('history')}>ИСТОРИЯ</button><button className={tab==='awards'?'selected':''} onClick={()=>setTab('awards')}><Trophy size={15}/> АЧИВКИ</button></div>
       {tab==='collection'&&<><p className="spin-panel-caption">Найдено {found.size} из {spinPrizes.length}. Повторы не исчезают из истории.</p><div className="spin-collection">{spinPrizes.map((p,i)=><div key={p.id} className={'spin-collect-item '+(found.has(p.id)?'discovered':'')} title={found.has(p.id)?p.name:'Неизвестный приз'}><span>{String(i+1).padStart(3,'0')}</span>{found.has(p.id)?<><CheckCircle2 size={15}/><strong>{p.name}</strong></>:<><LockKeyhole size={14}/><strong>???</strong></>}</div>)}</div></>}
       {tab==='history'&&<><p className="spin-panel-caption">Последние 250 прокруток. Повторные призы тоже учитываются.</p><div className="spin-history">{record.history.length?record.history.map((h,i)=>{const p=spinPrizes.find(x=>x.id===h.id);return <div key={h.at+'-'+i}><span>#{record.spins-i}</span><strong>{p?.name||'Неизвестный приз'}</strong><small>{p?.group}</small></div>}):<p>Здесь пока пусто. Колесо ждёт.</p>}</div></>}
-      {tab==='awards'&&<><p className="spin-panel-caption">Отдельные достижения рулетки. На ALL ACCESS TICKET не влияют.</p><div className="spin-awards">{milestones.map(m=><div key={m.count} className={record.spins>=m.count?'earned':''}>{record.spins>=m.count?<CheckCircle2 size={19}/>:<LockKeyhole size={19}/>}<div><small>{m.count} ПРОКРУТОК</small><strong>{record.spins>=m.count?m.title:'НЕ ОТКРЫТО'}</strong><p>{record.spins>=m.count?m.description:'Продолжай крутить колесо.'}</p></div></div>)}<div className={record.secret?'earned':''}>{record.secret?<Sparkles size={19}/>:<LockKeyhole size={19}/>}<div><small>SECRET / ???</small><strong>{record.secret?'НЕВЕРОЯТНОЕ УПОРСТВО':'ЗАСЕКРЕЧЕНО'}</strong><p>{record.secret?'25 раз подряд получать один и тот же приз было бы подозрительно.':'Условие неизвестно.'}</p></div></div></div></>}
+      {tab==='awards'&&<><p className="spin-panel-caption">Отдельные достижения рулетки. На ALL ACCESS TICKET не влияют.</p><div className="spin-awards">{milestones.map(m=><div key={m.count} className={record.spins>=m.count?'earned':''}>{record.spins>=m.count?<CheckCircle2 size={19}/>:<LockKeyhole size={19}/>}<div><small>{m.count} ПРОКРУТОК</small><strong>{record.spins>=m.count?m.title:'НЕ ОТКРЫТО'}</strong><p>{record.spins>=m.count?m.description:'Продолжай крутить колесо.'}</p></div></div>)}<div className={record.secret?'earned':''}>{record.secret?<Sparkles size={19}/>:<LockKeyhole size={19}/>}<div><small>SECRET / ???</small><strong>{record.secret?'НЕВЕРОЯТНОЕ УПОРСТВО':'ЗАСЕКРЕЧЕНО'}</strong><p>{record.secret?'Три одинаковых приза подряд. Поппи подозревает вмешательство Warlock.':'Условие неизвестно.'}</p></div></div></div></>}
     </div>
    </aside>
   </div>
