@@ -396,3 +396,34 @@
  .achievement-toast-main .achievement-toast-copy strong{font-size:19px}
  .achievement-toast-main .achievement-toast-copy small{font-size:8.5px}
 }
+
+/* Achievement categories / editorial chapter structure, same Saintfour visual DNA. */
+.achievement-category-nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:-5px 0 26px}
+.achievement-category-nav a{display:inline-flex;align-items:center;gap:14px;padding:10px 14px;border:1px solid #604366;background:#28172f;color:#d8b7df;text-decoration:none;font:800 10px 'DM Sans',sans-serif;letter-spacing:.07em;transition:background .2s,border-color .2s}
+.achievement-category-nav a:hover,.achievement-category-nav a:focus-visible{background:#3b2344;border-color:#b279bd}
+.achievement-category-nav a span{color:#f0b5e6;font:700 10px 'IBM Plex Mono',monospace}
+.achievement-category{scroll-margin-top:25px;margin:0 0 32px}
+.achievement-category-heading{display:flex;justify-content:space-between;align-items:end;gap:18px;padding:0 0 14px;margin-bottom:13px;border-bottom:1px solid #684875}
+.achievement-category-kicker{font:800 9px 'DM Sans',sans-serif;letter-spacing:.17em;color:#c990cc}
+.achievement-category-heading h2{font:900 clamp(31px,4.2vw,47px)/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.015em;color:#f5e4f5;margin:7px 0 6px}
+.achievement-category-heading h2 em{font-style:italic;color:#e3a0db}
+.achievement-category-heading p{font:400 11px/1.6 'DM Sans',sans-serif;color:#bba4c7;margin:0}
+.achievement-category-count{flex:0 0 auto;white-space:nowrap;color:#f6c4ef;font:900 32px/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.02em}
+.achievement-category-count i{font-style:normal;font-size:19px;color:#917598}
+.achievement-category-secrets .achievement-category-heading{border-color:#654b82}
+.achievement-category-secrets .achievement-category-kicker{color:#bd9be1}
+.achievement-category-secrets .achievement-category-heading h2 em{color:#be92df}
+.achievement-category-secrets .achievement-category-count{color:#c9a2eb}
+.achievement-category-secrets .achievement-collection{grid-template-columns:repeat(2,minmax(0,1fr))}
+.achievement-category-secrets .achievement-item:last-child{grid-column:auto}
+@media(max-width:860px){.achievement-category-secrets .achievement-collection{grid-template-columns:1fr}}
+@media(max-width:600px){
+ .achievement-category-nav{gap:7px;margin:0 0 24px}
+ .achievement-category-nav a{padding:9px 10px;gap:9px;font-size:9px}
+ .achievement-category-heading{align-items:center}
+ .achievement-category-heading h2{font-size:clamp(29px,8vw,38px)}
+ .achievement-category-heading p{font-size:10px}
+ .achievement-category-count{font-size:24px}
+ .achievement-category-count i{font-size:15px}
+ .achievement-category{margin-bottom:27px}
+}
