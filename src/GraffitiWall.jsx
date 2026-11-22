@@ -22,9 +22,9 @@ function spray(ctx,stroke,w,h){
  let state=seed>>>0
  const rnd=()=>{state=(Math.imul(1664525,state)+1013904223)>>>0;return state/4294967296}
  ctx.fillStyle=stroke.color
- const stamp=(x,y)=>{for(let k=0;k<14;k++){const angle=rnd()*Math.PI*2,r=radius*Math.sqrt(rnd()),dot=.25+rnd()*.9;ctx.globalAlpha=.08+rnd()*.32;ctx.beginPath();ctx.arc(x+Math.cos(angle)*r,y+Math.sin(angle)*r,dot,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=.4;ctx.beginPath();ctx.arc(x,y,Math.max(.65,stroke.width*.17),0,Math.PI*2);ctx.fill()}
+ const stamp=(x,y)=>{for(let k=0;k<7;k++){const angle=rnd()*Math.PI*2,r=radius*Math.sqrt(rnd()),dot=.25+rnd()*.9;ctx.globalAlpha=.08+rnd()*.32;ctx.beginPath();ctx.arc(x+Math.cos(angle)*r,y+Math.sin(angle)*r,dot,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=.4;ctx.beginPath();ctx.arc(x,y,Math.max(.65,stroke.width*.17),0,Math.PI*2);ctx.fill()}
  stamp(p[0][0]*w,p[0][1]*h)
- for(let i=1;i<p.length;i++){const x0=p[i-1][0]*w,y0=p[i-1][1]*h,x1=p[i][0]*w,y1=p[i][1]*h,dist=Math.hypot(x1-x0,y1-y0),steps=Math.min(180,Math.ceil(dist/2));for(let j=1;j<=steps;j++)stamp(x0+(x1-x0)*j/steps,y0+(y1-y0)*j/steps)}
+ for(let i=1;i<p.length;i++){const x0=p[i-1][0]*w,y0=p[i-1][1]*h,x1=p[i][0]*w,y1=p[i][1]*h,dist=Math.hypot(x1-x0,y1-y0),steps=Math.min(180,Math.ceil(dist/3.5));for(let j=1;j<=steps;j++)stamp(x0+(x1-x0)*j/steps,y0+(y1-y0)*j/steps)}
  ctx.globalAlpha=1
 }
 export default function GraffitiWall({onBack}){
@@ -39,7 +39,7 @@ export default function GraffitiWall({onBack}){
  },[])
  const point=e=>{const rect=canvas.current.getBoundingClientRect();return [Math.max(0,Math.min(1,(e.clientX-rect.left)/rect.width)),Math.max(0,Math.min(1,(e.clientY-rect.top)/rect.height))]}
  const down=e=>{e.preventDefault();if(active.current)return;try{canvas.current.setPointerCapture(e.pointerId)}catch{/* unsupported capture */}active.current={color,width,seed:Math.floor(Math.random()*2147483647),points:[point(e)]};paintRef.current?.()}
- const move=e=>{if(!active.current)return;const p=point(e);active.current.points.push(p);paintRef.current?.()}
+ const move=e=>{if(!active.current)return;e.preventDefault();const p=point(e),points=active.current.points,last=points[points.length-1];if(Math.hypot((p[0]-last[0])*canvas.current.clientWidth,(p[1]-last[1])*canvas.current.clientHeight)<2)return;points.push(p);if(points.length>900)points.splice(1,1);paintRef.current?.()}
  const up=()=>{if(!active.current)return;const completed=active.current;active.current=null;setDraft(d=>[...d,completed])}
  const publish=()=>{if(!draft.length)return;const next=[...strokesRef.current,...draft].slice(-300);try{localStorage.setItem(KEY,JSON.stringify(next))}catch{setNotice('Не удалось сохранить рисунок в этом браузере.')}setStrokes(next);setDraft([]);setColor(randomColor());setNotice('След сохранён в этом браузере. Общую стену подключим отдельно.')}
  return <section className="graffiti-page wrap">
