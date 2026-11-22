@@ -48,3 +48,11 @@
 .spin-achievement-toast-close{background:none;border:0;color:#e5c1df;font-size:23px;cursor:pointer;line-height:1;padding:0 3px}
 @keyframes spin-toast-in{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 @media(max-width:850px){.spin-achievement-toast{bottom:82px;right:10px;width:calc(100vw - 20px)}}
+
+.spin-collection{display:block;max-height:460px;overflow:auto}
+.spin-collection-group{margin-bottom:16px}
+.spin-collection-group-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 5px;border-bottom:1px solid #87578a;margin-bottom:8px;color:#e8a6d8}
+.spin-collection-group-heading strong{font:900 15px 'Barlow Condensed',Impact,sans-serif;letter-spacing:.05em}
+.spin-collection-group-heading span{font:800 10px 'DM Sans',sans-serif}
+.spin-collection-group-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+@media(max-width:390px){.spin-collection-group-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
