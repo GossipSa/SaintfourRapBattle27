@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, Gift, RotateCcw, Trophy, LockKeyhole, CheckCircle2, Sparkles, Cigarette, Flower2, CircleDot, Zap, Cat, Disc3, Flame, Music2, Mic2, Crown, Star, Diamond, Radio } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Gift, RotateCcw, Trophy, LockKeyhole, CheckCircle2, Sparkles, Cigarette, Flower2, CircleDot, Zap, Cat, Disc3, Flame, Music2, Mic2, Crown, Star, Diamond } from 'lucide-react'
 import { spinPrizes } from './spin-prizes'
 import './lucky-spin.css'
 
