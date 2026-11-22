@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, Gift, RotateCcw, Trophy, LockKeyhole, CheckCircle2, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Gift, RotateCcw, Trophy, LockKeyhole, CheckCircle2, Sparkles, Cigarette, Flower2, CircleDot, Zap, Cat, Disc3, Flame, Music2, Mic2, Crown, Star, Diamond, Radio } from 'lucide-react'
 import { spinPrizes } from './spin-prizes'
 import './lucky-spin.css'
 
-const storageKey='sf27-lucky-spin-v1'
+const storageKey='sf27-lucky-spin-v2'
 const milestones=[
  {count:1,title:'НУ, ПОНЕСЛАСЬ',description:'Ты только что потратил время на абсолютно бесполезную рулетку.'},
  {count:25,title:'ПОППИ НАЧИНАЕТ ПЕРЕЖИВАТЬ',description:'Даже организатор шоу не ожидала такого энтузиазма.'},
@@ -11,7 +11,7 @@ const milestones=[
  {count:250,title:'РУЛЕТКА ЗНАЕТ ТЕБЯ ПО ИМЕНИ',description:'Возможно, вам уже пора познакомиться лично.'},
  {count:1000,title:'ГОВАРД ТРЕБУЕТ ЗАКРЫТЬ САЙТ',description:'Юридический отдел Warlock направил официальную претензию.'}
 ]
-const icons=['✿','★','⚡','●','✦','♠','☾','◆','✳','♥','☢','✧']
+const wheelIcons=[Cigarette,Flower2,CircleDot,Zap,Cat,Disc3,Flame,Music2,Mic2,Crown,Star,Diamond]
 const blank={spins:0,history:[],found:[],secret:false}
 function load(){try{const s=JSON.parse(localStorage.getItem(storageKey));if(s&&Number.isFinite(s.spins)&&Array.isArray(s.history)&&Array.isArray(s.found))return {...blank,...s}}catch{/* storage disabled */}return blank}
 export default function LuckySpin({onBack}){
@@ -47,13 +47,13 @@ export default function LuckySpin({onBack}){
     <div className="spin-machine-label"><span>THE WHEEL OF VERY DUBIOUS FORTUNE</span><span>NO REFUNDS / NO QUESTIONS</span></div>
     <div className="spin-wheel-shell"><div className="spin-pointer" aria-hidden="true"/>
       <div className="spin-wheel" style={{transform:`rotate(${angle}deg)`}}>
-       {icons.map((symbol,i)=><span key={i} className="spin-wheel-symbol" style={{transform:`rotate(${i*30}deg) translateY(-138px) rotate(${-i*30}deg)`}}>{symbol}</span>)}
+       {wheelIcons.map((Icon,i)=><span key={i} className="spin-wheel-symbol" style={{transform:`rotate(${i*30}deg) translateY(calc(var(--wheel-size) * -0.345)) rotate(${-i*30}deg)`}}><Icon size={22} strokeWidth={1.8}/></span>)}
        <div className="spin-wheel-center"><span>SF</span><small>27</small></div>
       </div>
     </div>
-    <p className="spin-wheel-note">Символы на колесе ничего не предсказывают. Поппи просто понравился дизайн.</p>
+    <p className="spin-wheel-note">Значки — просто декор. Приз выбирается случайно.</p>
     <button className="spin-go" type="button" onClick={spin} disabled={rolling}><RotateCcw size={20} className={rolling?'spin-go-icon':''}/>{rolling?'КОЛЕСО КРУТИТСЯ...':'КРУТИТЬ РУЛЕТКУ'}<ArrowRight size={18}/></button>
-    <div className="spin-result" aria-live="polite">{rolling?<><span>PLEASE WAIT</span><strong>СУДЬБА ВЫБИРАЕТ БЕСПОЛЕЗНОСТЬ...</strong></>:result?<><span>YOUR PRIZE / {result.group.toUpperCase()}</span><strong>{result.name}</strong><p>{result.description}</p>{latestMilestone&&<small>🏆 НОВОЕ ДОСТИЖЕНИЕ: {latestMilestone.title}</small>}</>:<><span>NO PRIZE YET</span><strong>НАЖМИ SPIN И ПОСМОТРИ, ЧТО ТЕБЕ НЕ ДОСТАНЕТСЯ.</strong></>}</div>
+    <div className="spin-result" aria-live="polite">{rolling?<><span>PLEASE WAIT</span><strong>СУДЬБА ВЫБИРАЕТ БЕСПОЛЕЗНОСТЬ...</strong></>:result?<><span>YOUR PRIZE / {result.group.toUpperCase()}</span><strong>{result.name}</strong><p>{result.description}</p>{latestMilestone&&<small>НОВОЕ ДОСТИЖЕНИЕ: {latestMilestone.title}</small>}</>:<><span>NO PRIZE YET</span><strong>НАЖМИ SPIN И ПОСМОТРИ, ЧТО ТЕБЕ НЕ ДОСТАНЕТСЯ.</strong></>}</div>
    </div>
    <aside className="spin-side">
     <div className="spin-stats"><div><span>TOTAL SPINS</span><strong>{record.spins.toLocaleString('ru-RU')}</strong></div><div><span>COLLECTED</span><strong>{found.size}<small> / {spinPrizes.length}</small></strong></div></div>
