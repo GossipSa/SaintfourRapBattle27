@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDownRight, ArrowRight, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Menu, Mic2, Play, Radio, Vote, X, Trophy, LockKeyhole, CheckCircle2, Ticket, Sparkles, FlaskConical, Mail, Eye, FileWarning, Volume2, VolumeX, AudioLines } from 'lucide-react'
 import './App.css'
 import './theme.css'
@@ -43,88 +43,9 @@ const gallery = [
   { image:`${import.meta.env.BASE_URL}media/gallery-03.jpg`, label:'AFTER THE ROUND / 003' },
   { image:`${import.meta.env.BASE_URL}media/gallery-04.jpg`, label:'BEHIND THE SCENES / 004' },
 ]
-// Original, locally synthesized hip-hop battle stingers (no external samples or autoplay).
+// One optional low-volume background track, controlled explicitly by the visitor.
 const soundPrefKey='sf27-sound-consent-v1'
-function playSiteTone(context,kind='unlock'){
- try{
-  const t=context.currentTime+.025
-  const out=context.createGain()
-  out.gain.value=.57
-  const limiter=context.createDynamicsCompressor()
-  limiter.threshold.value=-13
-  limiter.knee.value=15
-  limiter.ratio.value=9
-  limiter.attack.value=.003
-  limiter.release.value=.14
-  out.connect(limiter)
-  limiter.connect(context.destination)
-  const envelope=(at,peak,attack,decay)=>{
-   const gain=context.createGain()
-   gain.gain.setValueAtTime(.0001,t+at)
-   gain.gain.linearRampToValueAtTime(peak,t+at+attack)
-   gain.gain.exponentialRampToValueAtTime(.0001,t+at+attack+decay)
-   gain.connect(out)
-   return gain
-  }
-  const noiseBuffer=context.createBuffer(1,Math.floor(context.sampleRate*.65),context.sampleRate)
-  const noise=noiseBuffer.getChannelData(0)
-  // Fresh non-looping transient, like a tiny vinyl/crowd texture.
-  for(let i=0;i<noise.length;i++)noise[i]=(Math.random()*2-1)
-  const kick=(at,power=1)=>{
-   const osc=context.createOscillator()
-   osc.type='sine'
-   osc.frequency.setValueAtTime(155,t+at)
-   osc.frequency.exponentialRampToValueAtTime(52,t+at+.095)
-   osc.frequency.exponentialRampToValueAtTime(43,t+at+.25)
-   osc.connect(envelope(at,.54*power,.002,.24))
-   osc.start(t+at);osc.stop(t+at+.255)
-  }
-  const clap=(at,power=1)=>{
-   const src=context.createBufferSource()
-   src.buffer=noiseBuffer
-   const filter=context.createBiquadFilter()
-   filter.type='highpass';filter.frequency.value=1150
-   src.connect(filter)
-   filter.connect(envelope(at,.23*power,.002,.115))
-   src.start(t+at);src.stop(t+at+.13)
-  }
-  const scratch=(at,power=1)=>{
-   const source=context.createBufferSource()
-   source.buffer=noiseBuffer
-   const band=context.createBiquadFilter()
-   band.type='bandpass';band.Q.value=1.4
-   band.frequency.setValueAtTime(2300,t+at)
-   band.frequency.exponentialRampToValueAtTime(430,t+at+.13)
-   band.frequency.exponentialRampToValueAtTime(1400,t+at+.22)
-   source.connect(band)
-   band.connect(envelope(at,.22*power,.006,.22))
-   source.start(t+at);source.stop(t+at+.23)
-  }
-  const horn=(at,power=1)=>{
-   for(const detune of [-7,8]){
-    const osc=context.createOscillator()
-    const tone=context.createBiquadFilter()
-    osc.type='sawtooth'
-    osc.frequency.setValueAtTime(196,t+at)
-    osc.frequency.exponentialRampToValueAtTime(218,t+at+.095)
-    osc.detune.value=detune
-    tone.type='lowpass'
-    tone.frequency.setValueAtTime(950,t+at)
-    tone.frequency.exponentialRampToValueAtTime(470,t+at+.27)
-    osc.connect(tone)
-    tone.connect(envelope(at,.085*power,.018,.26))
-    osc.start(t+at);osc.stop(t+at+.3)
-   }
-  }
-  if(kind==='unlock'){
-   kick(0,1);scratch(.03,.7);clap(.175,.85);kick(.31,.76);horn(.34,.82);clap(.49,.72)
-  }else if(kind==='enable'){
-   scratch(0,.6);kick(.055,.8);clap(.2,.7);horn(.22,.65)
-  }else{
-   scratch(0,.7);kick(.09,.62);clap(.13,.45)
-  }
- }catch{/* Web Audio unsupported: remain silent without disrupting the site */}
-}
+const musicSource=`${import.meta.env.BASE_URL}media/audio/saintfour-background.m4a`
 
 const hypePollIds=['scandal','punchlines','surprise','interview']
 function completedHypeVotes(votes){
@@ -145,30 +66,60 @@ function Cover({src, alt, className='', initials='', style={}}) {
 function SectionTitle({tag,title,action, onAction}){return <div className="section-heading"><div><p className="eyebrow"><span className="red-dot"/> {tag}</p><h2 className="glitch-heading" data-text={title}>{title}</h2></div>{action && <button className="text-button" onClick={onAction}>{action} <ArrowRight size={16}/></button>}</div>}
 export default function App() {
  const [page,setPage]=useState('home')
- const audioContextRef=useRef(null)
+ const musicRef=useRef(null)
+ const musicFadeRef=useRef(null)
  const [soundChoice,setSoundChoice]=useState(()=>{
   try{
    const value=window.localStorage.getItem(soundPrefKey)
    return value==='on'||value==='off'?value:null
   }catch{return null}
  })
- const playFx=useCallback((kind='open',force=false)=>{
-  if(!force&&soundChoice!=='on')return
-  try{
-   const AudioEngine=window.AudioContext||window.webkitAudioContext
-   if(!AudioEngine)return
-   const context=audioContextRef.current||new AudioEngine()
-   audioContextRef.current=context
-   if(context.state==='suspended')void context.resume().catch(()=>{})
-   playSiteTone(context,kind)
-  }catch{/* unsupported or restricted audio: visual interaction still works */}
- },[soundChoice])
+ const stopMusic=()=>{
+  if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)
+  musicFadeRef.current=null
+  const audio=musicRef.current
+  if(audio){audio.pause();audio.volume=0}
+ }
+ const startMusic=()=>{
+  const audio=musicRef.current
+  if(!audio)return
+  if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)
+  musicFadeRef.current=null
+  const fadeIn=()=>{
+   audio.volume=0
+   const start=window.performance.now()
+   const fade=(now)=>{
+    if(audio.paused)return
+    audio.volume=Math.min(.08,Math.max(0,(now-start)/1800*.08))
+    if(audio.volume<.08)musicFadeRef.current=window.requestAnimationFrame(fade)
+    else musicFadeRef.current=null
+   }
+   musicFadeRef.current=window.requestAnimationFrame(fade)
+  }
+  if(!audio.paused)return
+  audio.volume=0
+  const attempt=audio.play()
+  if(attempt&&typeof attempt.then==='function')void attempt.then(fadeIn).catch(()=>{})
+ }
  const chooseSound=(enabled)=>{
   const next=enabled?'on':'off'
   setSoundChoice(next)
   try{window.localStorage.setItem(soundPrefKey,next)}catch{/* private mode */}
-  if(enabled)playFx('enable',true)
+  if(enabled)startMusic()
+  else stopMusic()
  }
+ useEffect(()=>{
+  if(soundChoice==='on'){
+   const audio=musicRef.current
+   if(audio){
+    audio.volume=0
+    const attempt=audio.play()
+    if(attempt&&typeof attempt.then==='function')void attempt.then(()=>{audio.volume=.08}).catch(()=>{})
+   }
+  }
+  return ()=>{if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)}
+ // On reload, browsers may require another tap before playback; the control remains available.
+ },[])
  const [menuOpen,setMenuOpen]=useState(false)
  const [selected,setSelected]=useState(null)
  const [howardMailOpen,setHowardMailOpen]=useState(false)
@@ -183,7 +134,6 @@ export default function App() {
  const secretCount=Number(Boolean(achievements.sideEffect))+Number(Boolean(achievements.whosWatching))
  const openHowardMail=()=>{
    setHowardMailOpen(true)
-   if(achievements.whosWatching)playFx('open')
    if(achievements.whosWatching)return
    setAchievements(prev=>{
      if(prev.whosWatching)return prev
@@ -194,7 +144,7 @@ export default function App() {
    setAchievementToast('whosWatching')
  }
  const unlockSideEffect=()=>{
-   if(achievements.sideEffect){playFx('open');return}
+   if(achievements.sideEffect)return
    setAchievements(prev=>{
      if(prev.sideEffect)return prev
      const next={...prev,sideEffect:true}
@@ -247,9 +197,6 @@ export default function App() {
    return ()=>window.clearTimeout(t)
  },[achievements.earlyBird])
  useEffect(()=>{
-   if(achievementToast&&soundChoice==='on')playFx('unlock')
- },[achievementToast,soundChoice,playFx])
- useEffect(()=>{
    if(!achievementToast)return undefined
    const t=window.setTimeout(()=>setAchievementToast(null),10000)
    return ()=>window.clearTimeout(t)
@@ -291,9 +238,10 @@ export default function App() {
  const filteredMedia=useMemo(()=>media.filter(m=>m.type==='INTERVIEW'),[])
  const go=(p)=>{setPage(p);setMenuOpen(false)}
  return <div className="app">
-  {soundChoice===null&&<div className="sound-consent-backdrop"><section className="sound-consent-dialog" role="dialog" aria-modal="true" aria-labelledby="sound-consent-title" aria-describedby="sound-consent-description"><div className="sound-consent-scanline" aria-hidden="true"/><div className="sound-consent-icon"><AudioLines size={29}/></div><span className="sound-consent-kicker">SAINTFOUR / AUDIO EXPERIENCE</span><h2 id="sound-consent-title">MAKE SOME <em>NOISE.</em></h2><p id="sound-consent-description">На сайте есть звуковые спецэффекты: секретные находки и новые достижения звучат по-особенному. Хочешь их включить?</p><div className="sound-consent-actions"><button type="button" className="sound-consent-enable" onClick={()=>chooseSound(true)}><Volume2 size={18}/> ВКЛЮЧИТЬ ЗВУК</button><button type="button" className="sound-consent-silent" onClick={()=>chooseSound(false)}><VolumeX size={17}/> БЕЗ ЗВУКА</button></div><small>Выбор сохранится. Изменить его можно вверху сайта через SFX ON/OFF. Видео энергетика останется без звука.</small></section></div>}
+  <audio ref={musicRef} src={musicSource} preload="none" loop aria-hidden="true"/>
+  {soundChoice===null&&<div className="sound-consent-backdrop"><section className="sound-consent-dialog" role="dialog" aria-modal="true" aria-labelledby="sound-consent-title" aria-describedby="sound-consent-description"><div className="sound-consent-scanline" aria-hidden="true"/><div className="sound-consent-icon"><AudioLines size={29}/></div><span className="sound-consent-kicker">SAINTFOUR / AUDIO EXPERIENCE</span><h2 id="sound-consent-title">MAKE SOME <em>NOISE.</em></h2><p id="sound-consent-description">На сайте может играть тихая фоновая музыка. Включить её или оставить сайт без звука? Никаких сигналов при ачивках и секретках больше нет.</p><div className="sound-consent-actions"><button type="button" className="sound-consent-enable" onClick={()=>chooseSound(true)}><Volume2 size={18}/> ВКЛЮЧИТЬ МУЗЫКУ</button><button type="button" className="sound-consent-silent" onClick={()=>chooseSound(false)}><VolumeX size={17}/> БЕЗ МУЗЫКИ</button></div><small>Выбор сохранится. Музыку можно включить или выключить в шапке сайта в любой момент. Рекламные видео останутся без звука.</small></section></div>}
   <div className="top-strip"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="top-right"><span className="live-dot"/><span className="top-strip-slogan">THE UNDERGROUND IS CALLING</span></span></div>
-  <header className="header"><button className="logo" onClick={()=>go('home')} aria-label="На главную"><span className="logo-mark">SF<span>✳</span></span><span className="logo-type">SAINTFOUR<strong>RAP BATTLE <i>’27</i></strong></span></button><nav className="desktop-nav" aria-label="Навигация">{nav.map(n=><button key={n.id} className={page===n.id?'active':''} onClick={()=>go(n.id)}>{n.name}</button>)}</nav><div className="header-actions"><span className="edition">VOL. 001 / 2027</span><button className="sound-toggle sound-toggle-header" type="button" onClick={()=>chooseSound(soundChoice!=='on')} aria-label={soundChoice==='on'?'Выключить звуковые эффекты':'Включить звуковые эффекты'} aria-pressed={soundChoice==='on'} title={soundChoice==='on'?'Выключить звук':'Включить звук'}>{soundChoice==='on'?<Volume2 size={16}/>:<VolumeX size={16}/>} <span>SFX {soundChoice==='on'?'ON':'OFF'}</span></button><button className="mobile-menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Меню">{menuOpen?<X/>:<Menu/>}</button></div></header>
+  <header className="header"><button className="logo" onClick={()=>go('home')} aria-label="На главную"><span className="logo-mark">SF<span>✳</span></span><span className="logo-type">SAINTFOUR<strong>RAP BATTLE <i>’27</i></strong></span></button><nav className="desktop-nav" aria-label="Навигация">{nav.map(n=><button key={n.id} className={page===n.id?'active':''} onClick={()=>go(n.id)}>{n.name}</button>)}</nav><div className="header-actions"><span className="edition">VOL. 001 / 2027</span><button className="sound-toggle sound-toggle-header" type="button" onClick={()=>chooseSound(soundChoice!=='on')} aria-label={soundChoice==='on'?'Выключить фоновую музыку':'Включить фоновую музыку'} aria-pressed={soundChoice==='on'} title={soundChoice==='on'?'Выключить музыку':'Включить музыку'}>{soundChoice==='on'?<Volume2 size={16}/>:<VolumeX size={16}/>} <span>MUSIC {soundChoice==='on'?'ON':'OFF'}</span></button><button className="mobile-menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Меню">{menuOpen?<X/>:<Menu/>}</button></div></header>
   {menuOpen&&<nav className="mobile-nav" aria-label="Мобильная навигация">{nav.map(n=><button key={n.id} onClick={()=>go(n.id)}><n.Icon size={17}/>{n.name}<ArrowRight size={16}/></button>)}{unlockedCount>0&&<button onClick={()=>go("achievements")}><Trophy size={17}/>Достижения <span className="achievement-menu-count">{unlockedCount} / 5</span><ArrowRight size={16}/></button>}</nav>}
   <main>
   {page==='achievements'&&<section className="achievements-page wrap">
