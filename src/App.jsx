@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowDownRight, ArrowRight, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Menu, Mic2, Play, Radio, Vote, X, Trophy, LockKeyhole, CheckCircle2, Ticket, Zap, FlaskConical, Mail, Eye, FileWarning, Volume2, VolumeX, AudioLines, SlidersHorizontal, NotebookPen } from 'lucide-react'
+import { ArrowDownRight, ArrowRight, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Menu, Mic2, Play, Radio, Vote, X, Trophy, LockKeyhole, CheckCircle2, Ticket, Zap, FlaskConical, Mail, Eye, FileWarning, Volume2, VolumeX, PhoneOff, AudioLines, SlidersHorizontal, NotebookPen } from 'lucide-react'
 import './App.css'
 import './theme.css'
 import './cyber.css'
@@ -9,6 +9,7 @@ import SponsorsShowcase from './Sponsors.jsx'
 import HypePolls from './HypePolls.jsx'
 import SecretInterview from './SecretInterview.jsx'
 import PoppyNotebook from './PoppyNotebook.jsx'
+import HowardPhone from './HowardPhone.jsx'
 const dexManagerPhoto=`${import.meta.env.BASE_URL}media/dex-kitten-manager.jpg`
 import AllAccessTicket from './AllAccessTicket.jsx'
 import LuckySpin, { LuckySpinAchievements } from './LuckySpin.jsx'
@@ -185,7 +186,15 @@ export default function App() {
  const unlockedCount=Number(Boolean(achievements.earlyBird))+Number(Boolean(achievements.loyalOne))+Number(Boolean(achievements.sideEffect))+Number(Boolean(achievements.whosWatching))+Number(Boolean(achievements.fifthChair))
  const activityCount=Number(Boolean(achievements.earlyBird))+Number(Boolean(achievements.loyalOne))
  const secretCount=Number(Boolean(achievements.sideEffect))+Number(Boolean(achievements.whosWatching))+Number(Boolean(achievements.fifthChair))
- const foundSecrets=secretCount+Number(Boolean(achievements.shakeBonus))
+ const foundSecrets=secretCount+Number(Boolean(achievements.shakeBonus))+Number(Boolean(achievements.howardBlocked))
+ const unlockHowardBlocked=()=>{
+  setAchievements(prev=>{
+   if(prev.howardBlocked)return prev
+   const next={...prev,howardBlocked:true}
+   try{window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(next))}catch{/* private mode */}
+   return next
+  })
+ }
  const unlockFifthChair=()=>{
   if(achievements.fifthChair)return
   setAchievements(prev=>{
@@ -308,6 +317,7 @@ export default function App() {
   <div className="top-strip"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="top-right"><span className="live-dot"/><span className="top-strip-slogan">THE UNDERGROUND IS CALLING</span></span></div>
   <header className="header"><button className="logo" onClick={()=>go('home')} aria-label="На главную"><span className="logo-mark">SF</span><span className="logo-type">SAINTFOUR<strong>RAP BATTLE <i>’27</i></strong></span></button><nav className="desktop-nav" aria-label="Навигация">{nav.map(n=><button key={n.id} className={page===n.id?'active':''} onClick={()=>go(n.id)}>{n.name}</button>)}</nav><div className="header-actions"><span className="edition">VOL. 001 / 2027</span><button className="sound-toggle sound-toggle-header" type="button" onClick={()=>chooseSound(soundChoice!=='on')} aria-label={soundChoice==='on'?'Выключить фоновую музыку':'Включить фоновую музыку'} aria-pressed={soundChoice==='on'} title={soundChoice==='on'?'Выключить музыку':'Включить музыку'}>{soundChoice==='on'?<Volume2 size={16}/>:<VolumeX size={16}/>} <span>MUSIC {soundChoice==='on'?'ON':'OFF'}</span></button>{!mobileAudio&&<div className="music-volume-wrap"><button type="button" className="music-volume-trigger" aria-label="Настроить громкость музыки" aria-expanded={musicPanelOpen} title="Громкость фоновой музыки" onClick={()=>setMusicPanelOpen(v=>!v)}><SlidersHorizontal size={17}/></button>{musicPanelOpen&&<div className="music-volume-popover"><label htmlFor="sf-music-volume">ГРОМКОСТЬ МУЗЫКИ <b>{desktopMusicVolume}%</b></label><input id="sf-music-volume" type="range" min="0" max="100" step="1" value={desktopMusicVolume} onChange={e=>changeDesktopVolume(e.target.value)} aria-label="Громкость фоновой музыки"/><small>Только для этого компьютера</small></div>}</div>}<button className="mobile-menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Меню">{menuOpen?<X/>:<Menu/>}</button></div></header>
   {menuOpen&&<nav className="mobile-nav" aria-label="Мобильная навигация">{nav.map(n=><button key={n.id} onClick={()=>go(n.id)}><n.Icon size={17}/>{n.name}<ArrowRight size={16}/></button>)}</nav>}
+  <HowardPhone onBlocked={unlockHowardBlocked}/>
   <main>
   {page==='spin'&&<LuckySpin onBack={()=>go('home')} onAchievements={()=>go('achievements')}/>}
   {page==='achievements'&&<section className="achievements-page wrap">
@@ -334,6 +344,11 @@ export default function App() {
        <div className="achievement-emblem">{achievements.shakeBonus?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Zap size={27} strokeWidth={1.6}/><i>06</i></div>:<LockKeyhole size={27}/>}</div>
        <div className="achievement-item-copy"><span>BONUS ACHIEVEMENT / 006</span><h2>{achievements.shakeBonus?'SHAKE RESPONSIBLY':'UNDISCOVERED'}</h2><p>{achievements.shakeBonus?'Десять встряхиваний BLACK HELLEBORE. Промокод SHAKE10GET0 — скидка 0%, уважение 100%.':'Иногда любопытство заканчивается слишком громким пшшш.'}</p></div>
        <div className="achievement-status">{achievements.shakeBonus?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
+      </article>
+      <article className={'achievement-item achievement-tier-6 '+(achievements.howardBlocked?'is-earned':'is-locked')}>
+       <div className="achievement-emblem">{achievements.howardBlocked?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><PhoneOff size={27} strokeWidth={1.6}/><i>07</i></div>:<LockKeyhole size={27}/>}</div>
+       <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 007</span><h2>{achievements.howardBlocked?'ГОВАРД ЗАБЛОКИРОВАЛ ВАС':'UNDISCOVERED'}</h2><p>{achievements.howardBlocked?'Пять звонков Натаниэлю Говарду. Ваш номер официально внесён в чёрный список Warlock Industries.':'Секрет ещё не раскрыт.'}</p></div>
+       <div className="achievement-status">{achievements.howardBlocked?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
       </div>
       <LuckySpinAchievements onOpen={()=>go('spin')}/>
