@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, Paintbrush, RotateCcw, Send, LockKeyhole } from 'lucide-react'
+import { ArrowLeft, RotateCcw, Send, LockKeyhole } from 'lucide-react'
 import './graffiti-wall.css'
 
 const KEY='sf27-graffiti-drafts-v1'
