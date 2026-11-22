@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CheckCircle2, LockKeyhole, Sparkles, Ticket, X } from 'lucide-react'
+import { CheckCircle2, Sparkles, Ticket, X } from 'lucide-react'
 import './all-access-ticket.css'
 
 function ticketNumber(){
