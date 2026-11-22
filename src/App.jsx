@@ -81,7 +81,6 @@ export default function App() {
   }catch{return 30}
  })
  const desktopVolumeRef=useRef(desktopMusicVolume)
- const musicMaxVolume=mobileAudio?.02:desktopMusicVolume/100*.12
  const [soundChoice,setSoundChoice]=useState(()=>{
   try{
    const value=window.localStorage.getItem(soundPrefKey)
