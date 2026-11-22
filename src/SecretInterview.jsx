@@ -62,6 +62,62 @@ const callChoices=[
  ['Мы вообще-то договаривались на энтузиазме.','На энтузиазме?! Мой энтузиазм закончился примерно в тот момент, когда выяснилось, что я разговариваю с человеком через какой-то сайт! И вообще, почему об этом договоре знаю только ты?!']
 ]
 
+
+// Short stage directions keep the interview feeling like a recorded scene rather than a questionnaire.
+const interviewActing=[
+ {
+  before:'Поппи поправляет бандану, отбрасывает прядь волос за плечо и бросает быстрый взгляд на пустое кресло.',
+  answers:[
+   'Усмехается, постукивает ногтем по краю карточки с вопросами.',
+   'Одобрительно кивает и делает вид, что ставит галочку в блокноте.',
+   'Приподнимает брови и чуть подаётся вперёд.'
+  ],
+  after:'Она прислушивается, замирает на секунду и растерянно смотрит на микрофон.'
+ },
+ {
+  before:'Поппи перебирает карточки, выбирает следующую и устраивается поудобнее в кресле.',
+  answers:[
+   'Смеётся и качает головой, будто уже представляет будущую катастрофу.',
+   'Выпрямляется, изображая деловой тон, но улыбка всё равно прорывается.',
+   'Заинтересованно наклоняет голову и на секунду задумчиво прикусывает губу.'
+  ],
+  after:'Смотрит на пустое кресло, затем — на камеру. Медленно опускает карточку.'
+ },
+ {
+  before:'Поппи поправляет микрофон и несколько секунд молча разглядывает соседнее кресло.',
+  answers:[
+   'Резко оборачивается вправо и всматривается в пустое сиденье.',
+   'Медленно переводит взгляд с объектива на оператора и обратно.',
+   'Опускает взгляд вниз, словно пытается разглядеть кнопки под собственными ногами.'
+  ],
+  after:'Отодвигает карточки в сторону, делает паузу и подаётся к камере.'
+ },
+ {
+  before:'Поппи нервно разглаживает уголок карточки. Кажется, теперь она хочет услышать ответ всерьёз.',
+  answers:[
+   'Сначала смеётся, потом перестаёт. Широко раскрывает глаза и разводит руками.',
+   'Закатывает глаза, откидывается на спинку кресла и смотрит прямо в объектив.',
+   'Пересчитывает что-то на пальцах, каждый раз загибая новый, и резко вскидывает руки.'
+  ],
+  after:'Молчит несколько секунд, внимательно оглядывает студию и медленно опускает карточки на стол.'
+ },
+ {
+  before:'Она уже не смотрит в сценарий. Сжимает микрофон и раздражённо стучит пальцами по подлокотнику.',
+  answers:[
+   'Коротко усмехается, будто услышала наконец знакомое имя.',
+   'Поворачивается к оператору и многозначительно приподнимает бровь.',
+   'Возмущённо распрямляется и вскидывает свободную руку.'
+  ],
+  after:'Отодвигает микрофон, достаёт телефон и несколько раз решительно нажимает на экран.'
+ }
+]
+const phoneActing=[
+ 'Поппи смотрит на телефон, потом на дорогую с виду студию. Поднимает с пола одну из карточек и безнадёжно опускает её обратно.',
+ 'Несколько секунд молча смотрит в одну точку. Затем медленно снимает телефон с уха, смотрит на него и снова прикладывает к уху.',
+ 'Она закрывает глаза, считает до трёх и очень осторожно уточняет, не ослышалась ли.'
+]
+function StageCue({children}){return <p className="fifth-cue"><span aria-hidden="true">···</span>{children}</p>}
+
 export default function SecretInterview({onClose,onComplete,alreadyEarned=false}){
  const [stage,setStage]=useState('intro')
  const [index,setIndex]=useState(0)
@@ -112,27 +168,27 @@ export default function SecretInterview({onClose,onComplete,alreadyEarned=false}
       <span className="fifth-kicker">UNLISTED RECORDING / NO GUEST ID</span>
       <h2 id="fifth-title">THE FIFTH <em>CHAIR.</em></h2>
       <p className="fifth-dialogue"><strong>ПОППИ</strong>Ну что, привет! Я Поппи Эмерсон, и ты смотришь Saintfour Rap Battle. Сегодня у нас немного необычный гость. Честно говоря, я даже не знаю, как тебя представить.</p>
-      <p className="fifth-note">*Смотрит на пустое кресло.*</p>
+      <StageCue>Проверяет, включён ли микрофон, поправляет волосы и поворачивается к пустому креслу. Несколько секунд ждёт, будто кто-то должен там появиться.</StageCue>
       <p className="fifth-dialogue">Ладно, разберёмся по ходу. Начнём с простого.</p>
       <button className="fifth-primary" onClick={()=>setStage('questions')}>НАЧАТЬ ИНТЕРВЬЮ <Play size={16}/></button>
      </div>}
      {stage==='questions'&&<div key={index} className="fifth-screen">
       <div className="fifth-question-head"><span>QUESTION {String(index+1).padStart(2,'0')} / 05</span><span>{question.label}</span></div>
       <h2 id="fifth-title" className="fifth-title-small">{question.label}</h2>
-      <p className="fifth-dialogue"><strong>ПОППИ</strong>{question.line}</p>
-      {choice===null?<><span className="fifth-answer-kicker">ТВОЙ ОТВЕТ / CHOOSE ONE</span><div className="fifth-options">{question.choices.map(([label],i)=><button key={i} type="button" className="fifth-option" onClick={()=>choose(i)}><span>{String.fromCharCode(65+i)}</span><b>{label}</b><ArrowRight size={15}/></button>)}</div></>:<div className="fifth-reaction"><span className="fifth-reaction-head"><Check size={14}/> ANSWER RECORDED / POPPY REACTS</span><p>{question.choices[choice][1]}</p><div className="fifth-after"><span>ПОППИ / ПРОДОЛЖАЕТ</span><p>{question.after}</p></div><button className="fifth-primary" onClick={next}>{index===4?'ПОЗВОНИТЬ СПЛЕТНИЦЕ':'СЛЕДУЮЩИЙ ВОПРОС'} <ArrowRight size={16}/></button></div>}
+      <StageCue>{interviewActing[index].before}</StageCue><p className="fifth-dialogue"><strong>ПОППИ</strong>{question.line}</p>
+      {choice===null?<><span className="fifth-answer-kicker">ТВОЙ ОТВЕТ / CHOOSE ONE</span><div className="fifth-options">{question.choices.map(([label],i)=><button key={i} type="button" className="fifth-option" onClick={()=>choose(i)}><span>{String.fromCharCode(65+i)}</span><b>{label}</b><ArrowRight size={15}/></button>)}</div></>:<div className="fifth-reaction"><span className="fifth-reaction-head"><Check size={14}/> ANSWER RECORDED / POPPY REACTS</span><StageCue>{interviewActing[index].answers[choice]}</StageCue><p>{question.choices[choice][1]}</p><div className="fifth-after"><span>ПОППИ / ПРОДОЛЖАЕТ</span><StageCue>{interviewActing[index].after}</StageCue><p>{question.after}</p></div><button className="fifth-primary" onClick={next}>{index===4?'ПОЗВОНИТЬ СПЛЕТНИЦЕ':'СЛЕДУЮЩИЙ ВОПРОС'} <ArrowRight size={16}/></button></div>}
      </div>}
      {stage==='dial'&&<div className="fifth-screen fifth-phone">
       <span className="fifth-kicker">UNSCRIPTED / OUTGOING CALL</span><div className="fifth-phone-icon"><PhoneCall size={30}/></div>
       <h2 id="fifth-title">СПЛЕТНИЦА <em>СЕНТФОРА.</em></h2><span className="fifth-calling">СОЕДИНЕНИЕ УСТАНОВЛЕНО</span>
-      <div className="fifth-call-log"><p><strong>ПОППИ</strong>Алло? Привет, это Пенелопа. Да, с батла. Нет, всё нормально. Ну, почти.</p><p>Я сейчас разговаривала с каким-то человеком, которого вообще нет в студии, и он мне кое-что рассказал. Это правда, что всё началось с двух мемных песен?</p><p>А то, что ты потом добавила остальных участников, потому что двух тебе показалось мало, — тоже правда? Ага. Чудесно.</p><p>Тогда у меня возникает закономерный вопрос. <b>ПОЧЕМУ МНЕ ЗА ЭТО НЕДОСТАТОЧНО ПЛАТЯТ?!</b></p></div>
+      <StageCue>Поппи находит контакт «СПЛЕТНИЦА СЕНТФОРА», нажимает вызов и нетерпеливо постукивает носком ботинка по полу. После нескольких гудков распрямляется в кресле.</StageCue><div className="fifth-call-log"><p><strong>ПОППИ</strong>Алло? Привет, это Пенелопа. Да, с батла. Нет, всё нормально. Ну, почти.</p><StageCue>На секунду отводит телефон от уха и смотрит в объектив, словно проверяет, не исчез ли её невидимый гость.</StageCue><p>Я сейчас разговаривала с каким-то человеком, которого вообще нет в студии, и он мне кое-что рассказал. Это правда, что всё началось с двух мемных песен?</p><StageCue>Слушает ответ. Медленно приподнимает брови.</StageCue><p>А то, что ты потом добавила остальных участников, потому что двух тебе показалось мало, — тоже правда? Ага. Чудесно.</p><StageCue>Глубоко вздыхает, откладывает карточки и наклоняется к микрофону.</StageCue><p>Тогда у меня возникает закономерный вопрос. <b>ПОЧЕМУ МНЕ ЗА ЭТО НЕДОСТАТОЧНО ПЛАТЯТ?!</b></p></div>
       <button className="fifth-primary" onClick={()=>setStage('call')}>ОТВЕТИТЬ ЗА СПЛЕТНИЦУ <Phone size={16}/></button>
      </div>}
      {stage==='call'&&<div className="fifth-screen fifth-phone">
       <span className="fifth-kicker">CALL IN PROGRESS / YOU ARE THE CREATOR</span>
       <h2 id="fifth-title">ТВОЙ <em>ЗВОНОК.</em></h2>
-      <p className="fifth-dialogue"><strong>ПОППИ</strong>ПОЧЕМУ МНЕ ЗА ЭТО НЕДОСТАТОЧНО ПЛАТЯТ?!</p>
-      {callChoice===null?<><span className="fifth-answer-kicker">СПЛЕТНИЦА НА ЛИНИИ / ЧТО ОТВЕТИМ?</span><div className="fifth-options">{callChoices.map(([label],i)=><button key={i} type="button" className="fifth-option" onClick={()=>setCallChoice(i)}><span>{String.fromCharCode(65+i)}</span><b>{label}</b><Phone size={14}/></button>)}</div></>:<div className="fifth-reaction"><span className="fifth-reaction-head"><Phone size={14}/> ПОППИ / НА ЛИНИИ</span><p>{callChoices[callChoice][1]}</p><div className="fifth-after"><span>ПОППИ / ФИНАЛ</span><p>Ладно. Ты придумала батл. Я должна его вести. Мой гость даже не существует в этой студии. А зарплата у меня, судя по всему, воображаемая. Что значит «зато зрителям нравится»?!</p><p>А, ну конечно. ЗРИТЕЛЯМ НРАВИТСЯ! Знаешь что? Раз уж этот человек сидит там и нажимает на кнопки, пусть хотя бы получит за это что-нибудь!</p><p>Ачивку? В смысле ачивку? Подожди, что ты сейчас делаешь? Нет, только не говори, что ты опять что-то добавляешь на сайт!</p><p>ЭЙ! Я ВООБЩЕ-ТО ЕЩЁ РАЗГОВАРИВАЮ!</p></div><button className="fifth-primary fifth-cut" onClick={complete}><PhoneOff size={16}/> ОБОРВАТЬ ЗАПИСЬ</button></div>}
+      <StageCue>На другом конце отвечают. Поппи замирает с телефоном у уха и нетерпеливо ждёт.</StageCue><p className="fifth-dialogue"><strong>ПОППИ</strong>ПОЧЕМУ МНЕ ЗА ЭТО НЕДОСТАТОЧНО ПЛАТЯТ?!</p>
+      {callChoice===null?<><span className="fifth-answer-kicker">СПЛЕТНИЦА НА ЛИНИИ / ЧТО ОТВЕТИМ?</span><div className="fifth-options">{callChoices.map(([label],i)=><button key={i} type="button" className="fifth-option" onClick={()=>setCallChoice(i)}><span>{String.fromCharCode(65+i)}</span><b>{label}</b><Phone size={14}/></button>)}</div></>:<div className="fifth-reaction"><span className="fifth-reaction-head"><Phone size={14}/> ПОППИ / НА ЛИНИИ</span><StageCue>{phoneActing[callChoice]}</StageCue><p>{callChoices[callChoice][1]}</p><div className="fifth-after"><span>ПОППИ / ФИНАЛ</span><StageCue>Устало откидывается в кресле, прикрывает глаза и считает до трёх.</StageCue><p>Ладно. Ты придумала батл. Я должна его вести. Мой гость даже не существует в этой студии. А зарплата у меня, судя по всему, воображаемая. Что значит «зато зрителям нравится»?!</p><StageCue>Медленно поворачивается прямо к камере, будто впервые видит зрителя по-настоящему.</StageCue><p>А, ну конечно. ЗРИТЕЛЯМ НРАВИТСЯ! Знаешь что? Раз уж этот человек сидит там и нажимает на кнопки, пусть хотя бы получит за это что-нибудь!</p><StageCue>Прижимает телефон плечом, тянется к карточкам и с недоумением замечает, что надписи на них меняются.</StageCue><p>Ачивку? В смысле ачивку? Подожди, что ты сейчас делаешь? Нет, только не говори, что ты опять что-то добавляешь на сайт!</p><StageCue>В кадре пробегает помеха. Поппи резко подаётся вперёд и машет свободной рукой.</StageCue><p>ЭЙ! Я ВООБЩЕ-ТО ЕЩЁ РАЗГОВАРИВАЮ!</p></div><button className="fifth-primary fifth-cut" onClick={complete}><PhoneOff size={16}/> ОБОРВАТЬ ЗАПИСЬ</button></div>}
      </div>}
      {stage==='done'&&<div className="fifth-screen fifth-finished">
       <span className="fifth-kicker">[ CONNECTION LOST ] / RECORDING TERMINATED</span>
