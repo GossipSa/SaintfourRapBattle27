@@ -58,7 +58,7 @@ export default function ShakeCan({onBonusUnlock,bonusUnlocked=false}){
      <p>Ты встряхнул банку десять раз. Производитель просит больше так не делать.</p>
      <span className="hellebore-bonus-code-label">ТВОЙ ЭКСКЛЮЗИВНЫЙ ПРОМОКОД</span>
      <div className="hellebore-bonus-code">{bonusCode}</div>
-     <p className="hellebore-bonus-fineprint">Скидка 0%. Зато бесплатные брызги уже включены. Промокод шуточный и не действует в магазинах.</p>
+     <p className="hellebore-bonus-fineprint">Скидка 0%. Зато бесплатные брызги уже включены.</p>
      <button className="hellebore-bonus-copy" type="button" onClick={()=>{navigator.clipboard?.writeText(bonusCode).then(()=>setCopied(true)).catch(()=>setCopied(false))}}>{copied?'СКОПИРОВАНО ✓':'СКОПИРОВАТЬ ПРОМОКОД'}</button>
     </section>
    </div>}
