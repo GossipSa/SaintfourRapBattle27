@@ -4,3 +4,27 @@
 .hp-exit{right:0;top:18px;z-index:20;flex-shrink:0;transform:none;touch-action:manipulation}
 .hp-dismiss{right:-3px;top:-29px;z-index:5;transform:none;touch-action:manipulation}
 @media(max-width:420px){.hp-window{padding:0 37px;max-width:calc(100vw - 74px)}.hp-exit{right:0;top:8px}}
+
+/* Phone modal: reserve real space for the captions and controls on iPhone. */
+.hp-overlay{box-sizing:border-box;overflow-y:auto;align-items:safe center;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px))}
+.hp-window{box-sizing:border-box;width:min(100%,360px);max-width:360px;padding:12px 44px 14px;gap:12px;margin:auto;min-width:0}
+.hp-phone{box-sizing:border-box;flex:none;max-height:none}
+.hp-upper,.hp-lower,.hp-screen{box-sizing:border-box}
+.hp-caption{position:relative;z-index:2;display:block;width:100%;max-width:300px;line-height:1.5;min-height:20px;overflow-wrap:break-word}
+.hp-redial{position:relative;z-index:2;display:block;flex:none;min-height:44px;max-width:100%;white-space:normal;line-height:1.25;text-align:center}
+.hp-exit{right:3px;top:9px;z-index:20}
+@media(max-width:600px){
+ .hp-window{width:min(100%,320px);max-width:320px;padding:12px 34px 14px;gap:10px}
+ .hp-phone{zoom:.82;transform:rotate(-2deg);margin:0}
+ .hp-exit{right:0;top:6px}
+}
+@media(max-height:780px){
+ .hp-window{gap:7px;padding-top:8px;padding-bottom:8px}
+ .hp-phone{zoom:.73;transform:rotate(-2deg);margin:0}
+ .hp-caption{font-size:11px}
+ .hp-redial{font-size:11px;padding:10px 12px}
+}
+@media(max-height:620px){
+ .hp-phone{zoom:.58;transform:rotate(-2deg);margin:0}
+ .hp-window{gap:5px}
+}
