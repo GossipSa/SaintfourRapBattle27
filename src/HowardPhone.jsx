@@ -27,13 +27,18 @@ export default function HowardPhone({onBlocked}){
  const [mode,setMode]=useState('incoming')
  const [dismissed,setDismissed]=useState(false)
  useEffect(()=>{
-  if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){sessionStorage.setItem('sf27-howard-seen','1');return}
+  if(new URLSearchParams(window.location.search).get('resetHoward')==='1')return
   if(progress.blocked)return
-  if(sessionStorage.getItem('sf27-howard-seen'))return
-  const t=window.setTimeout(()=>{
-   if(document.visibilityState==='visible'){setVisible(true);sessionStorage.setItem('sf27-howard-seen','1')}
-  },20000+Math.round(Math.random()*20000))
-  return()=>clearTimeout(t)
+  let timer
+  const show=()=>{setVisible(true)}
+  const schedule=()=>{
+   window.clearTimeout(timer)
+   if(document.visibilityState==='hidden')return
+   timer=window.setTimeout(show,20000+Math.round(Math.random()*20000))
+  }
+  schedule()
+  document.addEventListener('visibilitychange',schedule)
+  return()=>{window.clearTimeout(timer);document.removeEventListener('visibilitychange',schedule)}
  },[progress.blocked])
  useEffect(()=>{
   if(!opened)return
