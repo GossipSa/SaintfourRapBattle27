@@ -11,7 +11,7 @@ import SecretInterview from './SecretInterview.jsx'
 import PoppyNotebook from './PoppyNotebook.jsx'
 const dexManagerPhoto=`${import.meta.env.BASE_URL}media/dex-kitten-manager.jpg`
 import AllAccessTicket from './AllAccessTicket.jsx'
-import LuckySpin from './LuckySpin.jsx'
+import LuckySpin, { LuckySpinAchievements } from './LuckySpin.jsx'
 import BattleTicker from './LineupMarquee.jsx'
 import './lineup-marquee.css'
 import './hero-background.css'
@@ -335,6 +335,7 @@ export default function App() {
        <div className="achievement-status">{achievements.shakeBonus?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
       </div>
+      <LuckySpinAchievements onOpen={()=>go('spin')}/>
     </section>
 
    </section>}
