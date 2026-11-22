@@ -512,3 +512,41 @@
 
 /* Achievement #04 appears over the open mystery mail dialog without obscuring its close control. */
 .app:has(.howard-mail-backdrop) .achievement-toast{z-index:410}
+
+/* Saintfour SFX opt-in: compact, intentional first-visit consent with persistent switch. */
+.sound-toggle{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:24px;margin-left:8px;padding:3px 9px;border:1px solid #ffffff64;background:#160f1b8a;color:#fff;font:800 9px/1 'IBM Plex Mono',monospace;letter-spacing:.08em;white-space:nowrap}
+.sound-toggle:hover,.sound-toggle:focus-visible{background:#3c1d47;border-color:#f4b1dc}
+.sound-toggle[aria-pressed="true"]{border-color:#ffc6ee;background:#713765b3;color:#ffe2fa}
+.sound-toggle svg{flex:none}
+.sound-consent-backdrop{position:fixed;inset:0;z-index:550;display:flex;align-items:center;justify-content:center;padding:20px;background:#05040aeF;backdrop-filter:blur(14px)}
+.sound-consent-dialog{position:relative;isolation:isolate;overflow:hidden;width:min(470px,100%);padding:30px 32px 28px;background:radial-gradient(ellipse at 88% 8%,#7a408d58,transparent 63%),radial-gradient(ellipse at 0% 100%,#7740a032,transparent 65%),linear-gradient(125deg,#26162d,#120d1b);border:1px solid #a26ba5;box-shadow:0 22px 70px #000d,0 0 42px #9a4db42c;color:#f9efff}
+.sound-consent-dialog:after{content:"";position:absolute;pointer-events:none;inset:0;z-index:-1;background:repeating-linear-gradient(to bottom,transparent 0 7px,#e5b3ed09 8px 9px)}
+.sound-consent-scanline{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#b59bff,#f296d5,#a984ec)}
+.sound-consent-icon{display:grid;place-items:center;width:53px;height:53px;margin-bottom:22px;background:linear-gradient(145deg,#7c4488,#382247);border:1px solid #d49cda;color:#f4c4fa;box-shadow:0 0 18px #d971bd24}
+.sound-consent-kicker{color:#cf9fdd;font:800 9px 'IBM Plex Mono',monospace;letter-spacing:.14em}
+.sound-consent-dialog h2{font:900 clamp(43px,8vw,64px)/.92 'Barlow Condensed',Impact,sans-serif;letter-spacing:.02em;margin:13px 0 18px;text-shadow:-1px 0 #8c6bdb,1px 0 #ec88c8}
+.sound-consent-dialog h2 em{font-style:italic;color:#f1a4da}
+.sound-consent-dialog p{color:#d7c3df;margin:0 0 22px;font:400 13px/1.7 'DM Sans',sans-serif}
+.sound-consent-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.sound-consent-actions button{display:flex;align-items:center;justify-content:center;gap:9px;min-height:45px;padding:11px;border:1px solid #9c6ba9;font:800 10px/1.3 'DM Sans',sans-serif;letter-spacing:.035em}
+.sound-consent-enable{background:linear-gradient(110deg,#e8a2d6,#bc8ae0);color:#1f1027}
+.sound-consent-enable:hover{background:linear-gradient(110deg,#f4b4e4,#c79af0)}
+.sound-consent-silent{background:#211729;color:#e4cce8}
+.sound-consent-silent:hover{background:#382241}
+.sound-consent-dialog>small{display:block;margin-top:18px;color:#a88fb4;font:400 10px/1.55 'DM Sans',sans-serif}
+@media(max-width:760px){
+ .top-strip{gap:9px}
+ .top-strip-slogan{display:none}
+ .sound-toggle{margin-left:0;min-height:24px;padding:4px 7px;font-size:8px}
+ .sound-toggle svg{width:13px;height:13px}
+ .sound-consent-backdrop{padding:12px}
+ .sound-consent-dialog{padding:26px 21px 22px}
+ .sound-consent-dialog p{font-size:12px}
+ .sound-consent-actions{gap:7px}
+ .sound-consent-actions button{min-height:45px;padding:9px 6px;font-size:9px;gap:5px}
+ .sound-consent-actions button svg{width:16px;height:16px;flex:none}
+}
+@media(max-width:360px){
+ .sound-consent-actions{grid-template-columns:1fr}
+ .sound-consent-dialog h2{font-size:43px}
+}
