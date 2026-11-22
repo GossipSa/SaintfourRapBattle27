@@ -9,7 +9,8 @@ const milestones=[
  {count:25,title:'ПОППИ НАЧИНАЕТ ПЕРЕЖИВАТЬ',description:'Даже организатор шоу не ожидала такого энтузиазма.'},
  {count:100,title:'ПРОФЕССИОНАЛЬНЫЙ БЕЗДЕЛЬНИК',description:'Сто прокруток. Ноль материальных призов.'},
  {count:250,title:'РУЛЕТКА ЗНАЕТ ТЕБЯ ПО ИМЕНИ',description:'Возможно, вам уже пора познакомиться лично.'},
- {count:1000,title:'ГОВАРД ТРЕБУЕТ ЗАКРЫТЬ САЙТ',description:'Юридический отдел Warlock направил официальную претензию.'}
+ {count:1000,title:'ГОВАРД ТРЕБУЕТ ЗАКРЫТЬ САЙТ',description:'Юридический отдел Warlock направил официальную претензию.'},
+ {count:1000000,title:'МИЛЛИОН. ТЫ СЕРЬЁЗНО?',description:'Поппи не верит. Декс уважает. Говард отказался комментировать.'}
 ]
 const categoryWeights={'Декс':8,'Руди':8,'Говард':8,'Даррен':8,'Надин':9,'Поппи':9,'Батл / закулисье':9,'Warlock / архив':7,'Школа Сентфора':6,'BLACK HELLEBORE':8,'Сплетница Сентфора':7,'Saintfour / город':7,'Фанат / зритель':6}
 function drawPrize(){const n=Math.random()*100;let cursor=0;let category='Фанат / зритель';for(const [name,weight] of Object.entries(categoryWeights)){cursor+=weight;if(n<cursor){category=name;break}}const choices=spinPrizes.filter(p=>p.group===category);return choices[Math.floor(Math.random()*choices.length)]}
