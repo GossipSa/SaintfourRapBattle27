@@ -68,3 +68,8 @@ export default function LuckySpin({onBack}){
   <p className="spin-legal">SAINTFOUR LUCKY SPIN — ШУТОЧНЫЙ АТТРАКЦИОН. НИКАКИХ ПОКУПОК, ДЕНЕГ И НАСТОЯЩИХ ПРИЗОВ. ПРЕТЕНЗИИ НАПРАВЛЯТЬ ПОППИ.</p>
  </section>
 }
+
+export function LuckySpinAchievements({onOpen}){
+ const [record]=useState(load)
+ return <div className="spin-achievement-bridge"><div className="spin-achievement-bridge-head"><span>LUCKY SPIN / BONUS COLLECTION</span><strong>ДОСТИЖЕНИЯ РУЛЕТКИ</strong><p>Отдельная коллекция. Не влияет на получение ALL ACCESS TICKET.</p></div><div className="spin-achievement-bridge-list">{milestones.map(m=><div key={m.count}><span>{record.spins>=m.count?<CheckCircle2 size={16}/>:<LockKeyhole size={16}/>}</span><strong>{record.spins>=m.count?m.title:'НЕИЗВЕСТНО'}</strong><small>{m.count} SPINS</small></div>)}<div><span>{record.secret?<Sparkles size={16}/>:<LockKeyhole size={16}/>}</span><strong>{record.secret?'НЕВЕРОЯТНОЕ УПОРСТВО':'НЕИЗВЕСТНО'}</strong><small>SECRET</small></div></div><button type="button" onClick={onOpen}>ПЕРЕЙТИ К РУЛЕТКЕ <ArrowRight size={15}/></button></div>
+}
