@@ -20,14 +20,14 @@ function readState(){try{
 const data=JSON.parse(localStorage.getItem(STORE)||'{}');return {calls:Math.max(0,Number(data.calls)||0),introDone:Boolean(data.introDone),blocked:Boolean(data.blocked),limit:Number(data.limit)||0}}catch{return {calls:0,introDone:false,blocked:false,limit:0}}}
 function saveState(state){try{localStorage.setItem(STORE,JSON.stringify(state))}catch{/* storage disabled */}}
 export default function HowardPhone({onBlocked}){
- const [visible,setVisible]=useState(false)
+ const [visible,setVisible]=useState(()=>new URLSearchParams(window.location.search).get('resetHoward')==='1')
  const [opened,setOpened]=useState(false)
  const [progress,setProgress]=useState(readState)
  const [reply,setReply]=useState(null)
  const [mode,setMode]=useState('incoming')
  const [dismissed,setDismissed]=useState(false)
  useEffect(()=>{
-  if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){setVisible(true);sessionStorage.setItem('sf27-howard-seen','1');return}
+  if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){sessionStorage.setItem('sf27-howard-seen','1');return}
   if(sessionStorage.getItem('sf27-howard-seen'))return
   const t=window.setTimeout(()=>{
    if(document.visibilityState==='visible'){setVisible(true);sessionStorage.setItem('sf27-howard-seen','1')}
