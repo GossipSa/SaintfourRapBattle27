@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowDownRight, ArrowRight, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Menu, Mic2, Play, Radio, Vote, X, Trophy, LockKeyhole, CheckCircle2, Ticket, Sparkles, FlaskConical, Mail, Eye, FileWarning, Volume2, VolumeX, AudioLines } from 'lucide-react'
+import { ArrowDownRight, ArrowRight, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Menu, Mic2, Play, Radio, Vote, X, Trophy, LockKeyhole, CheckCircle2, Ticket, Sparkles, FlaskConical, Mail, Eye, FileWarning, Volume2, VolumeX, AudioLines, SlidersHorizontal } from 'lucide-react'
 import './App.css'
 import './theme.css'
 import './cyber.css'
@@ -47,7 +47,9 @@ const gallery = [
 ]
 // One optional low-volume background track, controlled explicitly by the visitor.
 const soundPrefKey='sf27-sound-consent-v1'
-const musicSource=`${import.meta.env.BASE_URL}media/audio/saintfour-background-quiet.m4a`
+const mobileMusicSource=`${import.meta.env.BASE_URL}media/audio/saintfour-background-quiet.m4a`
+const desktopMusicSource=`${import.meta.env.BASE_URL}media/audio/saintfour-background.m4a`
+const musicVolumeKey='sf27-music-volume-desktop-v1'
 
 const hypePollIds=['scandal','punchlines','surprise','interview']
 function completedHypeVotes(votes){
@@ -70,6 +72,16 @@ export default function App() {
  const [page,setPage]=useState('home')
  const musicRef=useRef(null)
  const musicFadeRef=useRef(null)
+ const [mobileAudio]=useState(()=>window.matchMedia('(max-width: 760px)').matches)
+ const [musicPanelOpen,setMusicPanelOpen]=useState(false)
+ const [desktopMusicVolume,setDesktopMusicVolume]=useState(()=>{
+  try{
+   const n=Number(window.localStorage.getItem(musicVolumeKey))
+   return Number.isFinite(n)&&n>=0&&n<=100&&window.localStorage.getItem(musicVolumeKey)!==null?n:30
+  }catch{return 30}
+ })
+ const desktopVolumeRef=useRef(desktopMusicVolume)
+ const musicMaxVolume=mobileAudio?.02:desktopMusicVolume/100*.12
  const [soundChoice,setSoundChoice]=useState(()=>{
   try{
    const value=window.localStorage.getItem(soundPrefKey)
@@ -87,21 +99,29 @@ export default function App() {
   if(!audio)return
   if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)
   musicFadeRef.current=null
-  const fadeIn=()=>{
-   audio.volume=0
+  if(!audio.paused){audio.volume=mobileAudio?.02:desktopVolumeRef.current/100*.12;return}
+  audio.volume=0
+  const attempt=audio.play()
+  if(attempt&&typeof attempt.then==='function')void attempt.then(()=>{
    const start=window.performance.now()
    const fade=(now)=>{
     if(audio.paused)return
-    audio.volume=Math.min(.02,Math.max(0,(now-start)/1800*.02))
-    if(audio.volume<.02)musicFadeRef.current=window.requestAnimationFrame(fade)
+    const target=mobileAudio?.02:desktopVolumeRef.current/100*.12
+    audio.volume=Math.max(0,Math.min(1,(now-start)/1800))*target
+    if(now-start<1800)musicFadeRef.current=window.requestAnimationFrame(fade)
     else musicFadeRef.current=null
    }
    musicFadeRef.current=window.requestAnimationFrame(fade)
-  }
-  if(!audio.paused)return
-  audio.volume=0
-  const attempt=audio.play()
-  if(attempt&&typeof attempt.then==='function')void attempt.then(fadeIn).catch(()=>{})
+  }).catch(()=>{})
+ }
+ const changeDesktopVolume=(value)=>{
+  const next=Number(value)
+  if(!Number.isFinite(next))return
+  const safe=Math.max(0,Math.min(100,next))
+  desktopVolumeRef.current=safe
+  setDesktopMusicVolume(safe)
+  try{window.localStorage.setItem(musicVolumeKey,String(safe))}catch{/* private mode */}
+  if(musicRef.current&&!musicRef.current.paused&&musicFadeRef.current===null)musicRef.current.volume=safe/100*.12
  }
  const chooseSound=(enabled)=>{
   const next=enabled?'on':'off'
@@ -111,17 +131,27 @@ export default function App() {
   else stopMusic()
  }
  useEffect(()=>{
-  if(window.localStorage.getItem(soundPrefKey)==='on'){
-   const audio=musicRef.current
-   if(audio){
-    audio.volume=0
-    const attempt=audio.play()
-    if(attempt&&typeof attempt.then==='function')void attempt.then(()=>{audio.volume=.02}).catch(()=>{})
-   }
+  const audio=musicRef.current
+  if(!audio)return
+  let mounted=true
+  const restore=()=>{
+   if(!mounted||window.localStorage.getItem(soundPrefKey)!=='on'||!audio.paused)return
+   const attempt=audio.play()
+   if(attempt&&typeof attempt.then==='function')void attempt.then(()=>{
+    if(mounted)audio.volume=mobileAudio?.02:desktopVolumeRef.current/100*.12
+   }).catch(()=>{})
   }
-  return ()=>{if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)}
-  // Restored music may be blocked on reload until a user interaction.
- },[])
+  restore()
+  const onGesture=()=>restore()
+  document.addEventListener('pointerdown',onGesture)
+  document.addEventListener('keydown',onGesture)
+  return ()=>{
+   mounted=false
+   document.removeEventListener('pointerdown',onGesture)
+   document.removeEventListener('keydown',onGesture)
+   if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)
+  }
+ },[mobileAudio])
  const [menuOpen,setMenuOpen]=useState(false)
  const [selected,setSelected]=useState(null)
  const [howardMailOpen,setHowardMailOpen]=useState(false)
@@ -252,10 +282,10 @@ export default function App() {
  const filteredMedia=useMemo(()=>media.filter(m=>m.type==='INTERVIEW'),[])
  const go=(p)=>{setPage(p);setMenuOpen(false)}
  return <div className="app">
-  <audio ref={musicRef} src={musicSource} preload="none" loop aria-hidden="true"/>
+  <audio ref={musicRef} src={mobileAudio?mobileMusicSource:desktopMusicSource} preload="none" loop aria-hidden="true"/>
   {soundChoice===null&&<div className="sound-consent-backdrop"><section className="sound-consent-dialog" role="dialog" aria-modal="true" aria-labelledby="sound-consent-title" aria-describedby="sound-consent-description"><div className="sound-consent-scanline" aria-hidden="true"/><div className="sound-consent-icon"><AudioLines size={29}/></div><span className="sound-consent-kicker">SAINTFOUR / BACKGROUND MUSIC</span><h2 id="sound-consent-title">SET THE <em>MOOD.</em></h2><p id="sound-consent-description">На сайте может играть тихая фоновая музыка. Включить её или оставить сайт без звука? Никаких сигналов при ачивках и секретках больше нет.</p><div className="sound-consent-actions"><button type="button" className="sound-consent-enable" onClick={()=>chooseSound(true)}><Volume2 size={18}/> ВКЛЮЧИТЬ МУЗЫКУ</button><button type="button" className="sound-consent-silent" onClick={()=>chooseSound(false)}><VolumeX size={17}/> БЕЗ МУЗЫКИ</button></div><small>Музыка играет тихо и повторяется на всех страницах сайта. В любой момент можно отключить её кнопкой MUSIC ON/OFF. Видео энергетика останется без звука.</small></section></div>}
   <div className="top-strip"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="top-right"><span className="live-dot"/><span className="top-strip-slogan">THE UNDERGROUND IS CALLING</span></span></div>
-  <header className="header"><button className="logo" onClick={()=>go('home')} aria-label="На главную"><span className="logo-mark">SF<span>✳</span></span><span className="logo-type">SAINTFOUR<strong>RAP BATTLE <i>’27</i></strong></span></button><nav className="desktop-nav" aria-label="Навигация">{nav.map(n=><button key={n.id} className={page===n.id?'active':''} onClick={()=>go(n.id)}>{n.name}</button>)}</nav><div className="header-actions"><span className="edition">VOL. 001 / 2027</span><button className="sound-toggle sound-toggle-header" type="button" onClick={()=>chooseSound(soundChoice!=='on')} aria-label={soundChoice==='on'?'Выключить фоновую музыку':'Включить фоновую музыку'} aria-pressed={soundChoice==='on'} title={soundChoice==='on'?'Выключить музыку':'Включить музыку'}>{soundChoice==='on'?<Volume2 size={16}/>:<VolumeX size={16}/>} <span>MUSIC {soundChoice==='on'?'ON':'OFF'}</span></button><button className="mobile-menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Меню">{menuOpen?<X/>:<Menu/>}</button></div></header>
+  <header className="header"><button className="logo" onClick={()=>go('home')} aria-label="На главную"><span className="logo-mark">SF<span>✳</span></span><span className="logo-type">SAINTFOUR<strong>RAP BATTLE <i>’27</i></strong></span></button><nav className="desktop-nav" aria-label="Навигация">{nav.map(n=><button key={n.id} className={page===n.id?'active':''} onClick={()=>go(n.id)}>{n.name}</button>)}</nav><div className="header-actions"><span className="edition">VOL. 001 / 2027</span><button className="sound-toggle sound-toggle-header" type="button" onClick={()=>chooseSound(soundChoice!=='on')} aria-label={soundChoice==='on'?'Выключить фоновую музыку':'Включить фоновую музыку'} aria-pressed={soundChoice==='on'} title={soundChoice==='on'?'Выключить музыку':'Включить музыку'}>{soundChoice==='on'?<Volume2 size={16}/>:<VolumeX size={16}/>} <span>MUSIC {soundChoice==='on'?'ON':'OFF'}</span></button>{!mobileAudio&&<div className="music-volume-wrap"><button type="button" className="music-volume-trigger" aria-label="Настроить громкость музыки" aria-expanded={musicPanelOpen} title="Громкость фоновой музыки" onClick={()=>setMusicPanelOpen(v=>!v)}><SlidersHorizontal size={17}/></button>{musicPanelOpen&&<div className="music-volume-popover"><label htmlFor="sf-music-volume">ГРОМКОСТЬ МУЗЫКИ <b>{desktopMusicVolume}%</b></label><input id="sf-music-volume" type="range" min="0" max="100" step="1" value={desktopMusicVolume} onChange={e=>changeDesktopVolume(e.target.value)} aria-label="Громкость фоновой музыки"/><small>Только для этого компьютера</small></div>}</div>}<button className="mobile-menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Меню">{menuOpen?<X/>:<Menu/>}</button></div></header>
   {menuOpen&&<nav className="mobile-nav" aria-label="Мобильная навигация">{nav.map(n=><button key={n.id} onClick={()=>go(n.id)}><n.Icon size={17}/>{n.name}<ArrowRight size={16}/></button>)}{unlockedCount>0&&<button onClick={()=>go("achievements")}><Trophy size={17}/>Достижения <span className="achievement-menu-count">{unlockedCount} / 5</span><ArrowRight size={16}/></button>}</nav>}
   <main>
   {page==='achievements'&&<section className="achievements-page wrap">
