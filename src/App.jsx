@@ -160,9 +160,18 @@ export default function App() {
  const [premieres,setPremieres]=useState({})
  const [galleryIndex,setGalleryIndex]=useState(null)
  const [achievements,setAchievements]=useState(()=>{
-   try { const saved=JSON.parse(window.localStorage.getItem('sf27-achievements-v1')||'{}'); return saved&&typeof saved==='object'?saved:{} } catch { return {} }
+   try { const saved=JSON.parse(window.localStorage.getItem('sf27-achievements-v2')||'{}'); return saved&&typeof saved==='object'?saved:{} } catch { return {} }
  })
  const [achievementToast,setAchievementToast]=useState(null)
+ const resetAchievements=()=>{
+  setAchievements({})
+  setAchievementToast(null)
+  setAllAccessOpen(false)
+  try{
+   window.localStorage.setItem('sf27-achievements-v2','{}')
+   window.localStorage.removeItem('sf27-achievements-v1')
+  }catch{/* private mode */}
+ }
  const unlockedCount=Number(Boolean(achievements.earlyBird))+Number(Boolean(achievements.loyalOne))+Number(Boolean(achievements.sideEffect))+Number(Boolean(achievements.whosWatching))+Number(Boolean(achievements.fifthChair))
  const secretCount=Number(Boolean(achievements.sideEffect))+Number(Boolean(achievements.whosWatching))+Number(Boolean(achievements.fifthChair))
  const unlockFifthChair=()=>{
@@ -170,7 +179,7 @@ export default function App() {
   setAchievements(prev=>{
    if(prev.fifthChair)return prev
    const next={...prev,fifthChair:true}
-   try{window.localStorage.setItem('sf27-achievements-v1',JSON.stringify(next))}catch{/* private mode */}
+   try{window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(next))}catch{/* private mode */}
    return next
   })
   setAchievementToast('fifthChair')
@@ -181,7 +190,7 @@ export default function App() {
    setAchievements(prev=>{
      if(prev.whosWatching)return prev
      const next={...prev,whosWatching:true}
-     try{window.localStorage.setItem('sf27-achievements-v1',JSON.stringify(next))}catch{/* private mode */}
+     try{window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(next))}catch{/* private mode */}
      return next
    })
    setAchievementToast('whosWatching')
@@ -191,7 +200,7 @@ export default function App() {
    setAchievements(prev=>{
      if(prev.sideEffect)return prev
      const next={...prev,sideEffect:true}
-     try{window.localStorage.setItem('sf27-achievements-v1',JSON.stringify(next))}catch{/* private mode */}
+     try{window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(next))}catch{/* private mode */}
      return next
    })
    setAchievementToast('sideEffect')
@@ -201,44 +210,45 @@ export default function App() {
    setAchievements(prev=>{
      if(prev.loyalOne)return prev
      const next={...prev,loyalOne:true}
-     try{window.localStorage.setItem('sf27-achievements-v1',JSON.stringify(next))}catch{/* private mode */}
+     try{window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(next))}catch{/* private mode */}
      return next
    })
    setAchievementToast('loyalOne')
  }
  useEffect(()=>{
-   if(achievements.loyalOne)return
+   // Re-check existing poll participation only when the visitor opens the polls.
+   // A reset must stay at zero until the relevant activity is visited again.
+   if(page!=='polls'||achievements.loyalOne)return
    try{
      const saved=JSON.parse(window.localStorage.getItem('sfvs-hype-server-votes-v1')||'{}')
-     if(completedHypeVotes(saved)){
-       const t=window.setTimeout(()=>{
-         setAchievements(prev=>{
-           if(prev.loyalOne)return prev
-           const next={...prev,loyalOne:true}
-           try{window.localStorage.setItem('sf27-achievements-v1',JSON.stringify(next))}catch{/* private mode */}
-           return next
-         })
-         setAchievementToast('loyalOne')
-       },2200)
-       return ()=>window.clearTimeout(t)
-     }
+     if(!completedHypeVotes(saved))return
+     const t=window.setTimeout(()=>{
+       setAchievements(prev=>{
+         if(prev.loyalOne)return prev
+         const next={...prev,loyalOne:true}
+         try{window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(next))}catch{/* private mode */}
+         return next
+       })
+       setAchievementToast('loyalOne')
+     },2200)
+     return ()=>window.clearTimeout(t)
    }catch{/* missing vote cache */}
- },[achievements.loyalOne])
+ },[page,achievements.loyalOne])
  useEffect(()=>{
    // Moscow time: first interview premiere (03 Dec 2026, 19:00 MSK).
    const beforeFirstPremiere=Date.now()<Date.parse('2026-12-03T19:00:00+03:00')
-   if(!beforeFirstPremiere || achievements.earlyBird)return
+   if(page!=='home'||!beforeFirstPremiere || achievements.earlyBird)return
    const t=window.setTimeout(()=>{
      setAchievements(prev=>{
        if(prev.earlyBird)return prev
        const next={...prev,earlyBird:true}
-       try {window.localStorage.setItem('sf27-achievements-v1',JSON.stringify(next))}catch{ /* private mode */ }
+       try {window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(next))}catch{ /* private mode */ }
        return next
      })
      setAchievementToast('earlyBird')
    },6000)
    return ()=>window.clearTimeout(t)
- },[achievements.earlyBird])
+ },[page,achievements.earlyBird])
  useEffect(()=>{
    if(!achievementToast)return undefined
    const t=window.setTimeout(()=>setAchievementToast(null),10000)
@@ -309,7 +319,7 @@ export default function App() {
       </div>
     </section>
     <div className={'achievement-reward '+(unlockedCount===5?'achievement-reward-ready':'')} role={unlockedCount===5?'button':undefined} tabIndex={unlockedCount===5?0:undefined} aria-label={unlockedCount===5?'Открыть коллекционный ALL ACCESS TICKET':undefined} onClick={()=>{if(unlockedCount===5)setAllAccessOpen(true)}} onKeyDown={e=>{if(unlockedCount===5&&(e.key==='Enter'||e.key===' ')){e.preventDefault();setAllAccessOpen(true)}}}><div><span>FINAL REWARD / COLLECTION 01</span><h2><Ticket size={25}/> ALL ACCESS TICKET</h2><p>{unlockedCount===5?'Вся коллекция собрана! Твой коллекционный билет доступен. Нажми, чтобы открыть его.':'Коллекционный билет на шоу откроется, когда ты соберёшь всю первую коллекцию. Само шоу бесплатно для всех.'}</p>{unlockedCount===5&&<span className="achievement-reward-open">ПОСМОТРЕТЬ БИЛЕТ <ArrowRight size={15}/></span>}</div><span className="achievement-reward-lock">{unlockedCount===5?<CheckCircle2 size={17}/>:<LockKeyhole size={17}/>} {unlockedCount===5?'UNLOCKED / 5 OF 5':`LOCKED / ${unlockedCount} OF 5`}</span></div>
-    <div className="achievement-testing"><div className="achievement-replay-row">{achievements.earlyBird&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('earlyBird');go('home')}}><Sparkles size={15}/> ПОВТОРИТЬ EARLY BIRD</button>}{achievements.loyalOne&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('loyalOne');go('home')}}><Vote size={15}/> ПОВТОРИТЬ THE LOYAL ONE</button>}{achievements.sideEffect&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('sideEffect');go('home')}}><FlaskConical size={15}/> ПОВТОРИТЬ SIDE EFFECT</button>}{achievements.whosWatching&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('whosWatching');go('home')}}><Mail size={15}/> ПОВТОРИТЬ WHO'S WATCHING?</button>}{achievements.fifthChair&&<button type="button" className="achievement-replay" onClick={()=>setFifthInterviewOpen(true)}><Mic2 size={15}/> ПОВТОРИТЬ THE FIFTH CHAIR</button>}</div><p className="achievement-local-note">Пока достижения сохраняются только в этом браузере. Это первая тестовая версия механики.</p></div>
+    <div className="achievement-testing"><div className="achievement-replay-row">{achievements.earlyBird&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('earlyBird');go('home')}}><Sparkles size={15}/> ПОВТОРИТЬ EARLY BIRD</button>}{achievements.loyalOne&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('loyalOne');go('home')}}><Vote size={15}/> ПОВТОРИТЬ THE LOYAL ONE</button>}{achievements.sideEffect&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('sideEffect');go('home')}}><FlaskConical size={15}/> ПОВТОРИТЬ SIDE EFFECT</button>}{achievements.whosWatching&&<button type="button" className="achievement-replay" onClick={()=>{setAchievementToast('whosWatching');go('home')}}><Mail size={15}/> ПОВТОРИТЬ WHO'S WATCHING?</button>}{achievements.fifthChair&&<button type="button" className="achievement-replay" onClick={()=>setFifthInterviewOpen(true)}><Mic2 size={15}/> ПОВТОРИТЬ THE FIFTH CHAIR</button>}</div><p className="achievement-local-note">Достижения хранятся в этом браузере. При сбросе голосования не удаляются: ачивка за четыре голоса снова выдаётся при посещении раздела «Голосование». EARLY BIRD появляется при возвращении на главную до премьеры.</p><button type="button" className="achievement-reset-btn" onClick={resetAchievements}><X size={14}/> СБРОСИТЬ ВСЕ 5 АЧИВОК ДЛЯ ПРОВЕРКИ</button></div>
    </section>}
   {page==='home'&&<>
    <CreditsTicker/>
