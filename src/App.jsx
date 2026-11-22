@@ -63,6 +63,7 @@ export default function App() {
  const [activeVideo,setActiveVideo]=useState(null)
  const [premieres,setPremieres]=useState({})
  const [galleryIndex,setGalleryIndex]=useState(null)
+ const [secretTicketOpen,setSecretTicketOpen]=useState(false)
  useEffect(()=>{
    const tg=window.Telegram?.WebApp
    if(!tg)return
@@ -141,7 +142,8 @@ export default function App() {
   </main>
   <footer className="footer"><div className="wrap footer-main"><div><span className="footer-logo">SAINTFOUR</span><p>RAP BATTLE <b>’27</b></p><small>AN ORIGINAL GOSSIP SAINTFOUR PROJECT</small></div><div className="footer-nav">{nav.slice(1).map(n=><button key={n.id} onClick={()=>go(n.id)}>{n.name}</button>)}</div><div className="footer-stamp"><Radio size={23}/><span>UNDERGROUND<br/>NEVER DIES.</span></div></div><div className="wrap footer-bottom"><span>© {2027} GOSSIP SAINTFOUR. FAN PROJECT.</span><span>MADE FOR THE CULTURE. NOT FOR THE CLOUT.</span></div></footer>
   <nav className="bottom-nav" aria-label="Быстрая навигация">{nav.filter(n=>['home','artists','battles','interviews','polls'].includes(n.id)).map(n=><button key={n.id} onClick={()=>go(n.id)} className={page===n.id?'active':''}><n.Icon size={19}/><span>{n.name}</span></button>)}</nav>
-  {selected&&<div className="modal-backdrop" onClick={()=>setSelected(null)}><section className="artist-modal" role="dialog" aria-modal="true" aria-label={selected.stage} onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setSelected(null)} aria-label="Закрыть"><X/></button><Cover key={selected.id+'-'+(selected.profileImage||selected.image)} src={selected.profileImage?selected.profileImage+'?v=2':selected.image} initials={selected.initials} alt={selected.stage}/><div className="artist-modal-body"><span className="eyebrow">{selected.isHost?'HOST / SHOW PRESENTER':`CONTESTANT / ${selected.number}`}</span><h2 className="glitch-heading" data-text={selected.stage}>{selected.stage}</h2><p className="modal-realname">{selected.name}</p><div className="modal-rule"/><p>{selected.description}</p><strong>{selected.subtitle}</strong></div></section></div>}
+  {selected&&<div className="modal-backdrop" onClick={()=>setSelected(null)}><section className="artist-modal" role="dialog" aria-modal="true" aria-label={selected.stage} onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setSelected(null)} aria-label="Закрыть"><X/></button><Cover key={selected.id+'-'+(selected.profileImage||selected.image)} src={selected.profileImage?selected.profileImage+'?v=2':selected.image} initials={selected.initials} alt={selected.stage}/><div className="artist-modal-body">{selected.id==='dex'?<button type="button" className="dex-hidden-access" aria-label="CONTESTANT / 01" title="CONTESTANT / 01" onClick={()=>{setSelected(null);setSecretTicketOpen(true)}}>CONTESTANT / 01</button>:<span className="eyebrow">{selected.isHost?'HOST / SHOW PRESENTER':`CONTESTANT / ${selected.number}`}</span>}<h2 className="glitch-heading" data-text={selected.stage}>{selected.stage}</h2><p className="modal-realname">{selected.name}</p><div className="modal-rule"/><p>{selected.description}</p><strong>{selected.subtitle}</strong></div></section></div>}
+  {secretTicketOpen&&<SecretTicketDemo onClose={()=>setSecretTicketOpen(false)}/>}
   {activeVideo&&<div className="modal-backdrop" onClick={()=>setActiveVideo(null)}><section className="video-modal" role="dialog" aria-modal="true" aria-label={activeVideo.title} onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setActiveVideo(null)} aria-label="Закрыть"><X/></button>{activeVideo.url?<video controls playsInline autoPlay src={activeVideo.url}/>:<div className="video-unavailable"><Play size={42}/><h3>COMING SOON</h3><p>Видео ещё не опубликовано.</p></div>}<h3>{activeVideo.title}</h3></section></div>}
   {galleryIndex!==null&&<div className="modal-backdrop" onClick={()=>setGalleryIndex(null)}><section className="lightbox" role="dialog" aria-modal="true" aria-label="Просмотр фотографии" onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setGalleryIndex(null)} aria-label="Закрыть"><X/></button><Cover src={gallery[galleryIndex].image} initials={String(galleryIndex+1).padStart(2,'0')} alt={gallery[galleryIndex].label}/><div className="lightbox-controls"><button onClick={()=>setGalleryIndex((galleryIndex+gallery.length-1)%gallery.length)} aria-label="Предыдущее"><ChevronLeft/></button><span>{gallery[galleryIndex].label} — {galleryIndex+1}/{gallery.length}</span><button onClick={()=>setGalleryIndex((galleryIndex+1)%gallery.length)} aria-label="Следующее"><ChevronRight/></button></div></section></div>}
  </div>
@@ -189,6 +191,36 @@ function BattleMatch({number,name,left,right,final=false}){
  </article>
 }
 function HostFeature({onClick}){return <section className="host-feature" aria-label="Ведущая шоу"><div className="host-feature-heading"><span>05 / THE HOST</span><span>THE ONE HOLDING THE MIC ✳</span></div><button className="host-card" onClick={onClick}><div className="host-portrait"><Cover src={host.image} alt="Поппи Эмерсон" initials="PE"/></div><div className="host-content"><span className="host-role">NOT A CONTESTANT — THE HOST</span><h3 className="glitch-heading" data-text="POPPY EMERSON">POPPY EMERSON</h3><p>Пенелопа (Поппи) Эмерсон</p><span className="host-caption">SHE RUNS THE SHOW.</span><span className="host-action">ПОЗНАКОМИТЬСЯ С ВЕДУЩЕЙ <ArrowRight size={17}/></span></div></button></section>}
+
+const ticketDemoBars=[3,1,2,4,1,3,1,2,3,1,4,2,1,3,2,1,4,1,2,3,1,1,4,2,3,1,2,4,1,3,2,1,3,4,1,2]
+function SecretTicketDemo({onClose}){
+ const [nickname,setNickname]=useState('')
+ const displayName=nickname.trim()||'UNKNOWN GUEST'
+ useEffect(()=>{
+   const onKey=e=>{if(e.key==='Escape')onClose()}
+   window.addEventListener('keydown',onKey)
+   return ()=>window.removeEventListener('keydown',onKey)
+ },[onClose])
+ return <div className="modal-backdrop secret-ticket-backdrop" onClick={onClose}>
+  <section className="secret-ticket-overlay" role="dialog" aria-modal="true" aria-label="Коллекционный билет Saintfour Rap Battle" onClick={e=>e.stopPropagation()}>
+   <button type="button" className="secret-ticket-close" aria-label="Закрыть билет" onClick={onClose}><X size={23}/></button>
+   <div className="secret-ticket-unlock"><span className="secret-ticket-unlock-line"/><span>SECRET FOUND / 01 OF 05</span><span className="secret-ticket-unlock-line"/></div>
+   <h2 className="secret-ticket-reveal-title">ACCESS <em>GRANTED.</em></h2>
+   <p className="secret-ticket-reveal-sub">У тебя появился первый пропуск за кулисы Сентфора.</p>
+   <div className="secret-ticket-main">
+    <div className="secret-ticket-body">
+     <div className="secret-ticket-brand"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="secret-ticket-brand-mark">SF<span>✳</span></span></div>
+     <div className="secret-ticket-headline"><span>SAINTFOUR</span><strong>RAP<br/>BATTLE <em>’27</em></strong><span className="secret-ticket-type">UNDERGROUND / ALL ACCESS</span></div>
+     <div className="secret-ticket-person"><span>THIS TICKET BELONGS TO</span><strong>{displayName}</strong></div>
+     <div className="secret-ticket-details"><div><span>ADMISSION</span><strong>VIP / ONLINE</strong></div><div><span>ROW</span><strong>FRONT ROW</strong></div><div><span>ENTRY FEE</span><strong>0 ₽</strong></div></div>
+     <div className="secret-ticket-fineprint">NOT FOR SALE. EARNED, NOT BOUGHT. / SF27</div>
+    </div>
+    <div className="secret-ticket-stub"><div className="secret-ticket-stub-top">SF / 27</div><div className="secret-ticket-stub-access">ALL<br/>ACCESS</div><div className="secret-ticket-barcode" aria-hidden="true">{ticketDemoBars.map((bar,i)=><i key={i} style={{width:bar+'px'}}/>)}</div><span className="secret-ticket-number">SF-DEMO-001</span><span className="secret-ticket-stub-bottom">ADMIT ONE<br/>DIGITAL ONLY</span></div>
+   </div>
+   <div className="secret-ticket-bottom"><label htmlFor="secret-ticket-nick">ИМЯ НА БИЛЕТЕ <span>/ НЕОБЯЗАТЕЛЬНО</span></label><div className="secret-ticket-controls"><input id="secret-ticket-nick" type="text" value={nickname} maxLength={22} placeholder="Введи свой ник" onChange={e=>setNickname(e.target.value)}/><button type="button" onClick={onClose}>ГОТОВО <ArrowRight size={17}/></button></div><p>Тестовый коллекционный билет. Просмотр батлов бесплатный для всех; настоящий квест из пяти секретов добавим после утверждения дизайна.</p></div>
+  </section>
+ </div>
+}
 function ArtistCard({r,onClick}){return <button className="artist-card" onClick={onClick} style={{'--artist-color':r.color}}><Cover src={r.image} alt={r.stage} initials={r.initials}/><div className="artist-vignette"/><div className="artist-number">{r.number} / 04</div><div className="artist-info"><span>{r.role}</span><h3 className="glitch-label" data-text={r.stage}>{r.stage}</h3><p>{r.name}</p><div className="artist-action">VIEW PROFILE <ArrowRight size={16}/></div></div></button>}
 function MediaCard({m,onClick,available=false}){return <button className={'media-card '+(!available?'media-locked':'')} onClick={onClick} disabled={!available} aria-label={available?`Смотреть ${m.title}`:`${m.title} — премьера ${m.duration}`}><div className="media-image">{available?<Cover src={m.thumbnail} alt={m.title} initials="INT"/>:<div className="interview-locked-art" aria-hidden="true"><span className="locked-show-name">SAINTFOUR RAP BATTLE ’27</span><strong className="locked-word">INTERVIEW</strong><strong className="locked-word locked-pink">LOCKED</strong><span className="locked-premiere">PREMIERE AT 19:00 MSK</span></div>}<span className="media-type">{available?'В ЭФИРЕ':'СКОРО'}</span>{available&&<span className="play-circle"><Play fill="currentColor" size={19}/></span>}</div><div className="media-info"><span>{m.artist} <i>•</i> {m.date?'ПРЕМЬЕРА '+m.duration:m.duration}</span><h3 className="glitch-heading" data-text={m.title}>{m.title}</h3><p>{available?'СМОТРЕТЬ ИНТЕРВЬЮ':'ДОСТУПНО ПОСЛЕ ПРЕМЬЕРЫ'} <ArrowRight size={15}/></p></div></button>}
 function PageHeading({number,tag,title,intro}){return <div className="page-heading"><div className="page-kicker"><span className="red-dot"/> {number} / {tag}</div><h1>{title}</h1><p>{intro}</p><div className="page-heading-line"/></div>}
