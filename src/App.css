@@ -616,3 +616,15 @@
 /* Testing-only achievement reset; keeps polls and other user settings intact. */
 .achievement-reset-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;padding:10px 14px;border:1px solid #735076;background:#241629;color:#dcb4df;cursor:pointer;font:800 10px/1.5 'IBM Plex Mono',monospace;letter-spacing:.045em;max-width:100%;text-align:center}
 .achievement-reset-btn:hover,.achievement-reset-btn:focus-visible{border-color:#e7a9e6;background:#432648;color:#fff1ff}
+
+/* A discoverable but understated unlisted recording beside the homepage premiere. */
+.fifth-home-tape{display:flex;align-items:center;gap:13px;width:min(100%,650px);margin:13px 0 0;padding:11px 14px;border:1px solid #51405d;border-left:2px solid #9e78ac;background:linear-gradient(102deg,#21172a,#17131d);color:#e7d4ef;text-align:left;cursor:pointer;transition:border-color .16s,background .16s}
+.fifth-home-tape:hover,.fifth-home-tape:focus-visible{border-color:#bc91d0;background:linear-gradient(102deg,#33223b,#24192f)}
+.fifth-home-tape-glyph{display:grid;place-items:center;flex:0 0 33px;height:33px;background:#382740;border:1px solid #694c77;color:#c89bd8}
+.fifth-home-tape-copy{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.fifth-home-tape-copy small{font:800 9px 'IBM Plex Mono',monospace;letter-spacing:.045em;color:#ac91b9}
+.fifth-home-tape-copy small i{font-style:normal;color:#a37bba}
+.fifth-home-tape-copy strong{font:800 14px 'DM Sans',sans-serif;letter-spacing:.045em;color:#f6e8fa}
+.fifth-home-tape-copy>span{font:400 11px 'DM Sans',sans-serif;color:#ae9ab9}
+.fifth-home-tape-action{display:flex;align-items:center;gap:5px;color:#d3a4e5;font:800 9px 'IBM Plex Mono',monospace;letter-spacing:.03em;white-space:nowrap}
+@media(max-width:540px){.fifth-home-tape{padding:10px 11px;gap:9px}.fifth-home-tape-action{font-size:0}.fifth-home-tape-action svg{width:16px;height:16px}.fifth-home-tape-copy strong{font-size:13px}.fifth-home-tape-copy small{font-size:8px}}
