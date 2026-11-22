@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { ArrowDownRight, ArrowRight, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Menu, Mic2, Play, Radio, Vote, X, Trophy, LockKeyhole, CheckCircle2, Ticket, Sparkles, FlaskConical, Mail, Eye, FileWarning } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ArrowDownRight, ArrowRight, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Menu, Mic2, Play, Radio, Vote, X, Trophy, LockKeyhole, CheckCircle2, Ticket, Sparkles, FlaskConical, Mail, Eye, FileWarning, Volume2, VolumeX, AudioLines } from 'lucide-react'
 import './App.css'
 import './theme.css'
 import './cyber.css'
@@ -43,6 +43,31 @@ const gallery = [
   { image:`${import.meta.env.BASE_URL}media/gallery-03.jpg`, label:'AFTER THE ROUND / 003' },
   { image:`${import.meta.env.BASE_URL}media/gallery-04.jpg`, label:'BEHIND THE SCENES / 004' },
 ]
+// Lightweight, original sound effects generated locally; no external audio, network or autoplay.
+const soundPrefKey='sf27-sound-consent-v1'
+function playSiteTone(context,kind='unlock'){
+ try{
+  const now=context.currentTime+0.015
+  const notes=kind==='open' ? [{f:440,t:0,d:.065},{f:590,t:.085,d:.12}] : kind==='enable' ? [{f:520,t:0,d:.075},{f:780,t:.09,d:.14}] : [{f:392,t:0,d:.085},{f:523.25,t:.11,d:.095},{f:784,t:.235,d:.21}]
+  const master=context.createGain()
+  master.gain.value=.17
+  master.connect(context.destination)
+  notes.forEach(({f,t,d},i)=>{
+   const oscillator=context.createOscillator()
+   const envelope=context.createGain()
+   oscillator.type=kind==='unlock'?(i===notes.length-1?'sine':'triangle'):'sine'
+   oscillator.frequency.setValueAtTime(f,now+t)
+   oscillator.frequency.exponentialRampToValueAtTime(f*1.02,now+t+d)
+   envelope.gain.setValueAtTime(.0001,now+t)
+   envelope.gain.exponentialRampToValueAtTime(.24,now+t+.012)
+   envelope.gain.exponentialRampToValueAtTime(.0001,now+t+d)
+   oscillator.connect(envelope)
+   envelope.connect(master)
+   oscillator.start(now+t)
+   oscillator.stop(now+t+d+.02)
+  })
+ }catch{/* browsers without sound support stay silent */}
+}
 const hypePollIds=['scandal','punchlines','surprise','interview']
 function completedHypeVotes(votes){
  return Boolean(votes&&typeof votes==='object'&&hypePollIds.every(id=>typeof votes[id]==='string'&&votes[id].length>0))
@@ -62,6 +87,30 @@ function Cover({src, alt, className='', initials='', style={}}) {
 function SectionTitle({tag,title,action, onAction}){return <div className="section-heading"><div><p className="eyebrow"><span className="red-dot"/> {tag}</p><h2 className="glitch-heading" data-text={title}>{title}</h2></div>{action && <button className="text-button" onClick={onAction}>{action} <ArrowRight size={16}/></button>}</div>}
 export default function App() {
  const [page,setPage]=useState('home')
+ const audioContextRef=useRef(null)
+ const [soundChoice,setSoundChoice]=useState(()=>{
+  try{
+   const value=window.localStorage.getItem(soundPrefKey)
+   return value==='on'||value==='off'?value:null
+  }catch{return null}
+ })
+ const playFx=useCallback((kind='open',force=false)=>{
+  if(!force&&soundChoice!=='on')return
+  try{
+   const AudioEngine=window.AudioContext||window.webkitAudioContext
+   if(!AudioEngine)return
+   const context=audioContextRef.current||new AudioEngine()
+   audioContextRef.current=context
+   if(context.state==='suspended')void context.resume().catch(()=>{})
+   playSiteTone(context,kind)
+  }catch{/* unsupported or restricted audio: visual interaction still works */}
+ },[soundChoice])
+ const chooseSound=(enabled)=>{
+  const next=enabled?'on':'off'
+  setSoundChoice(next)
+  try{window.localStorage.setItem(soundPrefKey,next)}catch{/* private mode */}
+  if(enabled)playFx('enable',true)
+ }
  const [menuOpen,setMenuOpen]=useState(false)
  const [selected,setSelected]=useState(null)
  const [howardMailOpen,setHowardMailOpen]=useState(false)
@@ -76,6 +125,7 @@ export default function App() {
  const secretCount=Number(Boolean(achievements.sideEffect))+Number(Boolean(achievements.whosWatching))
  const openHowardMail=()=>{
    setHowardMailOpen(true)
+   if(achievements.whosWatching)playFx('open')
    if(achievements.whosWatching)return
    setAchievements(prev=>{
      if(prev.whosWatching)return prev
@@ -86,7 +136,7 @@ export default function App() {
    setAchievementToast('whosWatching')
  }
  const unlockSideEffect=()=>{
-   if(achievements.sideEffect)return
+   if(achievements.sideEffect){playFx('open');return}
    setAchievements(prev=>{
      if(prev.sideEffect)return prev
      const next={...prev,sideEffect:true}
@@ -139,6 +189,9 @@ export default function App() {
    return ()=>window.clearTimeout(t)
  },[achievements.earlyBird])
  useEffect(()=>{
+   if(achievementToast&&soundChoice==='on')playFx('unlock')
+ },[achievementToast,soundChoice,playFx])
+ useEffect(()=>{
    if(!achievementToast)return undefined
    const t=window.setTimeout(()=>setAchievementToast(null),10000)
    return ()=>window.clearTimeout(t)
@@ -180,7 +233,8 @@ export default function App() {
  const filteredMedia=useMemo(()=>media.filter(m=>m.type==='INTERVIEW'),[])
  const go=(p)=>{setPage(p);setMenuOpen(false)}
  return <div className="app">
-  <div className="top-strip"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="top-right"><span className="live-dot"/> THE UNDERGROUND IS CALLING</span></div>
+  {soundChoice===null&&<div className="sound-consent-backdrop"><section className="sound-consent-dialog" role="dialog" aria-modal="true" aria-labelledby="sound-consent-title" aria-describedby="sound-consent-description"><div className="sound-consent-scanline" aria-hidden="true"/><div className="sound-consent-icon"><AudioLines size={29}/></div><span className="sound-consent-kicker">SAINTFOUR / AUDIO EXPERIENCE</span><h2 id="sound-consent-title">MAKE SOME <em>NOISE.</em></h2><p id="sound-consent-description">На сайте есть звуковые спецэффекты: секретные находки и новые достижения звучат по-особенному. Хочешь их включить?</p><div className="sound-consent-actions"><button type="button" className="sound-consent-enable" onClick={()=>chooseSound(true)}><Volume2 size={18}/> ВКЛЮЧИТЬ ЗВУК</button><button type="button" className="sound-consent-silent" onClick={()=>chooseSound(false)}><VolumeX size={17}/> БЕЗ ЗВУКА</button></div><small>Выбор сохранится. Изменить его можно вверху сайта через SFX ON/OFF. Видео энергетика останется без звука.</small></section></div>}
+  <div className="top-strip"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="top-right"><span className="live-dot"/><span className="top-strip-slogan">THE UNDERGROUND IS CALLING</span><button className="sound-toggle" type="button" onClick={()=>chooseSound(soundChoice!=='on')} aria-label={soundChoice==='on'?'Выключить звуковые эффекты':'Включить звуковые эффекты'} aria-pressed={soundChoice==='on'} title={soundChoice==='on'?'Выключить звук':'Включить звук'}>{soundChoice==='on'?<Volume2 size={14}/>:<VolumeX size={14}/>} <span>SFX {soundChoice==='on'?'ON':'OFF'}</span></button></span></div>
   <header className="header"><button className="logo" onClick={()=>go('home')} aria-label="На главную"><span className="logo-mark">SF<span>✳</span></span><span className="logo-type">SAINTFOUR<strong>RAP BATTLE <i>’27</i></strong></span></button><nav className="desktop-nav" aria-label="Навигация">{nav.map(n=><button key={n.id} className={page===n.id?'active':''} onClick={()=>go(n.id)}>{n.name}</button>)}</nav><div className="header-actions"><span className="edition">VOL. 001 / 2027</span><button className="mobile-menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Меню">{menuOpen?<X/>:<Menu/>}</button></div></header>
   {menuOpen&&<nav className="mobile-nav" aria-label="Мобильная навигация">{nav.map(n=><button key={n.id} onClick={()=>go(n.id)}><n.Icon size={17}/>{n.name}<ArrowRight size={16}/></button>)}{unlockedCount>0&&<button onClick={()=>go("achievements")}><Trophy size={17}/>Достижения <span className="achievement-menu-count">{unlockedCount} / 5</span><ArrowRight size={16}/></button>}</nav>}
   <main>
