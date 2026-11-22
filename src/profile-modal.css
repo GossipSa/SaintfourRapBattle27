@@ -128,3 +128,24 @@
     border:1px solid #a77aca;
   }
 }
+
+/* Dex's little manager: low-key profile easter egg, no achievement. */
+.dex-kitten-teaser{display:flex;align-items:center;gap:11px;width:100%;margin-top:20px;padding:9px;background:#24192b;border:1px solid #634765;color:#f5e8f5;text-align:left;cursor:pointer;transition:background .18s,border-color .18s}
+.dex-kitten-teaser:hover,.dex-kitten-teaser:focus-visible{background:#36203c;border-color:#c38ac5}
+.dex-kitten-teaser>img{display:block;object-fit:cover;flex:0 0 64px;width:64px;height:64px;aspect-ratio:1;filter:saturate(.87)}
+.dex-kitten-teaser-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px}
+.dex-kitten-teaser-copy small{font:800 9px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#cb96cf}
+.dex-kitten-teaser-copy b{font:800 12px/1.25 'DM Sans',sans-serif;color:#f4d7f5}
+.dex-kitten-teaser-copy>span{font:400 11px/1.5 'DM Sans',sans-serif;color:#c6afce}
+.dex-kitten-arrow{flex:0 0 auto;color:#cda2d4}
+.dex-kitten-backdrop{position:fixed;inset:0;z-index:1150;display:flex;align-items:center;justify-content:center;padding:18px;background:#08050de8;backdrop-filter:blur(10px)}
+.dex-kitten-dialog{position:relative;display:flex;flex-direction:column;width:min(450px,100%);max-height:calc(100dvh - 36px);overflow:auto;background:#201523;border:1px solid #996a9b;box-shadow:0 22px 80px #000d;color:#f2dfef}
+.dex-kitten-dialog>img{width:100%;height:auto;aspect-ratio:1;object-fit:cover;display:block}
+.dex-kitten-close{position:absolute;z-index:2;top:11px;right:11px;width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;background:#1a1221ee;color:#fff;border:1px solid #b88dbb;cursor:pointer}
+.dex-kitten-close svg{display:block;width:20px;height:20px;flex:none;margin:0}
+.dex-kitten-caption{padding:21px 24px 24px}
+.dex-kitten-caption>span{font:800 9px 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#d6a3d6}
+.dex-kitten-caption h2{font:900 26px/1 'Barlow Condensed',Impact,sans-serif;margin:10px 0 12px;color:#fff0fa}
+.dex-kitten-caption p{margin:0 0 11px;font:400 13px/1.6 'DM Sans',sans-serif;color:#e7d4e6}
+.dex-kitten-caption small{font:italic 11px/1.5 'DM Sans',sans-serif;color:#c3a8c7}
+@media(max-width:480px){.dex-kitten-teaser>img{width:52px;height:52px;flex-basis:52px}.dex-kitten-teaser-copy b{font-size:11px}.dex-kitten-teaser-copy>span{font-size:10px}.dex-kitten-caption{padding:17px 18px 20px}.dex-kitten-caption h2{font-size:24px}}
