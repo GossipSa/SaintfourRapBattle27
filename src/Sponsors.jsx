@@ -86,12 +86,30 @@ function ProductMedia({onSecretFound}) {
         {mode==='video'&&<Play size={27} aria-hidden="true" className="sponsor-video-glyph"/>}
       </div>}
     </div>
-    <div className="sponsor-product-batch"><span>PRODUCT LINE / BH-27</span><button type="button" onClick={()=>{setClassified(true);onSecretFound?.()}} aria-label="Код экспериментальной партии энергетика">LOT 00 <span>↗</span></button></div>
-    {classified&&<div className="hellebore-classified" role="region" aria-label="Секретная экспериментальная партия">
-      <div className="hellebore-classified-top"><span><FlaskConical size={14}/> INTERNAL / NOT FOR DISTRIBUTION</span><button type="button" onClick={()=>setClassified(false)} aria-label="Закрыть экспериментальную партию"><X size={16}/></button></div>
-      <div className="hellebore-classified-content"><div className="hellebore-experimental-can" aria-hidden="true"><span>BH</span><strong>00</strong><small>EXPERIMENTAL</small></div><div><span className="hellebore-classified-kicker">DISCOVERED / FORMULA ZERO</span><h4>BLACK HELLEBORE <em>00.</em></h4><p>Экспериментальная партия, которой нет в официальном каталоге. Информация о составе засекречена.</p><span className="hellebore-classified-footer">STATUS: WITHDRAWN FROM PUBLIC RELEASE</span></div></div>
-      <button type="button" className="hellebore-classified-return" onClick={()=>setClassified(false)}><ArrowLeft size={14}/> ВЕРНУТЬСЯ К РЕКЛАМЕ</button>
-    </div>}
+    <div className="sponsor-research">
+      <button className="sponsor-research-teaser" type="button" onClick={()=>{setClassified(x=>!x);if(!classified)onSecretFound?.()}} aria-expanded={classified} aria-controls="hellebore-rd-file">
+        <div className="sponsor-research-preview" aria-hidden="true">
+          <img src={mediaPaths.photo} alt="" loading="lazy"/>
+          <span className="sponsor-research-overlay">R&D<br/>00</span>
+        </div>
+        <div className="sponsor-research-teaser-copy">
+          <span className="sponsor-research-overline"><FlaskConical size={12}/> BLACK HELLEBORE / LAB ARCHIVE</span>
+          <strong>НОВЫЙ ВКУС.<br/><em>НЕ ДЛЯ ВСЕХ.</em></strong>
+          <p>Внутренняя карточка разработки. Прототип, состав и результаты тестов.</p>
+          <span className="sponsor-research-cta">{classified?'СВЕРНУТЬ ДОСЬЕ':'ОТКРЫТЬ ДОСЬЕ'} <ArrowUpRight size={14}/></span>
+        </div>
+      </button>
+      {classified&&<div className="hellebore-classified" id="hellebore-rd-file" role="region" aria-label="Досье экспериментального энергетика">
+        <div className="hellebore-classified-top"><span><FlaskConical size={14}/> R&D / FILE BH–00 / INTERNAL USE ONLY</span><button type="button" onClick={()=>setClassified(false)} aria-label="Закрыть досье"><X size={16}/></button></div>
+        <div className="hellebore-classified-content"><div className="hellebore-experimental-can" aria-hidden="true"><span>BLACK HELLEBORE</span><strong>00</strong><small>FORMULA ZERO</small></div><div><span className="hellebore-classified-kicker">PROTOTYPE / UNRELEASED</span><h4>FORMULA <em>ZERO.</em></h4><p>Тестовая линейка BLACK HELLEBORE ENERGY. Рабочее название вкуса — <b>BLACKOUT BERRY</b>. Тёмные ягоды, холодное послевкусие и слишком много вопросов к финальной версии.</p><span className="hellebore-classified-footer">STATUS: REFORMULATION REQUIRED</span></div></div>
+        <div className="hellebore-lab-notes">
+          <div><span>01 / FLAVOR PROFILE</span><strong>BLACKOUT BERRY</strong><small>Тёмные ягоды · ледяная нота</small></div>
+          <div><span>02 / FORMULA REV.</span><strong>BH–00 / V.03</strong><small>Рецептура на доработке</small></div>
+          <div><span>03 / TEST STATUS</span><strong>ON HOLD</strong><small>Выпуск отложен</small></div>
+        </div>
+        <div className="hellebore-classified-bottom"><span>CONFIDENTIAL / NOT FOR PUBLIC RELEASE</span><button type="button" onClick={()=>setClassified(false)}><ArrowLeft size={14}/> НАЗАД К РЕКЛАМЕ</button></div>
+      </div>}
+    </div>
   </div>
 }
 
