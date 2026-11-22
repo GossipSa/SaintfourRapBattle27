@@ -427,3 +427,11 @@
  .achievement-category-count i{font-size:15px}
  .achievement-category{margin-bottom:27px}
 }
+
+/* Second badge: a soft pink metallic tier, shared between toast and archive. */
+.sf-medallion-loyal,.achievement-toast.achievement-tier-2 .sf-medallion{border-color:#f3c7df;background:radial-gradient(circle at 32% 24%,#f0b0d5 0%,#b16b9b 30%,#633956 63%,#251926 95%);color:#fff0fa;box-shadow:inset 0 0 0 3px #51314b,inset 0 0 0 5px #dfa9ca,0 2px 8px #08050aaa}
+.sf-medallion-loyal .sf-medallion-rays,.achievement-toast.achievement-tier-2 .sf-medallion-rays{color:#ffe1ed}
+.sf-medallion-loyal i,.achievement-toast.achievement-tier-2 .sf-medallion i{color:#ffe6f4}
+.achievement-toast.achievement-tier-2{border-color:#bc79b0;border-left-color:#e5a4d6;background:radial-gradient(ellipse at 0% 45%,#d26bad29,transparent 65%),linear-gradient(112deg,#392037,#201225 75%)}
+.achievement-toast.achievement-tier-2 .achievement-toast-medal{filter:drop-shadow(0 0 7px #db8cb348)}
+.achievement-replay-row{display:flex;flex-wrap:wrap;gap:9px}
