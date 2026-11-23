@@ -35,7 +35,7 @@ export default function TomatoAttack(){
   if(newOne){earned[newOne[0]]=true;setNewAward(newOne[1])}else setNewAward('')
   const next={counts,earned}
   setData(next)
-  try{localStorage.setItem(KEY,JSON.stringify(next)}catch{}
+  try{localStorage.setItem(KEY,JSON.stringify(next))}catch{}
   setSplats(prev=>[...prev,{id:Date.now()+Math.random(),x,y,rot:Math.random()*360}].slice(-35))
   setThrowing({x,y,id:Date.now()})
   setMessage(player.line)
