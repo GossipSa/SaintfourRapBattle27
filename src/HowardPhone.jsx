@@ -77,7 +77,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const markMissed=()=>{
   if(progress.firstSeen&&!progress.introDone&&!progress.missed){const next={...progress,missed:true};setProgress(next);saveState(next)}
  }
- const open=()=>{if(isBlocked&&secretFound){setOpened(true);setMode('secret-idle');return}if(isBlocked)return;setOpened(true);setMode(progress.firstSeen&&progress.missed&&!progress.introDone?'idle':progress.introDone?'idle':'incoming')}
+ const open=()=>{if(isBlocked&&secretFound){setOpened(true);setMode('secret-idle');return}if(isBlocked){setOpened(true);setMode('blocked');return}setOpened(true);setMode(progress.firstSeen&&progress.missed&&!progress.introDone?'idle':progress.introDone?'idle':'incoming')}
  const call=()=>{
   if(isBlocked){setMode('blocked');return}
   if(!progress.introDone){
@@ -98,9 +98,8 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const close=()=>{if(mode==='incoming')markMissed();setOpened(false);setMode('incoming')}
  const dismiss=()=>{markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
  if(!visible&&!isBlocked)return null
- if(isBlocked&&!secretFound&&!opened)return null
  return <>
-  {isBlocked&&secretFound&&!opened&&<button type="button" className="hp-pocket-launcher" onClick={open} aria-label="Достать Motorola"><Phone size={17}/><span>MOTOROLA</span></button>}
+  {isBlocked&&!opened&&<button type="button" className="hp-pocket-launcher" onClick={open} aria-label="Достать Motorola"><Phone size={17}/><span>MOTOROLA</span></button>}
   {!isBlocked&&!opened&&<div className="hp-floating">
     <button type="button" className="hp-closed" onClick={open} aria-label="Открыть звонящую фиолетовую раскладушку">
      <span className="hp-closed-hinge"/><span className="hp-closed-logo">M</span><span className="hp-closed-display"><Phone size={20}/><small>{isBlocked&&secretFound?'DIAL':isBlocked?'BLOCKED':progress.introDone||progress.missed?'CALL LOG':'INCOMING'}</small></span><span className="hp-closed-led"/>
