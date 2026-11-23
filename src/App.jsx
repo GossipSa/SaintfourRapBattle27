@@ -397,7 +397,7 @@ export default function App() {
   <HowardPhone onBlocked={unlockHowardBlocked}/>
   <SaintfourNotifications suppressed={Boolean(warlockNotice||achievementToast||wilsonOpen||soundChoice===null||howardMailOpen||fifthInterviewOpen||dexKittenOpen||daroRiderOpen||rudiLetterOpen||poppyNotebookOpen)}/>
   <main>
-  {page==='bank'&&<SaintfourBank onSlots={()=>go('slots')}/>}
+  {page==='bank'&&<SaintfourBank/>}
   {page==='spin'&&<LuckySpin onBack={()=>go('home')} onAchievements={()=>go('achievements')} onSlotsDiscovered={unlockSlots} onOpenSlots={()=>go('slots')}/>}
   {page==='slots'&&<section className="inner-page wrap" style={{maxWidth:650,margin:'35px auto 75px'}}><button type="button" className="achievement-return" onClick={()=>go('spin')} style={{marginBottom:20}}>← НАЗАД К КОЛЕСУ УДАЧИ</button><HelleboreSlots onClose={()=>go('spin')}/></section>}
   {page==='achievements'&&<section className="achievements-page wrap">
