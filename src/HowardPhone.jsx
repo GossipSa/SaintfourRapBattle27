@@ -108,6 +108,14 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
   {opened&&<div className="hp-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)close()}}>
    <div className="hp-window" role="dialog" aria-modal="true" aria-label="Телефон Натаниэля Говарда">
     <button type="button" className="hp-exit" onClick={close} aria-label="Закрыть раскладушку"><X size={20}/></button>
+    {secretFound&&isBlocked&&<aside className="hp-number-notes" aria-label="Сохранённые номера">
+      <span className="hp-notes-heading">НАЙДЕННЫЕ НОМЕРА</span>
+      <div className="hp-number-note">
+       <small>WARLOCK · PRIVATE</small>
+       <strong>27 04<br/>20 07</strong>
+       <span>Натаниэль<br/>Говард</span>
+      </div>
+     </aside>}
     <div className="hp-phone">
      <button type="button" className="hp-upper" onClick={close} aria-label="Сложить телефон">
       <span className="hp-earpiece"/>
