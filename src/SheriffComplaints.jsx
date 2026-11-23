@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ShieldAlert, X, FileText, CheckCircle2 } from 'lucide-react'
+import { ShieldAlert, X, FileText, CheckCircle2, Trophy } from 'lucide-react'
 import './sheriff-complaints.css'
 
 const targets=[
@@ -96,6 +96,7 @@ export default function SheriffComplaints({open,onClose,onFirstComplaint}){
     <p className="wilson-subject">ОБЪЕКТ: {targets.find(([id])=>id===result.target)?.[1]}</p>
     <h3>ОФИЦИАЛЬНЫЙ ОТВЕТ ШЕРИФА УИЛСОНА</h3>
     <blockquote>«{intro}{answer}»</blockquote>
+    {result.count===1&&<div className="wilson-achievement" role="status"><Trophy size={26}/><div><span>SECRET ACHIEVEMENT / 009 · UNLOCKED</span><strong>СТУКАЧ СЕНТФОРА</strong><small>Шериф Уилсон благодарит вас за сотрудничество. Остальные — нет.</small></div></div>}
     <button type="button" className="wilson-submit" onClick={reset}>ПОДАТЬ ЕЩЁ ОДНУ ЖАЛОБУ</button>
     <small className="wilson-privacy">Обращение зарегистрировано только в вашем браузере.</small>
    </div>}
