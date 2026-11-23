@@ -62,19 +62,37 @@ const replies={
  }
 }
 const key='sf27-wilson-complaints-v1'
+const casesKey='sf27-wilson-case-numbers-v1'
 function readCount(){try{return Number(localStorage.getItem(key))||0}catch{return 0}}
+function readCases(){try{const saved=JSON.parse(localStorage.getItem(casesKey)||'{}');return saved&&typeof saved==='object'&&!Array.isArray(saved)?saved:{}}catch{return {}}}
+function randomCaseNumber(used){
+ const taken=new Set(Object.values(used))
+ let candidate
+ do{
+  const bytes=new Uint32Array(1)
+  if(globalThis.crypto?.getRandomValues)globalThis.crypto.getRandomValues(bytes)
+  else bytes[0]=Math.floor(Math.random()*4294967295)
+  candidate='SF-'+String(100000+bytes[0]%900000)
+ }while(taken.has(candidate))
+ return candidate
+}
 
 export default function SheriffComplaints({open,onClose,onFirstComplaint,achievementUnlocked=false}){
  const [target,setTarget]=useState('dex')
  const [reason,setReason]=useState('noise')
  const [count,setCount]=useState(readCount)
+ const [caseNumbers,setCaseNumbers]=useState(readCases)
  const [result,setResult]=useState(null)
  if(!open)return null
  const submit=()=>{
   const next=count+1
   setCount(next)
   try{localStorage.setItem(key,String(next))}catch{/* private mode */}
-  setResult({target,reason,count:next})
+  const caseNumber=randomCaseNumber(caseNumbers)
+  const updatedCases={...caseNumbers,[next]:caseNumber}
+  setCaseNumbers(updatedCases)
+  try{localStorage.setItem(casesKey,JSON.stringify(updatedCases))}catch{/* private mode */}
+  setResult({target,reason,count:next,caseNumber})
   if(next===1)onFirstComplaint?.()
  }
  const reset=()=>setResult(null)
@@ -92,7 +110,7 @@ export default function SheriffComplaints({open,onClose,onFirstComplaint,achieve
     <button type="button" className="wilson-submit" onClick={submit}><FileText size={17}/> ПОДАТЬ ЖАЛОБУ</button>
     <small className="wilson-privacy">Игровая форма. Жалобы никуда не отправляются, личные данные не собираются.</small>
    </div>:<div className="wilson-body">
-    <div className="wilson-case"><span>CASE #027-{String(result.count).padStart(3,'0')}</span><strong className={result.target==='howard'?'wilson-cleared':''}><CheckCircle2 size={15}/>{result.target==='howard'?'NO VIOLATION FOUND':'REVIEWED'}</strong></div>
+    <div className="wilson-case"><span>ЖАЛОБА № {result.caseNumber}</span><strong className={result.target==='howard'?'wilson-cleared':''}><CheckCircle2 size={15}/>{result.target==='howard'?'NO VIOLATION FOUND':'REVIEWED'}</strong></div>
     <p className="wilson-subject">ОБЪЕКТ: {targets.find(([id])=>id===result.target)?.[1]}</p>
     <h3>ОФИЦИАЛЬНЫЙ ОТВЕТ ШЕРИФА УИЛСОНА</h3>
     <blockquote>«{intro}{answer}»</blockquote>
