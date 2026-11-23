@@ -76,3 +76,5 @@
 
 .hp-reminder{position:absolute;right:116px;bottom:55px;width:min(235px,calc(100vw - 155px));padding:11px 13px;border:1px solid #bd74d4aa;border-radius:12px;background:#1a1024f2;color:#f2d5ff;font:700 11px/1.45 sans-serif;letter-spacing:.2px;box-shadow:0 8px 22px #0009;text-align:left;animation:hp-enter .4s ease-out both;pointer-events:none}
 @media(max-width:480px){.hp-reminder{right:105px;bottom:48px;width:min(190px,calc(100vw - 130px));font-size:10px}}
+
+.hp-dial-display{font:700 19px/1.3 monospace!important;letter-spacing:2px;overflow-wrap:anywhere}.hp-connecting{font-size:12px!important}.hp-dots::after{content:'...';display:inline-block;width:18px;text-align:left;overflow:hidden;vertical-align:bottom;animation:hp-ellipsis 1.1s steps(4,end) infinite}@keyframes hp-ellipsis{0%{width:0}100%{width:18px}}.hp-clear-dial{border:0;background:none;color:#efc2ff;font:700 9px monospace;cursor:pointer;padding:2px 0}.hp-lower:has(.hp-clear-dial) .hp-keys{margin-top:3px;gap:4px}.hp-lower:has(.hp-clear-dial) .hp-keys button{height:29px}
