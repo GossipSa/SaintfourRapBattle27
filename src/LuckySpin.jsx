@@ -17,7 +17,7 @@ function drawPrize(){const n=Math.random()*100;let cursor=0;let category='Фан
 const wheelIcons=[Cigarette,Flower2,CircleDot,Zap,Cat,Disc3,Flame,Music2,Mic2,Crown,Star,Diamond]
 const blank={spins:0,history:[],found:[],secret:false}
 function load(){try{const s=JSON.parse(localStorage.getItem(storageKey));if(s&&Number.isFinite(s.spins)&&Array.isArray(s.history)&&Array.isArray(s.found))return {...blank,...s}}catch{/* storage disabled */}return blank}
-export default function LuckySpin({onBack,onAchievements}){
+export default function LuckySpin({onBack,onAchievements,onSlotsDiscovered,onOpenSlots}){
  const [record,setRecord]=useState(load)
  const [angle,setAngle]=useState(0)
  const [rolling,setRolling]=useState(false)
@@ -30,17 +30,19 @@ export default function LuckySpin({onBack,onAchievements}){
  const found=new Set(record.found)
  const spin=()=>{
   if(rolling)return
-  const prize=drawPrize()
+  const secretDrop=Math.random()<1/30
+  const prize=secretDrop?{id:'bh777',group:'BLACK HELLEBORE',name:'НЕИЗВЕСТНЫЙ ПРИЗ',description:'Похоже, колесо открыло что-то, чего не было в списке.'}:drawPrize()
   setResult(null);setRolling(true);setAchievementNotice(null)
   const extra=1800+Math.random()*1800
   setAngle(a=>a+360*6+extra)
   timer.current=setTimeout(()=>{
    const nextSpin=record.spins+1
+   if(secretDrop)onSlotsDiscovered?.()
    const milestone=milestones.find(m=>m.count===nextSpin)
    const secretNew=!record.secret&&record.history.length>=2&&record.history[0].id===prize.id&&record.history[1].id===prize.id
    if(milestone||secretNew){setAchievementNotice(milestone?{title:milestone.title,description:milestone.description}:{title:'НЕВЕРОЯТНОЕ УПОРСТВО',description:'Три одинаковых приза подряд. Поппи подозревает вмешательство Warlock.'});clearTimeout(noticeTimer.current);noticeTimer.current=setTimeout(()=>setAchievementNotice(null),9000)}
    setRecord(prev=>{
-    const next={spins:prev.spins+1,history:[{id:prize.id,at:Date.now()},...prev.history].slice(0,250),found:[...new Set([...prev.found,prize.id])],secret:prev.secret||(prev.history.length>=2&&prev.history[0].id===prize.id&&prev.history[1].id===prize.id)}
+    const next={spins:prev.spins+1,history:[{id:prize.id,at:Date.now()},...prev.history].slice(0,250),found:secretDrop?prev.found:[...new Set([...prev.found,prize.id])],secret:prev.secret||(prev.history.length>=2&&prev.history[0].id===prize.id&&prev.history[1].id===prize.id)}
     try{localStorage.setItem(storageKey,JSON.stringify(next))}catch{/* storage disabled */}
     return next
    })
@@ -61,7 +63,7 @@ export default function LuckySpin({onBack,onAchievements}){
     </div>
     <p className="spin-wheel-note">Значки — просто декор. Приз выбирается случайно.</p>
     <button className="spin-go" type="button" onClick={spin} disabled={rolling}><RotateCcw size={20} className={rolling?'spin-go-icon':''}/>{rolling?'КОЛЕСО КРУТИТСЯ...':'КРУТИТЬ РУЛЕТКУ'}<ArrowRight size={18}/></button>
-    <div className="spin-result" aria-live="polite">{rolling?<><span>PLEASE WAIT</span><strong>СУДЬБА ВЫБИРАЕТ БЕСПОЛЕЗНОСТЬ...</strong></>:result?<><span>YOUR PRIZE / {result.group.toUpperCase()}</span><strong>{result.name}</strong><p>{result.description}</p></>:<><span>NO PRIZE YET</span><strong>НАЖМИ SPIN И ПОСМОТРИ, ЧТО ТЕБЕ НЕ ДОСТАНЕТСЯ.</strong></>}</div>
+    <div className="spin-result" aria-live="polite">{rolling?<><span>PLEASE WAIT</span><strong>СУДЬБА ВЫБИРАЕТ БЕСПОЛЕЗНОСТЬ...</strong></>:result?<><span>YOUR PRIZE / {result.group.toUpperCase()}</span><strong>{result.name}</strong><p>{result.description}</p>{result.id==='bh777'&&<button type="button" className="spin-secret-portal" onClick={onOpenSlots}>ОТКРЫТЬ НЕИЗВЕСТНЫЙ ПРИЗ →</button>}</>:<><span>NO PRIZE YET</span><strong>НАЖМИ SPIN И ПОСМОТРИ, ЧТО ТЕБЕ НЕ ДОСТАНЕТСЯ.</strong></>}</div>
    </div>
    <aside className="spin-side">
     <div className="spin-stats"><div><span>TOTAL SPINS</span><strong>{record.spins.toLocaleString('ru-RU')}</strong></div><div><span>COLLECTED</span><strong>{found.size}<small> / {spinPrizes.length}</small></strong></div></div>
