@@ -29,6 +29,7 @@ function saveState(state){try{localStorage.setItem(STORE,JSON.stringify(state))}
 export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const [secretFound,setSecretFound]=useState(hasSecret)
  const [dial,setDial]=useState('')
+ const [expandedContact,setExpandedContact]=useState(null)
  const [secretReply,setSecretReply]=useState('')
  const [secretCalls,setSecretCalls]=useState(()=>{try{return Math.max(0,Number(localStorage.getItem('sf27-howard-secret-calls'))||0)}catch{return 0}})
  const [visible,setVisible]=useState(()=>new URLSearchParams(window.location.search).get('resetHoward')==='1'||(hasSecret()&&Boolean(JSON.parse(localStorage.getItem('sf27-achievements-v2')||'{}').howardBlocked)))
@@ -95,10 +96,12 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const pressKey=k=>{if(!isBlocked||!secretFound)return;const digit=k.charAt(0);if(!/^[0-9]$/.test(digit))return;setDial(v=>(v+digit).slice(0,14));setMode('secret-idle')}
  const hang=()=>{if(mode==='incoming')markMissed();setMode(isBlocked&&secretFound?'secret-idle':progress.blocked?'blocked':'idle')}
  const close=()=>{if(mode==='incoming')markMissed();setOpened(false);setMode('incoming')}
- const dismiss=()=>{markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');setNextReminder(n=>n+1)}
- if(!visible||(isBlocked&&!secretFound&&!opened))return null
+ const dismiss=()=>{markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
+ if(!visible&&!isBlocked)return null
+ if(isBlocked&&!secretFound&&!opened)return null
  return <>
-  {!opened&&<div className="hp-floating">
+  {isBlocked&&secretFound&&!opened&&<button type="button" className="hp-pocket-launcher" onClick={open} aria-label="Достать Motorola"><Phone size={17}/><span>MOTOROLA</span></button>}
+  {!isBlocked&&!opened&&<div className="hp-floating">
     <button type="button" className="hp-closed" onClick={open} aria-label="Открыть звонящую фиолетовую раскладушку">
      <span className="hp-closed-hinge"/><span className="hp-closed-logo">M</span><span className="hp-closed-display"><Phone size={20}/><small>{isBlocked&&secretFound?'DIAL':isBlocked?'BLOCKED':progress.introDone||progress.missed?'CALL LOG':'INCOMING'}</small></span><span className="hp-closed-led"/>
     </button>
@@ -109,12 +112,10 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
    <div className="hp-window" role="dialog" aria-modal="true" aria-label="Телефон Натаниэля Говарда">
     <button type="button" className="hp-exit" onClick={close} aria-label="Закрыть раскладушку"><X size={20}/></button>
     {secretFound&&isBlocked&&<aside className="hp-number-notes" aria-label="Сохранённые номера">
-      <span className="hp-notes-heading">НАЙДЕННЫЕ НОМЕРА</span>
-      <div className="hp-number-note">
-       <small>WARLOCK · PRIVATE</small>
-       <strong>27 04<br/>20 07</strong>
-       <span>Натаниэль<br/>Говард</span>
-      </div>
+      <button type="button" className={'hp-contact-tab '+(expandedContact==='howard'?'is-expanded':'')} onClick={()=>setExpandedContact(v=>v==='howard'?null:'howard')} aria-expanded={expandedContact==='howard'}>
+       <span className="hp-tab-label">HOWARD</span>
+       {expandedContact==='howard'&&<span className="hp-tab-details"><small>WARLOCK · PRIVATE</small><strong>27 04<br/>20 07</strong><span>Натаниэль Говард</span></span>}
+      </button>
      </aside>}
     <div className="hp-phone">
      <button type="button" className="hp-upper" onClick={close} aria-label="Сложить телефон">
