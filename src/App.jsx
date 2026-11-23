@@ -478,6 +478,7 @@ export default function App() {
       <div className="official-voting-intro-copy"><span className="official-voting-kicker"><span className="official-voting-live-dot"/> THE MAIN EVENT / COMING SOON</span><h2 id="official-voting-title">OFFICIAL <em>VOTING.</em></h2><p>Прогнозы закончились. Теперь решать тебе, кто пройдёт дальше. Голосование откроется после выхода каждого батла.</p></div>
       <div className="official-voting-seal" aria-hidden="true"><span>SF</span><strong>VS</strong><small>THE VERDICT</small></div>
     </div>
+    
     <div className="vote-explanation"><div><strong>КАК ПРОХОДИТ ГОЛОСОВАНИЕ?</strong><p>После выхода батла появятся голосования на сайте и в Telegram. Они будут открыты в течение 48 часов. Победители первых двух батлов проходят в финал.</p></div><div><strong>КОГДА МОЖНО ГОЛОСОВАТЬ?</strong><p>Пока официальные голосования закрыты. Они откроются после премьер соответствующих выпусков — тогда и можно будет отдать свой голос за победителя.</p></div></div>
     <div className="vote-rules-strip"><span><Vote size={18}/> OFFICIAL VOTING</span><span>48 ЧАСОВ НА ГОЛОСОВАНИЕ</span><span>TELEGRAM + SAINTFOUR VS</span></div>
     <div className="official-vote-grid">
@@ -485,7 +486,6 @@ export default function App() {
       <OfficialVoteCard number="02" first={rappers[2]} second={rappers[3]}/>
       <OfficialVoteCard number="03" final/>
     </div>
-    <BattlePredictions/>
     
   </section>}
   </main>
