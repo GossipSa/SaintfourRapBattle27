@@ -73,3 +73,6 @@
 }
 .hp-floating .hp-dismiss svg{display:block;flex:none;width:16px;height:16px;stroke-width:2;transform:none}
 @media(max-width:600px){.hp-floating .hp-dismiss{top:-15px;right:-12px}}
+
+.hp-reminder{position:absolute;right:116px;bottom:55px;width:min(235px,calc(100vw - 155px));padding:11px 13px;border:1px solid #bd74d4aa;border-radius:12px;background:#1a1024f2;color:#f2d5ff;font:700 11px/1.45 sans-serif;letter-spacing:.2px;box-shadow:0 8px 22px #0009;text-align:left;animation:hp-enter .4s ease-out both;pointer-events:none}
+@media(max-width:480px){.hp-reminder{right:105px;bottom:48px;width:min(190px,calc(100vw - 130px));font-size:10px}}
