@@ -486,6 +486,7 @@ export default function App() {
       <OfficialVoteCard number="02" first={rappers[2]} second={rappers[3]}/>
       <OfficialVoteCard number="03" final/>
     </div>
+    <BattlePredictions/>
     
   </section>}
   </main>
