@@ -76,7 +76,6 @@ const nav = [
   { id:'sponsors', name:'Партнёры', Icon:Radio },
   { id:'achievements', name:'Достижения', Icon:Trophy },
   { id:'spin', name:'Рулетка', Icon:Zap },
-  { id:'bank', name:'SF BANK', Icon:Ticket },
 ]
 function Cover({src, alt, className='', initials='', style={}}) {
   const [broken,setBroken]=useState(false)
@@ -486,7 +485,7 @@ export default function App() {
       <OfficialVoteCard number="02" first={rappers[2]} second={rappers[3]}/>
       <OfficialVoteCard number="03" final/>
     </div>
-    <BattlePredictions/>
+    <BattlePredictions onOpenBank={()=>go('bank')}/>
     
   </section>}
   </main>
