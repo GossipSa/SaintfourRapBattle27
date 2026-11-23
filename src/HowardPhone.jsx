@@ -26,23 +26,25 @@ function readState(){try{
  if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){localStorage.removeItem(STORE);sessionStorage.removeItem('sf27-howard-seen');return {calls:0,introDone:false,blocked:false,limit:0,firstSeen:false,missed:false,reminders:0}}
 const data=JSON.parse(localStorage.getItem(STORE)||'{}');return {calls:Math.max(0,Number(data.calls)||0),introDone:Boolean(data.introDone),blocked:Boolean(data.blocked),limit:Number(data.limit)||0,firstSeen:Boolean(data.firstSeen||data.introDone),missed:Boolean(data.missed),reminders:Math.max(0,Number(data.reminders)||0)}}catch{return {calls:0,introDone:false,blocked:false,limit:0}}}
 function saveState(state){try{localStorage.setItem(STORE,JSON.stringify(state))}catch{/* storage disabled */}}
-export default function HowardPhone({onBlocked}){
+export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const [secretFound,setSecretFound]=useState(hasSecret)
  const [dial,setDial]=useState('')
  const [secretReply,setSecretReply]=useState('')
  const [secretCalls,setSecretCalls]=useState(()=>{try{return Math.max(0,Number(localStorage.getItem('sf27-howard-secret-calls'))||0)}catch{return 0}})
- const [visible,setVisible]=useState(()=>new URLSearchParams(window.location.search).get('resetHoward')==='1')
+ const [visible,setVisible]=useState(()=>new URLSearchParams(window.location.search).get('resetHoward')==='1'||(hasSecret()&&Boolean(JSON.parse(localStorage.getItem('sf27-achievements-v2')||'{}').howardBlocked)))
  const [opened,setOpened]=useState(()=>new URLSearchParams(window.location.search).get('resetHoward')==='1')
  const [progress,setProgress]=useState(readState)
  const [reply,setReply]=useState(null)
  const [mode,setMode]=useState('incoming')
  const [dismissed,setDismissed]=useState(false)
  const [nextReminder,setNextReminder]=useState(0)
- useEffect(()=>{const found=()=>{setSecretFound(true);if(progress.blocked){setVisible(true);setDismissed(false);setDial('')}};window.addEventListener('sf27-howard-number-found',found);return()=>window.removeEventListener('sf27-howard-number-found',found)},[progress.blocked])
+ const isBlocked=progress.blocked||achievementUnlocked
+ useEffect(()=>{if(secretFound&&isBlocked){setVisible(true);setDismissed(false)}},[secretFound,isBlocked])
+ useEffect(()=>{const found=()=>{setSecretFound(true);if(isBlocked){setVisible(true);setDismissed(false);setDial('')}};window.addEventListener('sf27-howard-number-found',found);return()=>window.removeEventListener('sf27-howard-number-found',found)},[isBlocked])
  useEffect(()=>{if(!opened||mode!=='secret-connecting')return;const timer=setTimeout(()=>setMode('secret-answer'),1800);return()=>clearTimeout(timer)},[opened,mode])
  useEffect(()=>{
   if(new URLSearchParams(window.location.search).get('resetHoward')==='1')return
-  if((progress.blocked&&!secretFound)||visible||opened)return
+  if((isBlocked&&!secretFound)||visible||opened)return
   let timer
   const show=()=>{
    setVisible(true)
@@ -58,13 +60,13 @@ export default function HowardPhone({onBlocked}){
   const schedule=()=>{
    window.clearTimeout(timer)
    if(document.visibilityState==='hidden')return
-   const delay=progress.blocked?3000:progress.firstSeen?REMINDER_MIN+Math.floor(Math.random()*REMINDER_RANGE):20000+Math.round(Math.random()*20000)
+   const delay=isBlocked?3000:progress.firstSeen?REMINDER_MIN+Math.floor(Math.random()*REMINDER_RANGE):20000+Math.round(Math.random()*20000)
    timer=window.setTimeout(show,delay)
   }
   schedule()
   document.addEventListener('visibilitychange',schedule)
   return()=>{window.clearTimeout(timer);document.removeEventListener('visibilitychange',schedule)}
- },[progress.blocked,progress.firstSeen,visible,opened,nextReminder,secretFound])
+ },[isBlocked,progress.firstSeen,visible,opened,nextReminder,secretFound])
  useEffect(()=>{
   if(!opened)return
   const key=e=>{if(e.key==='Escape'){setOpened(false);setMode('incoming')}}
@@ -74,9 +76,9 @@ export default function HowardPhone({onBlocked}){
  const markMissed=()=>{
   if(progress.firstSeen&&!progress.introDone&&!progress.missed){const next={...progress,missed:true};setProgress(next);saveState(next)}
  }
- const open=()=>{if(progress.blocked&&secretFound){setOpened(true);setMode('secret-idle');return}if(progress.blocked)return;setOpened(true);setMode(progress.firstSeen&&progress.missed&&!progress.introDone?'idle':progress.introDone?'idle':'incoming')}
+ const open=()=>{if(isBlocked&&secretFound){setOpened(true);setMode('secret-idle');return}if(isBlocked)return;setOpened(true);setMode(progress.firstSeen&&progress.missed&&!progress.introDone?'idle':progress.introDone?'idle':'incoming')}
  const call=()=>{
-  if(progress.blocked){setMode('blocked');return}
+  if(isBlocked){setMode('blocked');return}
   if(!progress.introDone){
    const next={...progress,introDone:true,firstSeen:true,missed:false,limit:30+Math.floor(Math.random()*16)}
    setProgress(next);saveState(next);setMode('mistake');return
@@ -90,17 +92,17 @@ export default function HowardPhone({onBlocked}){
   setReply(chosen);setMode('answer')
  }
  const callSecret=()=>{if(mode==='secret-connecting')return;if(dial!==SECRET_NUMBER){setMode('secret-wrong');return}const index=secretCalls%secretLines.length;setSecretReply(secretLines[index]);setSecretCalls(secretCalls+1);try{localStorage.setItem('sf27-howard-secret-calls',String(secretCalls+1))}catch{}setMode('secret-connecting')}
- const pressKey=k=>{if(!progress.blocked||!secretFound)return;const digit=k.charAt(0);if(!/^[0-9]$/.test(digit))return;setDial(v=>(v+digit).slice(0,14));setMode('secret-idle')}
- const hang=()=>{if(mode==='incoming')markMissed();setMode(progress.blocked&&secretFound?'secret-idle':progress.blocked?'blocked':'idle')}
+ const pressKey=k=>{if(!isBlocked||!secretFound)return;const digit=k.charAt(0);if(!/^[0-9]$/.test(digit))return;setDial(v=>(v+digit).slice(0,14));setMode('secret-idle')}
+ const hang=()=>{if(mode==='incoming')markMissed();setMode(isBlocked&&secretFound?'secret-idle':progress.blocked?'blocked':'idle')}
  const close=()=>{if(mode==='incoming')markMissed();setOpened(false);setMode('incoming')}
  const dismiss=()=>{markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');setNextReminder(n=>n+1)}
- if(!visible||(progress.blocked&&!secretFound&&!opened))return null
+ if(!visible||(isBlocked&&!secretFound&&!opened))return null
  return <>
   {!opened&&<div className="hp-floating">
     <button type="button" className="hp-closed" onClick={open} aria-label="Открыть звонящую фиолетовую раскладушку">
-     <span className="hp-closed-hinge"/><span className="hp-closed-logo">M</span><span className="hp-closed-display"><Phone size={20}/><small>{progress.blocked&&secretFound?'DIAL':progress.blocked?'BLOCKED':progress.introDone||progress.missed?'CALL LOG':'INCOMING'}</small></span><span className="hp-closed-led"/>
+     <span className="hp-closed-hinge"/><span className="hp-closed-logo">M</span><span className="hp-closed-display"><Phone size={20}/><small>{isBlocked&&secretFound?'DIAL':isBlocked?'BLOCKED':progress.introDone||progress.missed?'CALL LOG':'INCOMING'}</small></span><span className="hp-closed-led"/>
     </button>
-    {(progress.blocked&&secretFound||progress.missed||progress.introDone)&&<div className="hp-reminder">{progress.blocked&&secretFound?'Может, попробуем позвонить по этому номеру?':progress.missed&&!progress.introDone?'1 ПРОПУЩЕННЫЙ ВЫЗОВ · ПЕРЕЗВОНИТЬ?':reminderLines[Math.max(0,progress.reminders-1)%reminderLines.length]}</div>}
+    {(isBlocked&&secretFound||progress.missed||progress.introDone)&&<div className="hp-reminder">{isBlocked&&secretFound?'Может, попробуем позвонить по этому номеру?':progress.missed&&!progress.introDone?'1 ПРОПУЩЕННЫЙ ВЫЗОВ · ПЕРЕЗВОНИТЬ?':reminderLines[Math.max(0,progress.reminders-1)%reminderLines.length]}</div>}
     <button type="button" className="hp-dismiss" aria-label="Убрать телефон" onClick={dismiss}><X size={15}/></button>
    </div>}
   {opened&&<div className="hp-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)close()}}>
@@ -126,12 +128,12 @@ export default function HowardPhone({onBlocked}){
      <div className="hp-joint"><span/></div>
      <div className="hp-lower">
       <div className="hp-actions">
-       <button type="button" className="hp-answer" onClick={progress.blocked&&secretFound?callSecret:call} aria-label={mode==='incoming'?'Ответить на звонок':'Позвонить ещё раз'} disabled={mode==='blocked'||mode==='final'||mode==='mistake'||mode==='secret-connecting'}><Phone size={20}/></button>
+       <button type="button" className="hp-answer" onClick={isBlocked&&secretFound?callSecret:call} aria-label={mode==='incoming'?'Ответить на звонок':'Позвонить ещё раз'} disabled={mode==='blocked'||mode==='final'||mode==='mistake'||mode==='secret-connecting'}><Phone size={20}/></button>
        <span className="hp-dpad"><span>▲</span><span>◀ ● ▶</span><span>▼</span></span>
        <button type="button" className="hp-hang" onClick={hang} aria-label="Сбросить звонок"><PhoneOff size={19}/></button>
       </div>
-      <div className="hp-keys">{['1','2 ABC','3 DEF','4 GHI','5 JKL','6 MNO','7 PQRS','8 TUV','9 WXYZ','*','0 +','#'].map(k=><button type="button" key={k} onClick={()=>{if(progress.blocked&&secretFound)pressKey(k);else if(mode==='idle')setMode('incoming')}}>{k}</button>)}</div>
-      {progress.blocked&&secretFound&&<button type="button" className="hp-clear-dial" onClick={()=>{setDial('');setMode('secret-idle')}}>СБРОСИТЬ НОМЕР</button>}<span className="hp-bottom-mark">MOTOR / SF EDITION</span>
+      <div className="hp-keys">{['1','2 ABC','3 DEF','4 GHI','5 JKL','6 MNO','7 PQRS','8 TUV','9 WXYZ','*','0 +','#'].map(k=><button type="button" key={k} onClick={()=>{if(isBlocked&&secretFound)pressKey(k);else if(mode==='idle')setMode('incoming')}}>{k}</button>)}</div>
+      {isBlocked&&secretFound&&<button type="button" className="hp-clear-dial" onClick={()=>{setDial('');setMode('secret-idle')}}>СБРОСИТЬ НОМЕР</button>}<span className="hp-bottom-mark">MOTOR / SF EDITION</span>
      </div>
     </div>
     <div className="hp-caption">{mode.startsWith('secret-')?'Личный номер. Говард явно не ожидал этого звонка.':mode==='blocked'?'Натаниэль Говард заблокировал ваш номер.':mode==='final'?'Достижение открыто: «ГОВАРД ЗАБЛОКИРОВАЛ ВАС»':mode==='incoming'?'Неизвестный номер. Ответить на вызов?':mode==='mistake'?'Звонок оборвался. Но номер остался в журнале.':progress.missed&&!progress.introDone?'1 пропущенный вызов. Номер сохранился. Может, перезвоним?':'Можно попробовать перезвонить.'}</div>
