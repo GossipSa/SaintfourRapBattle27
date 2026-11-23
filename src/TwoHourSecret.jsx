@@ -28,13 +28,28 @@ export default function TwoHourSecret(){
  },[earned])
  if(!open)return null
  return <div className="two-hour-backdrop" role="presentation"><section className="two-hour-dialog" role="dialog" aria-modal="true" aria-labelledby="two-hour-title" aria-describedby="two-hour-description">
+  <div className="two-hour-header"><span className="two-hour-kicker">◉ GOSSIP SAINTFOUR</span><span className="two-hour-private">PRIVATE MESSAGE · 02:00:00</span></div>
   <button className="two-hour-close" type="button" aria-label="Закрыть" onClick={()=>setOpen(false)}><X size={19}/></button>
-  <span className="two-hour-kicker"><Clock3 size={14}/> SAINTFOUR SECURITY / ACTIVITY REPORT</span>
-  <div className="two-hour-clock">02:00:00 <span>SESSION COMPLETE</span></div>
-  <h2 id="two-hour-title">ТЫ ВСЁ ЕЩЁ <em>ЗДЕСЬ?</em></h2>
-  <div id="two-hour-description" className="two-hour-story"><p>Два часа. Сто двадцать минут.</p><p>Поппи уже закончила интервью. Декс успел с кем-то поссориться. Говард трижды пожалел, что согласился участвовать в этом шоу.</p><p>А ты всё ещё здесь.</p><p>Мы не знаем, что именно ты ищешь. Но твою преданность невозможно игнорировать.</p></div>
-  <div className="two-hour-award"><Trophy size={28}/><div><small>SECRET ACHIEVEMENT / UNLOCKED</small><strong>ПОСТОЯННЫЙ ЖИТЕЛЬ СЕНТФОРА</strong><span>120 минут непрерывно на сайте. Получено один раз.</span></div></div>
-  <p className="two-hour-poppy">Поппи просит тебя хотя бы попить воды.</p>
-  <button className="two-hour-confirm" type="button" onClick={()=>setOpen(false)}>ЛАДНО, ПОППИ. Я УСЛЫШАЛ.</button>
+  <h2 id="two-hour-title">Серьёзно?</h2>
+  <div id="two-hour-description" className="two-hour-story">
+   <p>Два часа.</p>
+   <p>Ты уже два часа сидишь на этом сайте.</p>
+   <p>Я, конечно, подозревала, что у жителей Сентфора слишком много свободного времени, но ты, кажется, решил побить все рекорды.</p>
+   <p>Что ты здесь ищешь? Компромат на Говарда? Очередную тупую выходку Декса? Или надеешься, что я где-нибудь случайно оставила что-то интересное?</p>
+   <p>Хотя знаешь, что самое смешное?</p>
+   <p className="two-hour-highlight">Сентфора не существует.</p>
+   <p>Ни этих батлов, ни интервью, ни всей этой драмы.</p>
+   <p>А ты всё равно провёл здесь два часа.</p>
+   <p>…</p>
+   <p>Ладно, кого я обманываю.</p>
+   <p>Я ведь потратила на всё это гораздо больше времени. Придумывала, переделывала, прятала всякую ерунду по углам сайта в надежде, что кто-нибудь однажды её заметит.</p>
+   <p>И, кажется, кто-то действительно заметил.</p>
+   <p>Так что нет, я не буду говорить тебе потрогать траву.</p>
+   <p className="two-hour-highlight">Мне просто приятно, что ты здесь.</p>
+   <p>Только никому не рассказывай. У меня вообще-то репутация.</p>
+  </div>
+  <div className="two-hour-signature">— твоя Сплетница Сентфора ♡</div>
+  <div className="two-hour-award"><Trophy size={28}/><div><small>SECRET ACHIEVEMENT UNLOCKED</small><strong>ПО ТУ СТОРОНУ ЭКРАНА</strong><span>120 минут. Один непрерывный сеанс. Один маленький секрет между нами.</span></div></div>
+  <button className="two-hour-confirm" type="button" onClick={()=>setOpen(false)}>СЕКРЕТ ОСТАНЕТСЯ МЕЖДУ НАМИ</button>
  </section></div>
 }
