@@ -17,6 +17,8 @@ const dexManagerPhoto=`${import.meta.env.BASE_URL}media/dex-kitten-manager.jpg`
 import AllAccessTicket from './AllAccessTicket.jsx'
 import LuckySpin, { LuckySpinAchievements } from './LuckySpin.jsx'
 import HelleboreSlots from './HelleboreSlots.jsx'
+import SaintfourBank from './SaintfourBank.jsx'
+import { syncAchievements } from './saintfour-bank.js'
 import BattleTicker from './LineupMarquee.jsx'
 import './lineup-marquee.css'
 import './hero-background.css'
@@ -73,6 +75,7 @@ const nav = [
   { id:'sponsors', name:'Партнёры', Icon:Radio },
   { id:'achievements', name:'Достижения', Icon:Trophy },
   { id:'spin', name:'Рулетка', Icon:Zap },
+  { id:'bank', name:'SF BANK', Icon:Ticket },
 ]
 function Cover({src, alt, className='', initials='', style={}}) {
   const [broken,setBroken]=useState(false)
@@ -197,6 +200,7 @@ export default function App() {
  const [achievements,setAchievements]=useState(()=>{
    try { const saved=JSON.parse(window.localStorage.getItem('sf27-achievements-v2')||'{}'); return saved&&typeof saved==='object'?saved:{} } catch { return {} }
  })
+ useEffect(()=>{syncAchievements()},[achievements])
  const [achievementToast,setAchievementToast]=useState(null)
  const [warlockNotice,setWarlockNotice]=useState(false)
  const [wilsonOpen,setWilsonOpen]=useState(false)
@@ -393,6 +397,7 @@ export default function App() {
   <HowardPhone onBlocked={unlockHowardBlocked}/>
   <SaintfourNotifications suppressed={Boolean(warlockNotice||achievementToast||wilsonOpen||soundChoice===null||howardMailOpen||fifthInterviewOpen||dexKittenOpen||daroRiderOpen||rudiLetterOpen||poppyNotebookOpen)}/>
   <main>
+  {page==='bank'&&<SaintfourBank onSlots={()=>go('slots')}/>}
   {page==='spin'&&<LuckySpin onBack={()=>go('home')} onAchievements={()=>go('achievements')} onSlotsDiscovered={unlockSlots} onOpenSlots={()=>go('slots')}/>}
   {page==='slots'&&<section className="inner-page wrap" style={{maxWidth:650,margin:'35px auto 75px'}}><button type="button" className="achievement-return" onClick={()=>go('spin')} style={{marginBottom:20}}>← НАЗАД К КОЛЕСУ УДАЧИ</button><HelleboreSlots onClose={()=>go('spin')}/></section>}
   {page==='achievements'&&<section className="achievements-page wrap">
