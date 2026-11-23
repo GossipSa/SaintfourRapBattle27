@@ -11,6 +11,7 @@ import SecretInterview from './SecretInterview.jsx'
 import PoppyNotebook from './PoppyNotebook.jsx'
 import HowardPhone from './HowardPhone.jsx'
 import SaintfourNotifications from './SaintfourNotifications.jsx'
+import TwoHourSecret from './TwoHourSecret.jsx'
 import SheriffComplaints from './SheriffComplaints.jsx'
 const dexManagerPhoto=`${import.meta.env.BASE_URL}media/dex-kitten-manager.jpg`
 import AllAccessTicket from './AllAccessTicket.jsx'
@@ -383,6 +384,7 @@ export default function App() {
  const filteredMedia=useMemo(()=>media.filter(m=>m.type==='INTERVIEW'),[])
  const go=(p)=>{setPage(p);setMenuOpen(false)}
  return <div className="app">
+  <TwoHourSecret/>
   <audio ref={musicRef} src={mobileAudio?mobileMusicSource:desktopMusicSource} preload="none" loop aria-hidden="true"/>
   {soundChoice===null&&<div className="sound-consent-backdrop"><section className="sound-consent-dialog" role="dialog" aria-modal="true" aria-labelledby="sound-consent-title" aria-describedby="sound-consent-description"><div className="sound-consent-scanline" aria-hidden="true"/><div className="sound-consent-icon"><AudioLines size={29}/></div><span className="sound-consent-kicker">SAINTFOUR / BACKGROUND MUSIC</span><h2 id="sound-consent-title">SET THE <em>MOOD.</em></h2><p id="sound-consent-description">На сайте может играть тихая фоновая музыка. Включить её или оставить сайт без звука? Никаких сигналов при ачивках и секретках больше нет.</p><div className="sound-consent-actions"><button type="button" className="sound-consent-enable" onClick={()=>chooseSound(true)}><Volume2 size={18}/> ВКЛЮЧИТЬ МУЗЫКУ</button><button type="button" className="sound-consent-silent" onClick={()=>chooseSound(false)}><VolumeX size={17}/> БЕЗ МУЗЫКИ</button></div><small>Музыка играет тихо и повторяется на всех страницах сайта. В любой момент можно отключить её кнопкой MUSIC ON/OFF. Видео энергетика останется без звука.</small></section></div>}
   <div className="top-strip"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="top-right"><span className="live-dot"/><span className="top-strip-slogan">THE UNDERGROUND IS CALLING</span></span></div>
