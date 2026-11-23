@@ -37,12 +37,13 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const [progress,setProgress]=useState(readState)
  const [reply,setReply]=useState(null)
  const [mode,setMode]=useState('incoming')
+ const [dismissed,setDismissed]=useState(false)
  const [nextReminder,setNextReminder]=useState(0)
  const isBlocked=progress.blocked||achievementUnlocked
  // Resume the pre-block storyline on each visit, even if a previous call was dismissed.
  useEffect(()=>{if(!isBlocked&&!progress.firstSeen){const next={...progress,firstSeen:true};setProgress(next);saveState(next)}},[])
- useEffect(()=>{if(secretFound&&isBlocked){setVisible(true)}},[secretFound,isBlocked])
- useEffect(()=>{const found=()=>{setSecretFound(true);if(isBlocked){setVisible(true);setDial('')}};window.addEventListener('sf27-howard-number-found',found);return()=>window.removeEventListener('sf27-howard-number-found',found)},[isBlocked])
+ useEffect(()=>{if(secretFound&&isBlocked){setVisible(true);setDismissed(false)}},[secretFound,isBlocked])
+ useEffect(()=>{const found=()=>{setSecretFound(true);if(isBlocked){setVisible(true);setDismissed(false);setDial('')}};window.addEventListener('sf27-howard-number-found',found);return()=>window.removeEventListener('sf27-howard-number-found',found)},[isBlocked])
  useEffect(()=>{if(!opened||mode!=='secret-connecting')return;const timer=setTimeout(()=>setMode('secret-answer'),1800);return()=>clearTimeout(timer)},[opened,mode])
  useEffect(()=>{
   if(new URLSearchParams(window.location.search).get('resetHoward')==='1')return
@@ -50,6 +51,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
   let timer
   const show=()=>{
    setVisible(true)
+   setDismissed(false)
    if(!progress.firstSeen){
     const next={...progress,firstSeen:true}
     setProgress(next);saveState(next)
@@ -96,7 +98,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const pressKey=k=>{if(!isBlocked||!secretFound)return;const digit=k.charAt(0);if(!/^[0-9]$/.test(digit))return;setDial(v=>(v+digit).slice(0,14));setMode('secret-idle')}
  const hang=()=>{if(mode==='incoming')markMissed();setMode(isBlocked&&secretFound?'secret-idle':progress.blocked?'blocked':'idle')}
  const close=()=>{if(mode==='incoming')markMissed();setOpened(false);setMode('incoming')}
- const dismiss=()=>{markMissed();setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
+ const dismiss=()=>{markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
  if(!visible&&!isBlocked)return null
  return <>
   {isBlocked&&!opened&&<button type="button" className="hp-pocket-launcher" onClick={open} aria-label="Достать Motorola"><Phone size={17}/><span>MOTOROLA</span></button>}
