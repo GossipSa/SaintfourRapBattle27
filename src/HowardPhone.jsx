@@ -32,7 +32,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const [expandedContact,setExpandedContact]=useState(null)
  const [secretReply,setSecretReply]=useState('')
  const [secretCalls,setSecretCalls]=useState(()=>{try{return Math.max(0,Number(localStorage.getItem('sf27-howard-secret-calls'))||0)}catch{return 0}})
- const [visible,setVisible]=useState(()=>{try{const reset=new URLSearchParams(window.location.search).get('resetHoward')==='1';const state=readState();return reset||(!state.firstSeen&&!state.blocked)|| (hasSecret()&&Boolean(JSON.parse(localStorage.getItem('sf27-achievements-v2')||'{}').howardBlocked))}catch{return true}})
+ const [visible,setVisible]=useState(()=>{try{const reset=new URLSearchParams(window.location.search).get('resetHoward')==='1';const state=readState();return reset||!state.blocked||hasSecret()}catch{return true}})
  const [opened,setOpened]=useState(()=>new URLSearchParams(window.location.search).get('resetHoward')==='1')
  const [progress,setProgress]=useState(readState)
  const [reply,setReply]=useState(null)
@@ -40,14 +40,14 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const [dismissed,setDismissed]=useState(false)
  const [nextReminder,setNextReminder]=useState(0)
  const isBlocked=progress.blocked||achievementUnlocked
- // First-time visitors should see the incoming phone immediately, not wait for a timer.
- useEffect(()=>{if(!isBlocked&&!progress.firstSeen){const next={...progress,firstSeen:true};setProgress(next);saveState(next);setVisible(true)}},[])
+ // Resume the pre-block storyline on each visit, even if a previous call was dismissed.
+ useEffect(()=>{if(!isBlocked&&!progress.firstSeen){const next={...progress,firstSeen:true};setProgress(next);saveState(next)}},[])
  useEffect(()=>{if(secretFound&&isBlocked){setVisible(true);setDismissed(false)}},[secretFound,isBlocked])
  useEffect(()=>{const found=()=>{setSecretFound(true);if(isBlocked){setVisible(true);setDismissed(false);setDial('')}};window.addEventListener('sf27-howard-number-found',found);return()=>window.removeEventListener('sf27-howard-number-found',found)},[isBlocked])
  useEffect(()=>{if(!opened||mode!=='secret-connecting')return;const timer=setTimeout(()=>setMode('secret-answer'),1800);return()=>clearTimeout(timer)},[opened,mode])
  useEffect(()=>{
   if(new URLSearchParams(window.location.search).get('resetHoward')==='1')return
-  if((isBlocked&&!secretFound)||visible||opened)return
+  if(isBlocked||visible||opened)return
   let timer
   const show=()=>{
    setVisible(true)
