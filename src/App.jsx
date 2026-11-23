@@ -18,6 +18,7 @@ import AllAccessTicket from './AllAccessTicket.jsx'
 import LuckySpin, { LuckySpinAchievements } from './LuckySpin.jsx'
 import HelleboreSlots from './HelleboreSlots.jsx'
 import SaintfourBank from './SaintfourBank.jsx'
+import BattlePredictions from './BattlePredictions.jsx'
 import { syncAchievements } from './saintfour-bank.js'
 import BattleTicker from './LineupMarquee.jsx'
 import './lineup-marquee.css'
@@ -399,7 +400,7 @@ export default function App() {
   <main>
   {page==='bank'&&<SaintfourBank/>}
   {page==='spin'&&<LuckySpin onBack={()=>go('home')} onAchievements={()=>go('achievements')} onSlotsDiscovered={unlockSlots} onOpenSlots={()=>go('slots')}/>}
-  {page==='slots'&&<section className="inner-page wrap" style={{maxWidth:650,margin:'35px auto 75px'}}><button type="button" className="achievement-return" onClick={()=>go('spin')} style={{marginBottom:20}}>← НАЗАД К КОЛЕСУ УДАЧИ</button><HelleboreSlots onClose={()=>go('spin')}/></section>}
+  {page==='slots'&&slotsDiscovered&&<section className="inner-page wrap" style={{maxWidth:650,margin:'35px auto 75px'}}><button type="button" className="achievement-return" onClick={()=>go('spin')} style={{marginBottom:20}}>← НАЗАД К КОЛЕСУ УДАЧИ</button><HelleboreSlots onClose={()=>go('spin')}/></section>}
   {page==='achievements'&&<section className="achievements-page wrap">
     <div className="achievement-page-top"><button type="button" onClick={()=>go('home')} className="achievement-return"><ArrowRight size={16}/> НАЗАД НА ГЛАВНУЮ</button><span>SAINTFOUR / SECRET ACCESS</span></div>
     <div className="achievement-page-hero"><span className="achievement-page-eyebrow">THE UNDERGROUND HAS SECRETS</span><h1 className="achievement-title-glitch" data-text="YOUR ACHIEVEMENTS.">YOUR <em>ACHIEVEMENTS.</em></h1><p>Исследуй Saintfour Rap Battle, участвуй в жизни шоу и собирай достижения. Некоторые находятся на виду. Другие придётся поискать.</p>
@@ -473,6 +474,7 @@ export default function App() {
   {page==='sponsors'&&<section className="inner-page wrap sponsors-page"><PageHeading number="06" tag="POWERED BY" title={<><span className="glitch-heading" data-text="BACKED BY">BACKED BY</span><br/><em className="glitch-heading" data-text="THE CULTURE.">THE CULTURE.</em></>} intro="WARLOCK, BLACK HELLEBORE ENERGY и GOSSIP SAINTFOUR — бренды и партнёры нашего фанатского рэп-шоу."/><SponsorsShowcase onSecretFound={unlockSideEffect} onBonusUnlock={unlockShakeBonus} bonusUnlocked={Boolean(achievements.shakeBonus)}/></section>}
   {page==='polls'&&<section className="inner-page wrap official-voting-page"><PageHeading number="04" tag="YOUR VOTE MATTERS" title={<><span className="glitch-line" data-text="WHO WINS?">WHO WINS?</span><br/><em className="glitch-line" data-text="YOU DECIDE.">YOU DECIDE.</em></>} intro="Прогнозы до премьеры уже открыты! А официальные голосования за победителей начнутся после выхода соответствующих выпусков."/>
     <HypePolls onVotesChanged={unlockLoyalOne}/>
+    <BattlePredictions/>
     <div className="official-voting-intro" aria-labelledby="official-voting-title">
       <div className="official-voting-intro-copy"><span className="official-voting-kicker"><span className="official-voting-live-dot"/> THE MAIN EVENT / COMING SOON</span><h2 id="official-voting-title">OFFICIAL <em>VOTING.</em></h2><p>Прогнозы закончились. Теперь решать тебе, кто пройдёт дальше. Голосование откроется после выхода каждого батла.</p></div>
       <div className="official-voting-seal" aria-hidden="true"><span>SF</span><strong>VS</strong><small>THE VERDICT</small></div>
