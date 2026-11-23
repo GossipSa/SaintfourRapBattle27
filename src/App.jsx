@@ -14,6 +14,7 @@ import SheriffComplaints from './SheriffComplaints.jsx'
 const dexManagerPhoto=`${import.meta.env.BASE_URL}media/dex-kitten-manager.jpg`
 import AllAccessTicket from './AllAccessTicket.jsx'
 import LuckySpin, { LuckySpinAchievements } from './LuckySpin.jsx'
+import HelleboreSlots from './HelleboreSlots.jsx'
 import BattleTicker from './LineupMarquee.jsx'
 import './lineup-marquee.css'
 import './hero-background.css'
@@ -78,6 +79,8 @@ function Cover({src, alt, className='', initials='', style={}}) {
 function SectionTitle({tag,title,action, onAction}){return <div className="section-heading"><div><p className="eyebrow"><span className="red-dot"/> {tag}</p><h2 className="glitch-heading" data-text={title}>{title}</h2></div>{action && <button className="text-button" onClick={onAction}>{action} <ArrowRight size={16}/></button>}</div>}
 export default function App() {
  const [page,setPage]=useState('home')
+ const [slotsDiscovered,setSlotsDiscovered]=useState(()=>{try{return window.localStorage.getItem('sf27-secret-slots-discovered')==='1'}catch{return false}})
+ const unlockSlots=()=>{setSlotsDiscovered(true);try{window.localStorage.setItem('sf27-secret-slots-discovered','1')}catch{/* private mode */}}
  const musicRef=useRef(null)
  const musicFadeRef=useRef(null)
  const [mobileAudio]=useState(()=>window.matchMedia('(max-width: 760px)').matches)
@@ -368,7 +371,8 @@ export default function App() {
   {menuOpen&&<nav className="mobile-nav" aria-label="Мобильная навигация">{nav.map(n=><button key={n.id} onClick={()=>go(n.id)}><n.Icon size={17}/>{n.name}<ArrowRight size={16}/></button>)}</nav>}
   <HowardPhone onBlocked={unlockHowardBlocked}/>
   <main>
-  {page==='spin'&&<LuckySpin onBack={()=>go('home')} onAchievements={()=>go('achievements')}/>}
+  {page==='spin'&&<LuckySpin onBack={()=>go('home')} onAchievements={()=>go('achievements')} onSlotsDiscovered={unlockSlots} onOpenSlots={()=>go('slots')}/>}
+  {page==='slots'&&<section className="inner-page wrap" style={{maxWidth:650,margin:'35px auto 75px'}}><button type="button" className="achievement-return" onClick={()=>go('spin')} style={{marginBottom:20}}>← НАЗАД К КОЛЕСУ УДАЧИ</button><HelleboreSlots onClose={()=>go('spin')}/></section>}
   {page==='achievements'&&<section className="achievements-page wrap">
     <div className="achievement-page-top"><button type="button" onClick={()=>go('home')} className="achievement-return"><ArrowRight size={16}/> НАЗАД НА ГЛАВНУЮ</button><span>SAINTFOUR / SECRET ACCESS</span></div>
     <div className="achievement-page-hero"><span className="achievement-page-eyebrow">THE UNDERGROUND HAS SECRETS</span><h1 className="achievement-title-glitch" data-text="YOUR ACHIEVEMENTS.">YOUR <em>ACHIEVEMENTS.</em></h1><p>Исследуй Saintfour Rap Battle, участвуй в жизни шоу и собирай достижения. Некоторые находятся на виду. Другие придётся поискать.</p>
@@ -408,6 +412,11 @@ export default function App() {
        <div className="achievement-emblem">{achievements.wilsonSnitch?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><FileWarning size={27} strokeWidth={1.6}/><i>09</i></div>:<LockKeyhole size={27}/>}</div>
        <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 009</span><h2>{achievements.wilsonSnitch?'СТУКАЧ СЕНТФОРА':'UNDISCOVERED'}</h2><p>{achievements.wilsonSnitch?'Шериф Уилсон благодарит вас за сотрудничество. Остальные — нет.':'Секрет ещё не раскрыт.'}</p></div>
        <div className="achievement-status">{achievements.wilsonSnitch?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
+      </article>
+      <article className={'achievement-item achievement-tier-6 '+(slotsDiscovered?'is-earned':'is-locked')}>
+       <div className="achievement-emblem">{slotsDiscovered?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Zap size={27} strokeWidth={1.6}/><i>11</i></div>:<LockKeyhole size={27}/>}</div>
+       <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 011</span><h2>{slotsDiscovered?'НЕ ТУДА ПОПАЛ':'UNDISCOVERED'}</h2><p>{slotsDiscovered?'Колесо удачи открыло секретную игру BLACK HELLEBORE. Доступ сохранён.':'Секрет ещё не раскрыт.'}</p>{slotsDiscovered&&<button type="button" className="spin-secret-portal" onClick={()=>go('slots')}>ВЕРНУТЬСЯ К НАХОДКЕ →</button>}</div>
+       <div className="achievement-status">{slotsDiscovered?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
       </div>
       <LuckySpinAchievements onOpen={()=>go('spin')}/>
