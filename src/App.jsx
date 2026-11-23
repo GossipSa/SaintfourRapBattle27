@@ -299,7 +299,7 @@ export default function App() {
    const timer=window.setTimeout(()=>{
      try{window.sessionStorage.setItem('sf27-warlock-notice-v1','1')}catch{/* private mode */}
      setWarlockNotice(true)
-   },27000)
+   },150000)
    return ()=>window.clearTimeout(timer)
  },[achievementToast])
  useEffect(()=>{
