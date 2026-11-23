@@ -88,3 +88,5 @@
  .spin-glitch-layer{white-space:nowrap}
 }
 @media(prefers-reduced-motion:reduce){.spin-glitch-layer,.spin-heading .spin-glitch-title::after{animation:none;opacity:0}}
+
+.spin-secret-portal{display:block;margin:14px auto 2px;padding:11px 16px;border:1px solid #d3a0e5;border-radius:7px;background:#39234c;color:#fff;font-size:12px;font-weight:800;letter-spacing:.04em;cursor:pointer}.spin-secret-portal:hover{background:#59326c}
