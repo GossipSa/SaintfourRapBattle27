@@ -30,7 +30,7 @@ export default function LuckySpin({onBack,onAchievements,onSlotsDiscovered,onOpe
  const found=new Set(record.found)
  const spin=()=>{
   if(rolling)return
-  const secretDrop=Math.random()<1/30
+  const secretDrop=Math.random()<0.00005
   const prize=secretDrop?{id:'bh777',group:'BLACK HELLEBORE',name:'НЕИЗВЕСТНЫЙ ПРИЗ',description:'Похоже, колесо открыло что-то, чего не было в списке.'}:drawPrize()
   setResult(null);setRolling(true);setAchievementNotice(null)
   const extra=1800+Math.random()*1800
