@@ -61,7 +61,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
   const schedule=()=>{
    window.clearTimeout(timer)
    if(document.visibilityState==='hidden')return
-   const delay=isBlocked?3000:progress.firstSeen?REMINDER_MIN+Math.floor(Math.random()*REMINDER_RANGE):20000+Math.round(Math.random()*20000)
+   const delay=isBlocked?3000:progress.firstSeen?REMINDER_MIN+Math.floor(Math.random()*REMINDER_RANGE):5000+Math.round(Math.random()*3000)
    timer=window.setTimeout(show,delay)
   }
   schedule()
