@@ -138,6 +138,8 @@ function SponsorCard({sponsor,onOpen}) {
 }
 
 function SponsorModal({sponsor,onClose,onSecretFound}) {
+ const [numberFound,setNumberFound]=useState(()=>{try{return localStorage.getItem('sf27-howard-second-number-v1')==='1'}catch{return false}})
+ const discoverNumber=()=>{try{localStorage.setItem('sf27-howard-second-number-v1','1')}catch{}setNumberFound(true);window.dispatchEvent(new Event('sf27-howard-number-found'))}
   const closeRef=useRef(null)
   useEffect(()=>{
     const previous=document.activeElement
@@ -161,6 +163,7 @@ function SponsorModal({sponsor,onClose,onSecretFound}) {
         <h3 className="glitch-heading" data-text={sponsor.heading}>{sponsor.heading}</h3>
         <p className="sponsor-details-description">{sponsor.description}</p>
         {sponsor.note&&<p className="sponsor-partner-note">{sponsor.note}</p>}
+        {sponsor.id==='warlock'&&<button type="button" className="warlock-phone-sticker" onClick={discoverNumber} aria-label="Найти номер на служебной наклейке"><span>WARLOCK / INTERNAL CONTACT</span><strong>27 04 20 07</strong><small>{numberFound?'НОМЕР СОХРАНЁН ✓':'PRIVATE LINE · DO NOT SHARE'}</small></button>}
         {sponsor.id==='energy'&&<><ProductMedia onSecretFound={onSecretFound}/></>}
         {sponsor.url&&<a className="sponsor-channel-link" href={sponsor.url} target="_blank" rel="noopener noreferrer">ПЕРЕЙТИ В TELEGRAM <ArrowUpRight size={18}/></a>}
         <div className="sponsor-details-end"><Star size={13}/>{sponsor.aside}</div>
@@ -182,3 +185,4 @@ export default function SponsorsShowcase({onSecretFound,onBonusUnlock,bonusUnloc
     {selected&&<SponsorModal sponsor={selected} onClose={close} onSecretFound={onSecretFound}/>}
   </div>
 }
+
