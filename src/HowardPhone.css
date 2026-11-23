@@ -135,3 +135,15 @@
  .hp-tab-details strong{font-size:clamp(13px,3.5vw,17px);letter-spacing:0}
  .hp-tab-details>span{font-size:10px}
 }
+
+/* LIL DEX: second expandable contact and readable compact call summaries. */
+.hp-contact-dex{background:linear-gradient(145deg,#2a2039,#15101d);border:1px solid #c56abf;color:#f3b7e7;transform:rotate(3deg)}
+.hp-contact-dex.is-expanded{transform:rotate(1deg)}
+.hp-contact-dex .hp-tab-details small{color:#d48fc8}
+.hp-contact-dex .hp-tab-details strong{color:#f7d5f3}
+.hp-contact-dex .hp-tab-details>span{font-size:10px;color:#d9aed8}
+.hp-screen-body .hp-dex-story{font:600 10.5px/1.25 'DM Sans',Arial,sans-serif;letter-spacing:-.15px;max-height:117px;overflow-y:auto;overflow-wrap:break-word;text-shadow:none;scrollbar-width:thin}
+.hp-screen-body:has(.hp-dex-story){gap:5px;padding:3px 6px}
+.hp-screen-body:has(.hp-dex-story) .hp-screen-kicker{font-size:8px}
+.hp-screen-body:has(.hp-dex-story) small{font-size:7px}
+@media(max-width:600px){.hp-overlay .hp-number-notes{gap:7px}.hp-contact-dex .hp-tab-label{font-size:9px}}
