@@ -628,3 +628,6 @@
 .fifth-home-tape-copy>span{font:400 11px 'DM Sans',sans-serif;color:#ae9ab9}
 .fifth-home-tape-action{display:flex;align-items:center;gap:5px;color:#d3a4e5;font:800 9px 'IBM Plex Mono',monospace;letter-spacing:.03em;white-space:nowrap}
 @media(max-width:540px){.fifth-home-tape{padding:10px 11px;gap:9px}.fifth-home-tape-action{font-size:0}.fifth-home-tape-action svg{width:16px;height:16px}.fifth-home-tape-copy strong{font-size:13px}.fifth-home-tape-copy small{font-size:8px}}
+
+/* Compact fan-project attribution */
+.fan-disclaimer-consent{margin:15px 0 0;padding:11px 12px;border-top:1px solid rgba(192,158,220,.22);font-size:10px!important;line-height:1.55;color:#b9acc4;text-align:left}.fan-disclaimer-consent strong{display:block;font-size:9px;letter-spacing:1.5px;color:#c8a6df;margin-bottom:4px}.fan-disclaimer-footer{padding-top:15px;padding-bottom:12px;border-top:1px solid rgba(192,158,220,.12)}.fan-disclaimer-footer details{max-width:780px}.fan-disclaimer-footer summary{cursor:pointer;font-size:10px;letter-spacing:1px;color:#a999b7;list-style-position:inside}.fan-disclaimer-footer summary:hover{color:#d4b4ed}.fan-disclaimer-footer p{font-size:11px;line-height:1.7;color:#a999b7;margin:12px 0 0;max-width:720px}
