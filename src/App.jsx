@@ -227,7 +227,8 @@ export default function App() {
  const unlockedCount=Number(Boolean(achievements.earlyBird))+Number(Boolean(achievements.loyalOne))+Number(Boolean(achievements.sideEffect))+Number(Boolean(achievements.whosWatching))+Number(Boolean(achievements.fifthChair))
  const activityCount=Number(Boolean(achievements.earlyBird))+Number(Boolean(achievements.loyalOne))
  const secretCount=Number(Boolean(achievements.sideEffect))+Number(Boolean(achievements.whosWatching))+Number(Boolean(achievements.fifthChair))
- const foundSecrets=secretCount+Number(Boolean(achievements.shakeBonus))+Number(Boolean(achievements.howardBlocked))+Number(Boolean(achievements.nightOwl))+Number(Boolean(achievements.wilsonSnitch))
+ const slotsJackpot=(()=>{try{return Boolean(JSON.parse(window.localStorage.getItem('sf27-hellebore-slots-v1')||'{}').jackpot)}catch{return false}})()
+ const foundSecrets=secretCount+Number(Boolean(achievements.shakeBonus))+Number(Boolean(achievements.howardBlocked))+Number(Boolean(achievements.nightOwl))+Number(Boolean(achievements.wilsonSnitch))+Number(Boolean(slotsDiscovered))+Number(Boolean(slotsJackpot))
  const unlockHowardBlocked=()=>{
   setAchievements(prev=>{
    if(prev.howardBlocked)return prev
@@ -416,7 +417,8 @@ export default function App() {
     </section>
     <section className="achievement-category achievement-category-secrets" id="sf-achievement-secrets">
       <div className="achievement-category-heading"><div><span className="achievement-category-kicker">02 / THE HIDDEN FILES</span><h2>СЕКРЕТНЫЕ <em>НАХОДКИ.</em></h2><p>Сколько их на самом деле — неизвестно. Продолжай искать.</p></div><span className="achievement-category-count">{String(foundSecrets).padStart(2,'0')} <i>/ ???</i></span></div>
-      <div className="achievement-collection">
+      <details className="sf-secret-accordion"><summary><span>СЕКРЕТНЫЕ НАХОДКИ · {foundSecrets} ОТКРЫТО</span><span className="sf-secret-accordion-action">ПОКАЗАТЬ / СКРЫТЬ <span aria-hidden="true">⌄</span></span></summary>
+       <div className="achievement-collection">
         <article className={'achievement-item achievement-tier-3 '+(achievements.sideEffect?'is-earned':'is-locked')}><div className="achievement-emblem">{achievements.sideEffect?<div className="sf-medallion sf-medallion-side-effect"><span className="sf-medallion-rays" aria-hidden="true">✦</span><FlaskConical size={27} strokeWidth={1.6}/><i>03</i></div>:<LockKeyhole size={27}/>}</div><div className="achievement-item-copy"><span>ACHIEVEMENT / 003</span><h2>{achievements.sideEffect?'SIDE EFFECT':'UNDISCOVERED'}</h2><p>{achievements.sideEffect?'Экспериментальная партия BLACK HELLEBORE 00 обнаружена. Производитель предпочёл бы об этом умолчать.':'Секрет ещё не раскрыт.'}</p></div><div className="achievement-status">{achievements.sideEffect?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div></article>
         <article className={'achievement-item achievement-tier-4 '+(achievements.whosWatching?'is-earned':'is-locked')}><div className="achievement-emblem">{achievements.whosWatching?<div className="sf-medallion sf-medallion-whos-watching"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Mail size={27} strokeWidth={1.6}/><i>04</i></div>:<LockKeyhole size={27}/>}</div><div className="achievement-item-copy"><span>ACHIEVEMENT / 004</span><h2>{achievements.whosWatching?"WHO'S WATCHING?":'UNDISCOVERED'}</h2><p>{achievements.whosWatching?'Ты нашёл письмо, которое Поппи не собиралась показывать. Кто зарегистрировал MC NETTI — до сих пор неизвестно.':'Секрет ещё не раскрыт.'}</p></div><div className="achievement-status">{achievements.whosWatching?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div></article>
         <article className={'achievement-item achievement-tier-5 '+(achievements.fifthChair?'is-earned':'is-locked')}><div className="achievement-emblem">{achievements.fifthChair?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Mic2 size={27} strokeWidth={1.6}/><i>05</i></div>:<LockKeyhole size={27}/>}</div><div className="achievement-item-copy"><span>ACHIEVEMENT / 005</span><h2>{achievements.fifthChair?'THE FIFTH CHAIR':'UNDISCOVERED'}</h2><p>{achievements.fifthChair?'Ты взял интервью у самого себя, сломал четвёртую стену и оставил Поппи без гонорара.':'Секрет ещё не раскрыт.'}</p></div><div className="achievement-status">{achievements.fifthChair?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div></article>
@@ -440,6 +442,11 @@ export default function App() {
        <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 009</span><h2>{achievements.wilsonSnitch?'СТУКАЧ СЕНТФОРА':'UNDISCOVERED'}</h2><p>{achievements.wilsonSnitch?'Шериф Уилсон благодарит вас за сотрудничество. Остальные — нет.':'Секрет ещё не раскрыт.'}</p></div>
        <div className="achievement-status">{achievements.wilsonSnitch?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
+      <article className={'achievement-item achievement-tier-6 '+(slotsJackpot?'is-earned':'is-locked')}>
+       <div className="achievement-emblem">{slotsJackpot?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Trophy size={27} strokeWidth={1.6}/><i>10</i></div>:<LockKeyhole size={27}/>}</div>
+       <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 010</span><h2>{slotsJackpot?'СЕМЬ-СЕМЬ-СЕМЬ':'UNDISCOVERED'}</h2><p>{slotsJackpot?'Три семёрки в BLACK HELLEBORE LUCKY 777. Поппи требует проверить автомат.':'Секрет ещё не раскрыт.'}</p></div>
+       <div className="achievement-status">{slotsJackpot?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
+      </article>
       <article className={'achievement-item achievement-tier-6 '+(slotsDiscovered?'is-earned':'is-locked')}>
        <div className="achievement-emblem">{slotsDiscovered?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Zap size={27} strokeWidth={1.6}/><i>11</i></div>:<LockKeyhole size={27}/>}</div>
        <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 011</span><h2>{slotsDiscovered?'НЕ ТУДА ПОПАЛ':'UNDISCOVERED'}</h2><p>{slotsDiscovered?'Колесо удачи открыло секретную игру BLACK HELLEBORE. Доступ сохранён.':'Секрет ещё не раскрыт.'}</p>{slotsDiscovered&&<button type="button" className="spin-secret-portal" onClick={()=>go('slots')}>ВЕРНУТЬСЯ К НАХОДКЕ →</button>}</div>
@@ -447,6 +454,7 @@ export default function App() {
       </article>
       </div>
       <LuckySpinAchievements onOpen={()=>go('spin')}/>
+      </details>
     </section>
 
    </section>}
