@@ -90,3 +90,17 @@
 @media(prefers-reduced-motion:reduce){.spin-glitch-layer,.spin-heading .spin-glitch-title::after{animation:none;opacity:0}}
 
 .spin-secret-portal{display:block;margin:14px auto 2px;padding:11px 16px;border:1px solid #d3a0e5;border-radius:7px;background:#39234c;color:#fff;font-size:12px;font-weight:800;letter-spacing:.04em;cursor:pointer}.spin-secret-portal:hover{background:#59326c}
+
+/* Independent LIL DEX easter egg in the breathing room above the legal notice. */
+.spin-dex-secret-area{min-height:175px;display:flex;justify-content:flex-end;align-items:center;padding:22px clamp(12px,8vw,105px) 15px;overflow:visible}
+.spin-dex-note{position:relative;display:flex;flex-direction:column;gap:5px;align-items:flex-start;width:min(240px,75vw);padding:14px 17px 13px;text-align:left;cursor:pointer;color:#eac3e9;background:repeating-linear-gradient(0deg,transparent 0 4px,#df79d007 5px 6px),linear-gradient(145deg,#1b1124,#100d19 75%);border:1px solid #5f386b;box-shadow:3px 5px 0 #08070c,0 0 24px #a74fb522;transform:rotate(-3deg);clip-path:polygon(0 0,96% 0,100% 7%,100% 95%,96% 100%,2% 100%,0 94%);transition:border-color .2s,box-shadow .2s,transform .2s}
+.spin-dex-note:hover,.spin-dex-note:focus-visible{border-color:#d58bcf;box-shadow:3px 5px 0 #08070c,0 0 26px #bd61b55c;transform:rotate(-1deg)}
+.spin-dex-note-head{display:flex;width:100%;justify-content:space-between;gap:8px;color:#9d7ca8;font:700 9px 'DM Sans',sans-serif;letter-spacing:.12em}
+.spin-dex-note-head span{color:#ed7ab9}
+.spin-dex-note-name{position:relative;font:900 25px/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.13em;color:#f5c7e7;text-shadow:1px 0 #e452ad,-1px 0 #61d0ed;animation:spin-dex-flicker 5.4s steps(1,end) infinite}
+.spin-dex-note-number{font:800 21px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;color:#e8b0df}
+.spin-dex-note-bottom{font:700 9px/1.5 'DM Sans',sans-serif;letter-spacing:.08em;color:#ac85b4}
+.spin-dex-note.is-revealed .spin-dex-note-number{color:#fff0fa;text-shadow:0 0 12px #e279d5}
+@keyframes spin-dex-flicker{0%,92%,94%,100%{transform:none;filter:none}92.4%{transform:translateX(2px);filter:hue-rotate(70deg)}93%{transform:translateX(-2px)}}
+@media(max-width:600px){.spin-dex-secret-area{min-height:150px;padding:18px 28px 10px}.spin-dex-note{width:212px}}
+@media(prefers-reduced-motion:reduce){.spin-dex-note-name{animation:none}}
