@@ -20,6 +20,7 @@ import './host-card.css'
 import CreditsTicker from './CreditsTicker.jsx'
 import './credits-ticker.css'
 import './profile-modal.css'
+import './night-easter-egg.css'
 
 const rappers = [
   { id:'dex', stage:'LIL DEX', name:'DEX HAWK', subtitle:'NO RULES. NO MERCY.', role:'THE WILD CARD', number:'01', color:'#ff78cf', initials:'DX', image:`${import.meta.env.BASE_URL}media/lil-dex.jpg`, profileImage:`${import.meta.env.BASE_URL}media/lil-dex-profile.jpg`, description:'Байкер, провокатор и человек, который никогда не держит язык за зубами. На баттле играет грязно, бьёт по больному и получает от этого удовольствие. Особенно если напротив Руди.' },
@@ -173,6 +174,7 @@ export default function App() {
    try { const saved=JSON.parse(window.localStorage.getItem('sf27-achievements-v2')||'{}'); if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){delete saved.howardBlocked;window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(saved))} return saved&&typeof saved==='object'?saved:{} } catch { return {} }
  })
  const [achievementToast,setAchievementToast]=useState(null)
+ const [warlockNotice,setWarlockNotice]=useState(false)
  const unlockShakeBonus=()=>{
   if(achievements.shakeBonus)return
   setAchievements(prev=>{
@@ -186,7 +188,7 @@ export default function App() {
  const unlockedCount=Number(Boolean(achievements.earlyBird))+Number(Boolean(achievements.loyalOne))+Number(Boolean(achievements.sideEffect))+Number(Boolean(achievements.whosWatching))+Number(Boolean(achievements.fifthChair))
  const activityCount=Number(Boolean(achievements.earlyBird))+Number(Boolean(achievements.loyalOne))
  const secretCount=Number(Boolean(achievements.sideEffect))+Number(Boolean(achievements.whosWatching))+Number(Boolean(achievements.fifthChair))
- const foundSecrets=secretCount+Number(Boolean(achievements.shakeBonus))+Number(Boolean(achievements.howardBlocked))
+ const foundSecrets=secretCount+Number(Boolean(achievements.shakeBonus))+Number(Boolean(achievements.howardBlocked))+Number(Boolean(achievements.nightOwl))
  const unlockHowardBlocked=()=>{
   setAchievements(prev=>{
    if(prev.howardBlocked)return prev
@@ -271,6 +273,41 @@ export default function App() {
    return ()=>window.clearTimeout(t)
  },[page,achievements.earlyBird])
  useEffect(()=>{
+   if(achievements.nightOwl)return undefined
+   const checkNight=()=>{
+     if(document.visibilityState!=='visible')return
+     const hour=new Date().getHours()
+     if(hour<2||hour>=5)return
+     setAchievements(prev=>{
+       if(prev.nightOwl)return prev
+       const next={...prev,nightOwl:true}
+       try{window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(next))}catch{/* private mode */}
+       return next
+     })
+     setAchievementToast('nightOwl')
+   }
+   const timer=window.setTimeout(checkNight,3500)
+   const interval=window.setInterval(checkNight,60000)
+   document.addEventListener('visibilitychange',checkNight)
+   return ()=>{window.clearTimeout(timer);window.clearInterval(interval);document.removeEventListener('visibilitychange',checkNight)}
+ },[achievements.nightOwl])
+ useEffect(()=>{
+   if(achievementToast)return undefined
+   let seen=false
+   try{seen=window.sessionStorage.getItem('sf27-warlock-notice-v1')==='1'}catch{/* private mode */}
+   if(seen)return undefined
+   const timer=window.setTimeout(()=>{
+     try{window.sessionStorage.setItem('sf27-warlock-notice-v1','1')}catch{/* private mode */}
+     setWarlockNotice(true)
+   },27000)
+   return ()=>window.clearTimeout(timer)
+ },[achievementToast])
+ useEffect(()=>{
+   if(!warlockNotice)return undefined
+   const timer=window.setTimeout(()=>setWarlockNotice(false),8500)
+   return ()=>window.clearTimeout(timer)
+ },[warlockNotice])
+ useEffect(()=>{
    if(!achievementToast)return undefined
    const t=window.setTimeout(()=>setAchievementToast(null),10000)
    return ()=>window.clearTimeout(t)
@@ -350,6 +387,11 @@ export default function App() {
        <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 007</span><h2>{achievements.howardBlocked?'ГОВАРД ЗАБЛОКИРОВАЛ ВАС':'UNDISCOVERED'}</h2><p>{achievements.howardBlocked?'Вы так настойчиво перезванивали Натаниэлю Говарду, что ваш номер внесли в чёрный список Warlock Industries.':'Секрет ещё не раскрыт.'}</p></div>
        <div className="achievement-status">{achievements.howardBlocked?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
+      <article className={'achievement-item achievement-tier-6 '+(achievements.nightOwl?'is-earned':'is-locked')}>
+       <div className="achievement-emblem">{achievements.nightOwl?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Eye size={27} strokeWidth={1.6}/><i>08</i></div>:<LockKeyhole size={27}/>}</div>
+       <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 008</span><h2>{achievements.nightOwl?'ТЫ ВООБЩЕ СПИШЬ?':'UNDISCOVERED'}</h2><p>{achievements.nightOwl?'Зайти на сайт между 02:00 и 05:00 по местному времени. Поппи просит тебя лечь спать.':'Секрет ещё не раскрыт.'}</p></div>
+       <div className="achievement-status">{achievements.nightOwl?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
+      </article>
       </div>
       <LuckySpinAchievements onOpen={()=>go('spin')}/>
     </section>
@@ -393,7 +435,8 @@ export default function App() {
   </main>
   <footer className="footer"><div className="wrap footer-main"><div><span className="footer-logo">SAINTFOUR</span><p>RAP BATTLE <b>’27</b></p><small>AN ORIGINAL GOSSIP SAINTFOUR PROJECT</small></div><div className="footer-nav">{nav.slice(1).map(n=><button key={n.id} onClick={()=>go(n.id)} className={n.id==='achievements'?'achievement-footer-link':undefined}>{n.id==='achievements'&&<Trophy size={14}/>} {n.name}{n.id==='achievements'&&<span>{unlockedCount}/5</span>}</button>)}</div><div className="footer-stamp"><Radio size={23}/><span>UNDERGROUND<br/>NEVER DIES.</span></div></div><div className="wrap footer-bottom"><span>© {2027} GOSSIP SAINTFOUR. FAN PROJECT.</span><span>MADE FOR THE CULTURE. NOT FOR THE CLOUT.</span></div></footer>
   <nav className="bottom-nav" aria-label="Быстрая навигация">{nav.filter(n=>['home','artists','battles','interviews','polls'].includes(n.id)).map(n=><button key={n.id} onClick={()=>go(n.id)} className={page===n.id?'active':''}><n.Icon size={19}/><span>{n.name}</span></button>)}</nav>
-  {achievementToast&&<div className={`achievement-toast achievement-tier-${achievementToast==='shakeBonus'?6:achievementToast==='fifthChair'?5:achievementToast==='whosWatching'?4:achievementToast==='sideEffect'?3:achievementToast==='loyalOne'?2:1}`} role="status" aria-live="polite"><button className="achievement-toast-main" type="button" onClick={()=>{setAchievementToast(null);setHowardMailOpen(false);setSelected(null);go('achievements')}}><div className="achievement-toast-medal"><div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span>{achievementToast==='shakeBonus'?<Zap size={23} strokeWidth={1.6}/>:achievementToast==='fifthChair'?<Mic2 size={23} strokeWidth={1.6}/>:achievementToast==='whosWatching'?<Mail size={23} strokeWidth={1.6}/>:achievementToast==='sideEffect'?<FlaskConical size={23} strokeWidth={1.6}/>:achievementToast==='loyalOne'?<Vote size={23} strokeWidth={1.6}/>:<Ticket size={23} strokeWidth={1.6}/>}<i>{achievementToast==='shakeBonus'?'06':achievementToast==='fifthChair'?'05':achievementToast==='whosWatching'?'04':achievementToast==='sideEffect'?'03':achievementToast==='loyalOne'?'02':'01'}</i></div></div><div className="achievement-toast-copy"><span>NEW ACHIEVEMENT <i>{achievementToast==='shakeBonus'?'06':achievementToast==='fifthChair'?'05':achievementToast==='whosWatching'?'04':achievementToast==='sideEffect'?'03':achievementToast==='loyalOne'?'02':'01'} / {achievementToast==='shakeBonus'?'BONUS':'05'}</i></span><strong>{achievementToast==='shakeBonus'?'SHAKE RESPONSIBLY':achievementToast==='fifthChair'?'THE FIFTH CHAIR':achievementToast==='whosWatching'?"WHO'S WATCHING?":achievementToast==='sideEffect'?'SIDE EFFECT':achievementToast==='loyalOne'?'THE LOYAL ONE':'EARLY BIRD'}</strong><small>{achievementToast==='shakeBonus'?'Промокод SHAKE10GET0 получен':achievementToast==='fifthChair'?'Интервью с невидимым гостем завершено':achievementToast==='whosWatching'?'Засекреченное письмо найдено':achievementToast==='sideEffect'?'Секретная формула найдена':achievementToast==='loyalOne'?'Все четыре голоса учтены':'Ты успел до первой премьеры'} <ArrowRight size={13}/></small></div></button><button type="button" className="achievement-toast-dismiss" aria-label="Закрыть уведомление" onClick={()=>setAchievementToast(null)}><X size={16}/></button></div>}
+  {warlockNotice&&!achievementToast&&<div className="warlock-notice" role="status" aria-live="polite"><span className="warlock-notice-kicker"><Eye size={13}/> WARLOCK SECURITY / SYSTEM MESSAGE</span><strong>WARLOCK ОТСЛЕЖИВАЕТ ВАШУ АКТИВНОСТЬ.</strong><small>Шутка. Наверное.</small><button type="button" aria-label="Закрыть уведомление" onClick={()=>setWarlockNotice(false)}><X size={15}/></button></div>}
+  {achievementToast&&<div className={`achievement-toast achievement-tier-${achievementToast==='nightOwl'?6:achievementToast==='shakeBonus'?6:achievementToast==='fifthChair'?5:achievementToast==='whosWatching'?4:achievementToast==='sideEffect'?3:achievementToast==='loyalOne'?2:1}`} role="status" aria-live="polite"><button className="achievement-toast-main" type="button" onClick={()=>{setAchievementToast(null);setHowardMailOpen(false);setSelected(null);go('achievements')}}><div className="achievement-toast-medal"><div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span>{achievementToast==='nightOwl'?<Eye size={23}/>:achievementToast==='shakeBonus'?<Zap size={23} strokeWidth={1.6}/>:achievementToast==='fifthChair'?<Mic2 size={23} strokeWidth={1.6}/>:achievementToast==='whosWatching'?<Mail size={23} strokeWidth={1.6}/>:achievementToast==='sideEffect'?<FlaskConical size={23} strokeWidth={1.6}/>:achievementToast==='loyalOne'?<Vote size={23} strokeWidth={1.6}/>:<Ticket size={23} strokeWidth={1.6}/>}<i>{achievementToast==='nightOwl'?'08':achievementToast==='shakeBonus'?'06':achievementToast==='fifthChair'?'05':achievementToast==='whosWatching'?'04':achievementToast==='sideEffect'?'03':achievementToast==='loyalOne'?'02':'01'}</i></div></div><div className="achievement-toast-copy"><span>NEW ACHIEVEMENT <i>{achievementToast==='nightOwl'?'08':achievementToast==='shakeBonus'?'06':achievementToast==='fifthChair'?'05':achievementToast==='whosWatching'?'04':achievementToast==='sideEffect'?'03':achievementToast==='loyalOne'?'02':'01'} / {achievementToast==='nightOwl'?'SECRET':achievementToast==='shakeBonus'?'BONUS':'05'}</i></span><strong>{achievementToast==='nightOwl'?'ТЫ ВООБЩЕ СПИШЬ?':achievementToast==='shakeBonus'?'SHAKE RESPONSIBLY':achievementToast==='fifthChair'?'THE FIFTH CHAIR':achievementToast==='whosWatching'?"WHO'S WATCHING?":achievementToast==='sideEffect'?'SIDE EFFECT':achievementToast==='loyalOne'?'THE LOYAL ONE':'EARLY BIRD'}</strong><small>{achievementToast==='nightOwl'?'Поппи советует тебе поспать':achievementToast==='shakeBonus'?'Промокод SHAKE10GET0 получен':achievementToast==='fifthChair'?'Интервью с невидимым гостем завершено':achievementToast==='whosWatching'?'Засекреченное письмо найдено':achievementToast==='sideEffect'?'Секретная формула найдена':achievementToast==='loyalOne'?'Все четыре голоса учтены':'Ты успел до первой премьеры'} <ArrowRight size={13}/></small></div></button><button type="button" className="achievement-toast-dismiss" aria-label="Закрыть уведомление" onClick={()=>setAchievementToast(null)}><X size={16}/></button></div>}
   {allAccessOpen&&<AllAccessTicket onClose={()=>setAllAccessOpen(false)}/>}
   {fifthInterviewOpen&&<SecretInterview onClose={()=>setFifthInterviewOpen(false)} onComplete={unlockFifthChair} alreadyEarned={Boolean(achievements.fifthChair)}/>}
   {selected&&<div className="modal-backdrop" onClick={()=>setSelected(null)}><section className="artist-modal" role="dialog" aria-modal="true" aria-label={selected.stage} onClick={e=>e.stopPropagation()}><button className="close-btn" onClick={()=>setSelected(null)} aria-label="Закрыть"><X/></button><Cover key={selected.id+'-'+(selected.profileImage||selected.image)} src={selected.profileImage?selected.profileImage+'?v=2':selected.image} initials={selected.initials} alt={selected.stage}/><div className="artist-modal-body"><span className="eyebrow">{selected.isHost?'HOST / SHOW PRESENTER':`CONTESTANT / ${selected.number}`}</span><h2 className="glitch-heading" data-text={selected.stage}>{selected.stage}</h2><p className="modal-realname">{selected.name}</p><div className="modal-rule"/><p>{selected.description}</p><strong>{selected.subtitle}</strong>{selected.isHost&&<button type="button" className="poppy-notebook-teaser" onClick={()=>setPoppyNotebookOpen(true)} aria-label="Открыть личный блокнот Поппи"><span className="poppy-notebook-teaser-icon"><NotebookPen size={23}/></span><span className="poppy-notebook-teaser-text"><small>POPPY / PRIVATE NOTES</small><strong>НЕ ДЛЯ ЭФИРА</strong><span>Записи организатора. Не открывать.</span></span><ArrowRight size={17} className="poppy-notebook-teaser-arrow"/></button>}{selected.id==='dex'&&<button type="button" className="dex-kitten-teaser" onClick={()=>setDexKittenOpen(true)} aria-label="Открыть фотографию маленького менеджера LIL DEX"><img src={dexManagerPhoto} alt="Чёрный котёнок Декса лежит на блокноте с панчами"/><span className="dex-kitten-teaser-copy"><small>LIL DEX / MANAGEMENT</small><b>МАЛЕНЬКИЙ МЕНЕДЖЕР LIL DEX</b><span>Забраковал половину панчей. Уснул на остальных.</span></span><ArrowRight size={16} className="dex-kitten-arrow"/></button>}{selected.id==='rudi'&&<button type="button" className="rudi-letter-teaser" onClick={()=>setRudiLetterOpen(true)} aria-label="Прочитать личную записку для YUNG RUD"><span className="rudi-letter-teaser-icon" aria-hidden="true"><span>♡</span></span><span className="rudi-letter-teaser-copy"><small>PERSONAL / FOR RUDI ONLY</small><b>ЛИЧНАЯ ЗАПИСКА ДЛЯ YUNG RUD</b><span>Кто-то оставил её среди вещей Руди перед батлом.</span></span><ArrowRight size={17} className="rudi-letter-teaser-arrow"/></button>}{selected.id==='daro'&&<button type="button" className="daro-rider-teaser" onClick={()=>setDaroRiderOpen(true)} aria-label="Открыть официальный райдер DON DARO"><span className="daro-rider-teaser-seal">DD</span><span className="daro-rider-teaser-copy"><small>DON DARO / BACKSTAGE DOCUMENT</small><b>ОФИЦИАЛЬНЫЙ РАЙДЕР</b><span>Список требований. Комментарий организатора прилагается.</span></span><ArrowRight size={17} className="daro-rider-teaser-arrow"/></button>}{selected.id==='netti'&&<button type="button" className="howard-mail-teaser" onClick={openHowardMail} aria-label="Открыть архивное письмо Поппи о регистрации MC NETTI"><span className="howard-mail-teaser-icon"><Mail size={19}/></span><span className="howard-mail-teaser-copy"><small>POPPY'S INBOX / CASE 027</small><b>РЕГИСТРАЦИЯ БЕЗ ОТПРАВИТЕЛЯ</b><span>Одно письмо. Никакого объяснения.</span></span><ArrowRight className="howard-mail-teaser-arrow" size={17}/></button>}</div></section></div>}
