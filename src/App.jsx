@@ -94,8 +94,6 @@ export default function App() {
   }catch{return 30}
  })
  const desktopVolumeRef=useRef(desktopMusicVolume)
- const previewFanNotice=new URLSearchParams(window.location.search).get('previewFanNotice')==='1'
- const [previewFanDismissed,setPreviewFanDismissed]=useState(false)
  const [soundChoice,setSoundChoice]=useState(()=>{
   try{
    const value=window.localStorage.getItem(soundPrefKey)
@@ -138,7 +136,6 @@ export default function App() {
   if(musicRef.current&&!musicRef.current.paused&&musicFadeRef.current===null)musicRef.current.volume=safe/100*.12
  }
  const chooseSound=(enabled)=>{
-  if(previewFanNotice&&!previewFanDismissed){setPreviewFanDismissed(true);return}
   const next=enabled?'on':'off'
   setSoundChoice(next)
   try{window.localStorage.setItem(soundPrefKey,next)}catch{/* private mode */}
@@ -198,7 +195,7 @@ export default function App() {
  const [premieres,setPremieres]=useState({})
  const [galleryIndex,setGalleryIndex]=useState(null)
  const [achievements,setAchievements]=useState(()=>{
-   try { const saved=JSON.parse(window.localStorage.getItem('sf27-achievements-v2')||'{}'); if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){delete saved.howardBlocked;window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(saved))} if(new URLSearchParams(window.location.search).get('resetWilson')==='1'){delete saved.wilsonSnitch;window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(saved));window.localStorage.removeItem('sf27-wilson-complaints-v1')} return saved&&typeof saved==='object'?saved:{} } catch { return {} }
+   try { const saved=JSON.parse(window.localStorage.getItem('sf27-achievements-v2')||'{}'); return saved&&typeof saved==='object'?saved:{} } catch { return {} }
  })
  const [achievementToast,setAchievementToast]=useState(null)
  const [warlockNotice,setWarlockNotice]=useState(false)
@@ -389,7 +386,7 @@ export default function App() {
  return <div className="app">
   <TwoHourSecret/>
   <audio ref={musicRef} src={mobileAudio?mobileMusicSource:desktopMusicSource} preload="none" loop aria-hidden="true"/>
-  {(soundChoice===null||(previewFanNotice&&!previewFanDismissed))&&<div className="sound-consent-backdrop"><section className="sound-consent-dialog" role="dialog" aria-modal="true" aria-labelledby="sound-consent-title" aria-describedby="sound-consent-description"><div className="sound-consent-scanline" aria-hidden="true"/><div className="sound-consent-icon"><AudioLines size={29}/></div><span className="sound-consent-kicker">SAINTFOUR / BACKGROUND MUSIC</span><h2 id="sound-consent-title">SET THE <em>MOOD.</em></h2><p id="sound-consent-description">На сайте может играть тихая фоновая музыка. Включить её или оставить сайт без звука? Никаких сигналов при ачивках и секретках больше нет.</p><div className="sound-consent-actions"><button type="button" className="sound-consent-enable" onClick={()=>chooseSound(true)}><Volume2 size={18}/> ВКЛЮЧИТЬ МУЗЫКУ</button><button type="button" className="sound-consent-silent" onClick={()=>chooseSound(false)}><VolumeX size={17}/> БЕЗ МУЗЫКИ</button></div><small>Музыка играет тихо и повторяется на всех страницах сайта. В любой момент можно отключить её кнопкой MUSIC ON/OFF. Видео энергетика останется без звука.</small><p className="fan-disclaimer-consent"><strong>UNOFFICIAL FAN PROJECT</strong> Неофициальный фан-проект по мотивам «Клуба Романтики». Не связан с разработчиками.</p></section></div>}
+  {soundChoice===null&&<div className="sound-consent-backdrop"><section className="sound-consent-dialog" role="dialog" aria-modal="true" aria-labelledby="sound-consent-title" aria-describedby="sound-consent-description"><div className="sound-consent-scanline" aria-hidden="true"/><div className="sound-consent-icon"><AudioLines size={29}/></div><span className="sound-consent-kicker">SAINTFOUR / BACKGROUND MUSIC</span><h2 id="sound-consent-title">SET THE <em>MOOD.</em></h2><p id="sound-consent-description">На сайте может играть тихая фоновая музыка. Включить её или оставить сайт без звука? Никаких сигналов при ачивках и секретках больше нет.</p><div className="sound-consent-actions"><button type="button" className="sound-consent-enable" onClick={()=>chooseSound(true)}><Volume2 size={18}/> ВКЛЮЧИТЬ МУЗЫКУ</button><button type="button" className="sound-consent-silent" onClick={()=>chooseSound(false)}><VolumeX size={17}/> БЕЗ МУЗЫКИ</button></div><small>Музыка играет тихо и повторяется на всех страницах сайта. В любой момент можно отключить её кнопкой MUSIC ON/OFF. Видео энергетика останется без звука.</small><p className="fan-disclaimer-consent"><strong>UNOFFICIAL FAN PROJECT</strong> Неофициальный фан-проект по мотивам «Клуба Романтики». Не связан с разработчиками.</p></section></div>}
   <div className="top-strip"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="top-right"><span className="live-dot"/><span className="top-strip-slogan">THE UNDERGROUND IS CALLING</span></span></div>
   <header className="header"><button className="logo" onClick={()=>go('home')} aria-label="На главную"><span className="logo-mark">SF</span><span className="logo-type">SAINTFOUR<strong>RAP BATTLE <i>’27</i></strong></span></button><nav className="desktop-nav" aria-label="Навигация">{nav.map(n=><button key={n.id} className={page===n.id?'active':''} onClick={()=>go(n.id)}>{n.name}</button>)}</nav><div className="header-actions"><span className="edition">VOL. 001 / 2027</span><button className="sound-toggle sound-toggle-header" type="button" onClick={()=>chooseSound(soundChoice!=='on')} aria-label={soundChoice==='on'?'Выключить фоновую музыку':'Включить фоновую музыку'} aria-pressed={soundChoice==='on'} title={soundChoice==='on'?'Выключить музыку':'Включить музыку'}>{soundChoice==='on'?<Volume2 size={16}/>:<VolumeX size={16}/>} <span>MUSIC {soundChoice==='on'?'ON':'OFF'}</span></button>{!mobileAudio&&<div className="music-volume-wrap"><button type="button" className="music-volume-trigger" aria-label="Настроить громкость музыки" aria-expanded={musicPanelOpen} title="Громкость фоновой музыки" onClick={()=>setMusicPanelOpen(v=>!v)}><SlidersHorizontal size={17}/></button>{musicPanelOpen&&<div className="music-volume-popover"><label htmlFor="sf-music-volume">ГРОМКОСТЬ МУЗЫКИ <b>{desktopMusicVolume}%</b></label><input id="sf-music-volume" type="range" min="0" max="100" step="1" value={desktopMusicVolume} onChange={e=>changeDesktopVolume(e.target.value)} aria-label="Громкость фоновой музыки"/><small>Только для этого компьютера</small></div>}</div>}<button className="mobile-menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Меню">{menuOpen?<X/>:<Menu/>}</button></div></header>
   {menuOpen&&<nav className="mobile-nav" aria-label="Мобильная навигация">{nav.map(n=><button key={n.id} onClick={()=>go(n.id)}><n.Icon size={17}/>{n.name}<ArrowRight size={16}/></button>)}</nav>}
