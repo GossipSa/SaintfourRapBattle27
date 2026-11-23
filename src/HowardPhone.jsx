@@ -140,7 +140,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
        <span className="hp-dpad"><span>▲</span><span>◀ ● ▶</span><span>▼</span></span>
        <button type="button" className="hp-hang" onClick={hang} aria-label="Сбросить звонок"><PhoneOff size={19}/></button>
       </div>
-      <div className="hp-keys">{['1','2 ABC','3 DEF','4 GHI','5 JKL','6 MNO','7 PQRS','8 TUV','9 WXYZ','*','0 +','#'].map(k=><button type="button" key={k} onClick={()=>{if(isBlocked&&secretFound)pressKey(k);else if(mode==='idle')setMode('incoming')}}>{k}</button>)}</div>
+      <div className="hp-keys">{['1','2 ABC','3 DEF','4 GHI','5 JKL','6 MNO','7 PQRS','8 TUV','9 WXYZ','*','0 +','#'].map(k=><button type="button" key={k} onClick={()=>{if(isBlocked&&secretFound)pressKey(k);else if(mode==='idle')setMode('incoming')}}>{<><span className="hp-key-digit">{k.charAt(0)}</span>{k.length>1&&<span className="hp-key-letters">{k.slice(1).trim()}</span>}</>}</button>)}</div>
       {isBlocked&&secretFound&&<button type="button" className="hp-clear-dial" onClick={()=>{setDial('');setMode('secret-idle')}}>СБРОСИТЬ НОМЕР</button>}<span className="hp-bottom-mark">MOTOR / SF EDITION</span>
      </div>
     </div>
