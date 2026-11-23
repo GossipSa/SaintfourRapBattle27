@@ -64,7 +64,7 @@ const replies={
 const key='sf27-wilson-complaints-v1'
 function readCount(){try{return Number(localStorage.getItem(key))||0}catch{return 0}}
 
-export default function SheriffComplaints({open,onClose,onFirstComplaint}){
+export default function SheriffComplaints({open,onClose,onFirstComplaint,achievementUnlocked=false}){
  const [target,setTarget]=useState('dex')
  const [reason,setReason]=useState('noise')
  const [count,setCount]=useState(readCount)
@@ -96,7 +96,7 @@ export default function SheriffComplaints({open,onClose,onFirstComplaint}){
     <p className="wilson-subject">ОБЪЕКТ: {targets.find(([id])=>id===result.target)?.[1]}</p>
     <h3>ОФИЦИАЛЬНЫЙ ОТВЕТ ШЕРИФА УИЛСОНА</h3>
     <blockquote>«{intro}{answer}»</blockquote>
-    {result.count===1&&<div className="wilson-achievement" role="status"><Trophy size={26}/><div><span>SECRET ACHIEVEMENT / 009 · UNLOCKED</span><strong>СТУКАЧ СЕНТФОРА</strong><small>Шериф Уилсон благодарит вас за сотрудничество. Остальные — нет.</small></div></div>}
+    {achievementUnlocked&&<div className="wilson-achievement" role="status"><Trophy size={26}/><div><span>SECRET ACHIEVEMENT / 009 · UNLOCKED</span><strong>СТУКАЧ СЕНТФОРА</strong><small>Шериф Уилсон благодарит вас за сотрудничество. Остальные — нет.</small></div></div>}
     <button type="button" className="wilson-submit" onClick={reset}>ПОДАТЬ ЕЩЁ ОДНУ ЖАЛОБУ</button>
     <small className="wilson-privacy">Обращение зарегистрировано только в вашем браузере.</small>
    </div>}
