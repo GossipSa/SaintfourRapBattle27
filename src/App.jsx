@@ -172,7 +172,7 @@ export default function App() {
  const [premieres,setPremieres]=useState({})
  const [galleryIndex,setGalleryIndex]=useState(null)
  const [achievements,setAchievements]=useState(()=>{
-   try { const saved=JSON.parse(window.localStorage.getItem('sf27-achievements-v2')||'{}'); if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){delete saved.howardBlocked;window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(saved))} return saved&&typeof saved==='object'?saved:{} } catch { return {} }
+   try { const saved=JSON.parse(window.localStorage.getItem('sf27-achievements-v2')||'{}'); if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){delete saved.howardBlocked;window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(saved))} if(new URLSearchParams(window.location.search).get('resetWilson')==='1'){delete saved.wilsonSnitch;window.localStorage.setItem('sf27-achievements-v2',JSON.stringify(saved));window.localStorage.removeItem('sf27-wilson-complaints-v1')} return saved&&typeof saved==='object'?saved:{} } catch { return {} }
  })
  const [achievementToast,setAchievementToast]=useState(null)
  const [warlockNotice,setWarlockNotice]=useState(false)
