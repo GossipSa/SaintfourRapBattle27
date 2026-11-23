@@ -8,7 +8,7 @@ export default function SaintfourBank() {
  const tier=bankTier(bank)
  const freeRemaining=Math.max(0,86400000-(Date.now()-bank.lastFreeSpin))
  return <section className="sf-bank-page">
- <span className="sf-bank-eyebrow">SAINTFOUR / VIRTUAL FINANCE</span><h1>SAINTFOUR <em>BANK.</em></h1>
+ <span className="sf-bank-eyebrow">SAINTFOUR / VIRTUAL FINANCE</span><h1 className="sf-bank-glitch" data-text="SAINTFOUR BANK.">SAINTFOUR <em>BANK.</em></h1>
  <p className="sf-bank-lead">Твой виртуальный счёт Сентфора. Зарабатывай HBC в BLACK HELLEBORE LUCKY 777 и за достижения. Карты открываются автоматически по сумме заработанного за всё время.</p>
  <div className="sf-bank-layout"><div className={'sf-bank-card '+tier}><div className="sf-bank-card-head"><span>SAINTFOUR BANK</span><span>✿</span></div><div className="sf-bank-card-chip"/><div className="sf-bank-card-bottom"><strong>{tier==='elite'?'WARLOCK ELITE':tier==='hellebore'?'BLACK HELLEBORE':'STANDARD'}</strong><span>•••• 2027</span></div></div>
  <div className="sf-bank-balance"><small>AVAILABLE BALANCE</small><strong>{fmt(bank.balance)} HBC</strong><p>Всего заработано: <b>{fmt(bank.earned)} HBC</b>. Карты сохраняются навсегда, даже если потратить весь баланс.</p>
