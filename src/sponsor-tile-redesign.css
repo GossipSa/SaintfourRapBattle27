@@ -155,3 +155,6 @@
 .sponsors-grid .sponsor-tile .sponsor-brand-glitch::before{color:#885cff;transform:translate(-2px,0);clip-path:inset(12% 0 72% 0);animation:sf-heading-top 5.9s steps(1,end) -1.1s infinite}
 .sponsors-grid .sponsor-tile .sponsor-brand-glitch::after{color:#ff4fcf;transform:translate(2px,0);clip-path:inset(73% 0 10% 0);animation:sf-heading-bottom 6.7s steps(1,end) -2.9s infinite}
 @media(prefers-reduced-motion:reduce){.sponsors-grid .sponsor-tile .sponsor-brand-glitch::before,.sponsors-grid .sponsor-tile .sponsor-brand-glitch::after{animation:none;opacity:.22}}
+
+/* A misplaced Warlock internal contact label: deliberately understated. */
+.warlock-phone-sticker{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:max-content;max-width:100%;margin:20px 0 8px auto;padding:10px 15px;transform:rotate(-3deg);border:1px dashed #b2a7a0;background:#d5cbb8;color:#302d30;box-shadow:2px 4px 12px #0007;cursor:pointer;text-align:left;font-family:monospace;transition:transform .2s}.warlock-phone-sticker:hover{transform:rotate(0deg) translateY(-3px)}.warlock-phone-sticker span{font-size:8px;letter-spacing:1.1px}.warlock-phone-sticker strong{font-size:18px;letter-spacing:3px}.warlock-phone-sticker small{font-size:8px;opacity:.7}
