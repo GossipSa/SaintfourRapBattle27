@@ -1,6 +1,5 @@
 import './sponsor-tile-redesign.css'
 import ShakeCan from './ShakeCan.jsx'
-import HelleboreSlots from './HelleboreSlots.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, Play, Star, X, Zap, FlaskConical, ArrowLeft } from 'lucide-react'
 
@@ -139,7 +138,6 @@ function SponsorCard({sponsor,onOpen}) {
 }
 
 function SponsorModal({sponsor,onClose,onSecretFound}) {
-  const [slotsOpen,setSlotsOpen]=useState(false)
   const closeRef=useRef(null)
   useEffect(()=>{
     const previous=document.activeElement
@@ -163,7 +161,7 @@ function SponsorModal({sponsor,onClose,onSecretFound}) {
         <h3 className="glitch-heading" data-text={sponsor.heading}>{sponsor.heading}</h3>
         <p className="sponsor-details-description">{sponsor.description}</p>
         {sponsor.note&&<p className="sponsor-partner-note">{sponsor.note}</p>}
-        {sponsor.id==='energy'&&<><ProductMedia onSecretFound={onSecretFound}/><button type="button" className="bh-slots-launch" onClick={()=>setSlotsOpen(v=>!v)}>🎰 BLACK HELLEBORE / LUCKY 777 <span>{slotsOpen?'СВЕРНУТЬ':'ИГРАТЬ →'}</span></button>{slotsOpen&&<HelleboreSlots onClose={()=>setSlotsOpen(false)}/>}<p className="bh-slots-note">Бесплатная мини-игра. Без ставок и настоящих призов.</p></>}
+        {sponsor.id==='energy'&&<><ProductMedia onSecretFound={onSecretFound}/></>}
         {sponsor.url&&<a className="sponsor-channel-link" href={sponsor.url} target="_blank" rel="noopener noreferrer">ПЕРЕЙТИ В TELEGRAM <ArrowUpRight size={18}/></a>}
         <div className="sponsor-details-end"><Star size={13}/>{sponsor.aside}</div>
       </div>
