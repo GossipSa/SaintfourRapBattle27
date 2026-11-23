@@ -88,3 +88,10 @@
 .hp-number-note span{font:700 11px/1.3 sans-serif}
 @media(max-width:600px){.hp-number-notes{right:calc(100% - 12px);top:100px;width:100px;gap:6px}.hp-notes-heading{font-size:7px;letter-spacing:0;max-width:85px}.hp-number-note{width:100px;padding:9px 7px 11px}.hp-number-note strong{font-size:15px;letter-spacing:0}.hp-number-note small{font-size:7px}.hp-number-note span{font-size:10px}}
 @media(max-width:360px){.hp-number-notes{right:calc(100% - 18px);top:105px}.hp-number-note{width:88px}.hp-number-note strong{font-size:13px}}
+
+/* Keep keypad legends inside each physical key, including iPhone Safari. */
+.hp-keys{align-items:stretch}
+.hp-keys button,.hp-lower:has(.hp-clear-dial) .hp-keys button{box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;min-width:0;height:36px;min-height:36px;padding:2px 1px;line-height:1;overflow:hidden;white-space:nowrap}
+.hp-key-digit{display:block;font:700 15px/17px monospace;flex:none}
+.hp-key-letters{display:block;font:600 8px/10px monospace;letter-spacing:.15px;flex:none;opacity:.85}
+@media(max-width:600px){.hp-keys button,.hp-lower:has(.hp-clear-dial) .hp-keys button{height:35px;min-height:35px}.hp-key-digit{font-size:14px}}
