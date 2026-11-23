@@ -18,15 +18,15 @@ export default function HelleboreSlots({onClose}){
  const [reels,setReels]=useState([0,1,2])
  const [record,setRecord]=useState(load)
  const [spinning,setSpinning]=useState(false)
- const [result,setResult]=useState('ТРИ СЕМЁРКИ — И ЛАБОРАТОРИЯ ВАША. ПОЧТИ.')
+ const [result,setResult]=useState('ТРИ СЕМЁРКИ — И ВАША ВИРТУАЛЬНАЯ БАНКА. ПОЧТИ.')
  const [muted,setMuted]=useState(true)
  const timer=useRef(null)
  const audio=useRef(null)
  useEffect(()=>()=>clearTimeout(timer.current),[])
  const playTone=(win)=>{if(muted)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=audio.current||new C();audio.current=ctx;[0,1,2].forEach(i=>{const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.value=(win?523:270)+i*(win?130:40);gain.gain.setValueAtTime(.045,ctx.currentTime+i*.12);gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.12+.16);osc.connect(gain);gain.connect(ctx.destination);osc.start(ctx.currentTime+i*.12);osc.stop(ctx.currentTime+i*.12+.18)})}catch{/* audio optional */}}
- const spin=()=>{if(spinning)return;setSpinning(true);setResult('БАРАБАНЫ ВРАЩАЮТСЯ...');const next=[randomSymbol(),randomSymbol(),randomSymbol()];timer.current=setTimeout(()=>{setReels(next);setSpinning(false);const jackpot=next.every(v=>v===5);const matched=next.every(v=>v===next[0]);setResult(jackpot?'777! ДЖЕКПОТ! ВЫ ВЫИГРАЛИ ВИРТУАЛЬНУЮ БАНКУ. WARLOCK НЕ ЗАНИМАЕТСЯ БЛАГОТВОРИТЕЛЬНОСТЬЮ.':matched?'ТРИ ОДИНАКОВЫХ! ЛАБОРАТОРИЯ ОДОБРЯЕТ.':'НЕ В ЭТОТ РАЗ. WARLOCK РЕКОМЕНДУЕТ ПОВТОРИТЬ ЭКСПЕРИМЕНТ.');setRecord(prev=>{const nextRecord={spins:prev.spins+1,jackpot:prev.jackpot||jackpot};try{localStorage.setItem(KEY,JSON.stringify(nextRecord))}catch{}return nextRecord});playTone(jackpot||matched)},1600)}
+ const spin=()=>{if(spinning)return;setSpinning(true);setResult('БАРАБАНЫ ВРАЩАЮТСЯ...');const next=[randomSymbol(),randomSymbol(),randomSymbol()];timer.current=setTimeout(()=>{setReels(next);setSpinning(false);const jackpot=next.every(v=>v===5);const matched=next.every(v=>v===next[0]);setResult(jackpot?'777! ДЖЕКПОТ! ВЫ ВЫИГРАЛИ ВИРТУАЛЬНУЮ БАНКУ BLACK HELLEBORE.':matched?'ТРИ ОДИНАКОВЫХ! BLACK HELLEBORE ОДОБРЯЕТ.':'НЕ В ЭТОТ РАЗ. ПОПРОБУЙТЕ ЕЩЁ РАЗ.');setRecord(prev=>{const nextRecord={spins:prev.spins+1,jackpot:prev.jackpot||jackpot};try{localStorage.setItem(KEY,JSON.stringify(nextRecord))}catch{}return nextRecord});playTone(jackpot||matched)},1600)}
  return <div className="bh-slots" aria-label="BLACK HELLEBORE LUCKY 777">
-  <div className="bh-slots-top"><div><span>WARLOCK ARCADE / EXPERIMENT #027</span><h3>BLACK HELLEBORE <b>LUCKY 777</b></h3></div><button type="button" onClick={onClose} aria-label="Закрыть слоты"><X size={19}/></button></div>
+  <div className="bh-slots-top"><div><span>BLACK HELLEBORE ENERGY / BONUS ARCADE</span><h3>BLACK HELLEBORE <b>LUCKY 777</b></h3></div><button type="button" onClick={onClose} aria-label="Закрыть слоты"><X size={19}/></button></div>
   <div className="bh-slots-reels" aria-live="off">{reels.map((v,i)=><div key={i} className={'bh-slot-window '+(spinning?'bh-slot-spinning':'')}><Can index={spinning?(v+i+record.spins+1)%flavors.length:v}/></div>)}</div>
   <div className="bh-slots-message" role="status">{result}</div>
   {record.jackpot&&<div className="bh-slots-achievement"><Trophy size={20}/><div><small>SECRET ACHIEVEMENT / 010 · UNLOCKED</small><strong>СЕМЬ-СЕМЬ-СЕМЬ</strong><span>Три семёрки. Никаких материальных призов.</span></div></div>}
