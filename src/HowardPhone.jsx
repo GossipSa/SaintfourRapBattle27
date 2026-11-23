@@ -38,7 +38,7 @@ export default function HowardPhone({onBlocked}){
  const [mode,setMode]=useState('incoming')
  const [dismissed,setDismissed]=useState(false)
  const [nextReminder,setNextReminder]=useState(0)
- useEffect(()=>{const found=()=>{setSecretFound(true);setVisible(true);setDismissed(false);setDial('')};window.addEventListener('sf27-howard-number-found',found);return()=>window.removeEventListener('sf27-howard-number-found',found)},[])
+ useEffect(()=>{const found=()=>{setSecretFound(true);if(progress.blocked){setVisible(true);setDismissed(false);setDial('')}};window.addEventListener('sf27-howard-number-found',found);return()=>window.removeEventListener('sf27-howard-number-found',found)},[progress.blocked])
  useEffect(()=>{if(!opened||mode!=='secret-connecting')return;const timer=setTimeout(()=>setMode('secret-answer'),1800);return()=>clearTimeout(timer)},[opened,mode])
  useEffect(()=>{
   if(new URLSearchParams(window.location.search).get('resetHoward')==='1')return
@@ -58,7 +58,7 @@ export default function HowardPhone({onBlocked}){
   const schedule=()=>{
    window.clearTimeout(timer)
    if(document.visibilityState==='hidden')return
-   const delay=progress.blocked?3000:progress.firstSeen?REMINDER_MIN+Math.floor(Math.random()*REMINDER_RANGE):20000+Math.round(Math.random()*20000
+   const delay=progress.blocked?3000:progress.firstSeen?REMINDER_MIN+Math.floor(Math.random()*REMINDER_RANGE):20000+Math.round(Math.random()*20000)
    timer=window.setTimeout(show,delay)
   }
   schedule()
