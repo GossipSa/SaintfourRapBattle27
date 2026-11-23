@@ -453,8 +453,10 @@ export default function App() {
        <div className="achievement-status">{slotsDiscovered?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
       </div>
-      <LuckySpinAchievements onOpen={()=>go('spin')}/>
       </details>
+    </section>
+    <section className="achievement-category achievement-category-spin" aria-label="Достижения Lucky Spin">
+      <LuckySpinAchievements onOpen={()=>go('spin')}/>
     </section>
 
    </section>}
