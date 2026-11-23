@@ -2,7 +2,7 @@ const KEY='sf27-bank-v1'
 export const BANK_EVENT='sf27-bank-updated'
 export const fmt=n=>Math.floor(n).toLocaleString('ru-RU')
 const clean=n=>Math.max(0,Math.floor(Number(n)||0))
-const initial=()=>({balance:1000,earned:0,aidUsed:false,lastFreeSpin:0,awarded:[],transactions:[]})
+const initial=()=>({balance:1000,earned:0,aidUsed:false,lastFreeSpin:0,awarded:[],transactions:[],predictions:{}})
 export function getBank(){try{const raw=JSON.parse(localStorage.getItem(KEY));if(raw&&Array.isArray(raw.awarded))return {...initial(),...raw,balance:clean(raw.balance),earned:clean(raw.earned)}}catch{}return initial()}
 export function saveBank(next){try{localStorage.setItem(KEY,JSON.stringify(next))}catch{}window.dispatchEvent(new Event(BANK_EVENT));return next}
 function log(s,type,amount){return [{type,amount,at:Date.now()},...(s.transactions||[])].slice(0,30)}
@@ -19,3 +19,4 @@ if(spin.secret)awardAchievement('lucky-secret',500)
 if(slots.jackpot)awardAchievement('slots777',500)
 try{if(localStorage.getItem('sf27-two-hour-resident-v1')==='1')awardAchievement('two-hour',500)}catch{}
 }
+export function placePrediction(id,choice,choices){if(!['first','second'].includes(id)||!Array.isArray(choices)||!choices.includes(choice))return false;const s=getBank();if(s.balance<500||s.predictions?.[id])return false;const predictions={...s.predictions,[id]:{choice,stake:500,placedAt:Date.now(),status:'pending'}};saveBank({...s,balance:s.balance-500,predictions,transactions:log(s,'PREDICTION '+id,-500)});return true}
