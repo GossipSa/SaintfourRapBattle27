@@ -3,6 +3,9 @@ import { Phone, PhoneOff, X, LockKeyhole } from 'lucide-react'
 import './HowardPhone.css'
 
 const STORE='sf27-howard-phone-v2'
+const REMINDER_MIN=120000
+const REMINDER_RANGE=120000
+const reminderLines=['Номер сохранился в журнале. Может, перезвоним?','Номер всё ещё здесь. Говард, вероятно, надеялся, что вы его удалите.','Пропущенный вызов никуда не исчез. Перезвоним?']
 const responses=[
  {text:'Абонент не отвечает.',status:'НЕТ ОТВЕТА'},
  {text:'Линия занята. Попробуйте позже.',status:'ЗАНЯТО'},
@@ -16,8 +19,8 @@ const responses=[
  {text:'Откуда у вас вообще этот номер?',status:'ВЫЗОВ ЗАВЕРШЁН'},
 ]
 function readState(){try{
- if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){localStorage.removeItem(STORE);sessionStorage.removeItem('sf27-howard-seen');return {calls:0,introDone:false,blocked:false,limit:0}}
-const data=JSON.parse(localStorage.getItem(STORE)||'{}');return {calls:Math.max(0,Number(data.calls)||0),introDone:Boolean(data.introDone),blocked:Boolean(data.blocked),limit:Number(data.limit)||0}}catch{return {calls:0,introDone:false,blocked:false,limit:0}}}
+ if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){localStorage.removeItem(STORE);sessionStorage.removeItem('sf27-howard-seen');return {calls:0,introDone:false,blocked:false,limit:0,firstSeen:false,missed:false,reminders:0}}
+const data=JSON.parse(localStorage.getItem(STORE)||'{}');return {calls:Math.max(0,Number(data.calls)||0),introDone:Boolean(data.introDone),blocked:Boolean(data.blocked),limit:Number(data.limit)||0,firstSeen:Boolean(data.firstSeen||data.introDone),missed:Boolean(data.missed),reminders:Math.max(0,Number(data.reminders)||0)}}catch{return {calls:0,introDone:false,blocked:false,limit:0}}}
 function saveState(state){try{localStorage.setItem(STORE,JSON.stringify(state))}catch{/* storage disabled */}}
 export default function HowardPhone({onBlocked}){
  const [visible,setVisible]=useState(()=>new URLSearchParams(window.location.search).get('resetHoward')==='1')
@@ -26,31 +29,46 @@ export default function HowardPhone({onBlocked}){
  const [reply,setReply]=useState(null)
  const [mode,setMode]=useState('incoming')
  const [dismissed,setDismissed]=useState(false)
+ const [nextReminder,setNextReminder]=useState(0)
  useEffect(()=>{
   if(new URLSearchParams(window.location.search).get('resetHoward')==='1')return
-  if(progress.blocked)return
+  if(progress.blocked||visible||opened)return
   let timer
-  const show=()=>{setVisible(true)}
+  const show=()=>{
+   setVisible(true)
+   setDismissed(false)
+   if(!progress.firstSeen){
+    const next={...progress,firstSeen:true}
+    setProgress(next);saveState(next)
+   }else{
+    const next={...progress,reminders:progress.reminders+1}
+    setProgress(next);saveState(next)
+   }
+  }
   const schedule=()=>{
    window.clearTimeout(timer)
    if(document.visibilityState==='hidden')return
-   timer=window.setTimeout(show,20000+Math.round(Math.random()*20000))
+   const delay=progress.firstSeen?REMINDER_MIN+Math.floor(Math.random()*REMINDER_RANGE):20000+Math.round(Math.random()*20000)
+   timer=window.setTimeout(show,delay)
   }
   schedule()
   document.addEventListener('visibilitychange',schedule)
   return()=>{window.clearTimeout(timer);document.removeEventListener('visibilitychange',schedule)}
- },[progress.blocked])
+ },[progress.blocked,progress.firstSeen,visible,opened,nextReminder])
  useEffect(()=>{
   if(!opened)return
   const key=e=>{if(e.key==='Escape'){setOpened(false);setMode('incoming')}}
   document.addEventListener('keydown',key)
   return()=>document.removeEventListener('keydown',key)
  },[opened])
- const open=()=>{if(progress.blocked)return;setOpened(true);setMode(progress.introDone?'idle':'incoming')}
+ const markMissed=()=>{
+  if(progress.firstSeen&&!progress.introDone&&!progress.missed){const next={...progress,missed:true};setProgress(next);saveState(next)}
+ }
+ const open=()=>{if(progress.blocked)return;setOpened(true);setMode(progress.firstSeen&&progress.missed&&!progress.introDone?'idle':progress.introDone?'idle':'incoming')}
  const call=()=>{
   if(progress.blocked){setMode('blocked');return}
   if(!progress.introDone){
-   const next={...progress,introDone:true,limit:30+Math.floor(Math.random()*16)}
+   const next={...progress,introDone:true,firstSeen:true,missed:false,limit:30+Math.floor(Math.random()*16)}
    setProgress(next);saveState(next);setMode('mistake');return
   }
   const next={...progress,calls:progress.calls+1}
@@ -61,15 +79,16 @@ export default function HowardPhone({onBlocked}){
   const chosen=pool[Math.floor(Math.random()*pool.length)]
   setReply(chosen);setMode('answer')
  }
- const hang=()=>{setMode(progress.blocked?'blocked':progress.introDone?'idle':'incoming')}
- const close=()=>{setOpened(false);setMode('incoming')}
- const dismiss=()=>{setDismissed(true);setVisible(false);close()}
- if(!visible||dismissed||(progress.blocked&&!opened))return null
+ const hang=()=>{if(mode==='incoming')markMissed();setMode(progress.blocked?'blocked':'idle')}
+ const close=()=>{if(mode==='incoming')markMissed();setOpened(false);setMode('incoming')}
+ const dismiss=()=>{markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');setNextReminder(n=>n+1)}
+ if(!visible||(progress.blocked&&!opened))return null
  return <>
   {!opened&&<div className="hp-floating">
     <button type="button" className="hp-closed" onClick={open} aria-label="Открыть звонящую фиолетовую раскладушку">
-     <span className="hp-closed-hinge"/><span className="hp-closed-logo">M</span><span className="hp-closed-display"><Phone size={20}/><small>{progress.blocked?'BLOCKED':progress.introDone?'CALL LOG':'INCOMING'}</small></span><span className="hp-closed-led"/>
+     <span className="hp-closed-hinge"/><span className="hp-closed-logo">M</span><span className="hp-closed-display"><Phone size={20}/><small>{progress.blocked?'BLOCKED':progress.introDone||progress.missed?'CALL LOG':'INCOMING'}</small></span><span className="hp-closed-led"/>
     </button>
+    {(progress.missed||progress.introDone)&&<div className="hp-reminder">{progress.missed&&!progress.introDone?'1 ПРОПУЩЕННЫЙ ВЫЗОВ · ПЕРЕЗВОНИТЬ?':reminderLines[Math.max(0,progress.reminders-1)%reminderLines.length]}</div>}
     <button type="button" className="hp-dismiss" aria-label="Убрать телефон" onClick={dismiss}><X size={15}/></button>
    </div>}
   {opened&&<div className="hp-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)close()}}>
@@ -103,7 +122,7 @@ export default function HowardPhone({onBlocked}){
       <span className="hp-bottom-mark">MOTOR / SF EDITION</span>
      </div>
     </div>
-    <div className="hp-caption">{mode==='blocked'?'Натаниэль Говард заблокировал ваш номер.':mode==='final'?'Достижение открыто: «ГОВАРД ЗАБЛОКИРОВАЛ ВАС»':mode==='incoming'?'Неизвестный номер. Ответить на вызов?':mode==='mistake'?'Звонок оборвался. Но номер остался в журнале.':'Можно попробовать перезвонить.'}</div>
+    <div className="hp-caption">{mode==='blocked'?'Натаниэль Говард заблокировал ваш номер.':mode==='final'?'Достижение открыто: «ГОВАРД ЗАБЛОКИРОВАЛ ВАС»':mode==='incoming'?'Неизвестный номер. Ответить на вызов?':mode==='mistake'?'Звонок оборвался. Но номер остался в журнале.':progress.missed&&!progress.introDone?'1 пропущенный вызов. Номер сохранился. Может, перезвоним?':'Можно попробовать перезвонить.'}</div>
     {(mode==='answer'||mode==='idle'||mode==='mistake')&&<button type="button" className="hp-redial" onClick={()=>{if(mode==='mistake'){setMode('idle')}else{call()}}}>ПОЗВОНИТЬ ЕЩЁ РАЗ ↗</button>}
     {mode==='final'&&<button type="button" className="hp-redial" onClick={close}>ЗАКРЫТЬ ТЕЛЕФОН ↗</button>}
    </div>
