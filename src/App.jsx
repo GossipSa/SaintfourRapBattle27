@@ -11,7 +11,6 @@ import SecretInterview from './SecretInterview.jsx'
 import PoppyNotebook from './PoppyNotebook.jsx'
 import HowardPhone from './HowardPhone.jsx'
 import SaintfourNotifications from './SaintfourNotifications.jsx'
-import TomatoAttack from './TomatoAttack.jsx'
 import SheriffComplaints from './SheriffComplaints.jsx'
 const dexManagerPhoto=`${import.meta.env.BASE_URL}media/dex-kitten-manager.jpg`
 import AllAccessTicket from './AllAccessTicket.jsx'
@@ -73,7 +72,6 @@ const nav = [
   { id:'sponsors', name:'Партнёры', Icon:Radio },
   { id:'achievements', name:'Достижения', Icon:Trophy },
   { id:'spin', name:'Рулетка', Icon:Zap },
-  { id:'tomato', name:'Помидоры 🍅', Icon:Flame },
 ]
 function Cover({src, alt, className='', initials='', style={}}) {
   const [broken,setBroken]=useState(false)
@@ -394,7 +392,6 @@ export default function App() {
   <SaintfourNotifications suppressed={Boolean(warlockNotice||achievementToast||wilsonOpen||soundChoice===null||howardMailOpen||fifthInterviewOpen||dexKittenOpen||daroRiderOpen||rudiLetterOpen||poppyNotebookOpen)}/>
   <main>
   {page==='spin'&&<LuckySpin onBack={()=>go('home')} onAchievements={()=>go('achievements')} onSlotsDiscovered={unlockSlots} onOpenSlots={()=>go('slots')}/>}
-  {page==='tomato'&&<section className="inner-page wrap"><TomatoAttack/></section>}
   {page==='slots'&&<section className="inner-page wrap" style={{maxWidth:650,margin:'35px auto 75px'}}><button type="button" className="achievement-return" onClick={()=>go('spin')} style={{marginBottom:20}}>← НАЗАД К КОЛЕСУ УДАЧИ</button><HelleboreSlots onClose={()=>go('spin')}/></section>}
   {page==='achievements'&&<section className="achievements-page wrap">
     <div className="achievement-page-top"><button type="button" onClick={()=>go('home')} className="achievement-return"><ArrowRight size={16}/> НАЗАД НА ГЛАВНУЮ</button><span>SAINTFOUR / SECRET ACCESS</span></div>
