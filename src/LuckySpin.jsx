@@ -4,6 +4,7 @@ import { spinPrizes } from './spin-prizes'
 import './lucky-spin.css'
 
 const storageKey='sf27-lucky-spin-v2'
+const dexContactKey='sf27-dex-number-found-v1'
 const milestones=[
  {count:1,title:'НУ, ПОНЕСЛАСЬ',description:'Ты только что потратил время на абсолютно бесполезную рулетку.'},
  {count:25,title:'ПОППИ НАЧИНАЕТ ПЕРЕЖИВАТЬ',description:'Даже организатор шоу не ожидала такого энтузиазма.'},
@@ -19,6 +20,8 @@ const blank={spins:0,history:[],found:[],secret:false}
 function load(){try{const s=JSON.parse(localStorage.getItem(storageKey));if(s&&Number.isFinite(s.spins)&&Array.isArray(s.history)&&Array.isArray(s.found))return {...blank,...s}}catch{/* storage disabled */}return blank}
 export default function LuckySpin({onBack,onAchievements,onSlotsDiscovered,onOpenSlots}){
  const [record,setRecord]=useState(load)
+ const [dexNoteOpen,setDexNoteOpen]=useState(false)
+ const revealDexNumber=()=>{setDexNoteOpen(v=>!v);try{localStorage.setItem(dexContactKey,'66601313')}catch{/* storage disabled */}window.dispatchEvent(new Event('sf27-dex-number-found'))}
  const [angle,setAngle]=useState(0)
  const [rolling,setRolling]=useState(false)
  const [result,setResult]=useState(null)
@@ -76,6 +79,7 @@ export default function LuckySpin({onBack,onAchievements,onSlotsDiscovered,onOpe
    </aside>
   </div>
   {achievementNotice&&<div className="spin-achievement-toast" role="status" aria-live="polite"><button className="spin-achievement-toast-main" type="button" onClick={()=>{setAchievementNotice(null);onAchievements()}}><span className="spin-achievement-toast-icon"><Trophy size={23}/></span><span className="spin-achievement-toast-copy"><small>NEW ACHIEVEMENT / LUCKY SPIN</small><strong>{achievementNotice.title}</strong><span>{achievementNotice.description}</span><em>ПОСМОТРЕТЬ ДОСТИЖЕНИЯ →</em></span></button><button type="button" className="spin-achievement-toast-close" onClick={()=>setAchievementNotice(null)} aria-label="Закрыть уведомление">×</button></div>}
+  <div className="spin-dex-secret-area"><button type="button" className={'spin-dex-note '+(dexNoteOpen?'is-revealed':'')} onClick={revealDexNumber} aria-expanded={dexNoteOpen} aria-label="Таинственная глитчевая записка"><span className="spin-dex-note-head">SIGNAL LOST <span>✕</span> PRIVATE / 013</span><span className="spin-dex-note-name" data-text="LIL DEX">LIL DEX</span><span className="spin-dex-note-number">{dexNoteOpen?'66601313':'66••••13'}</span><span className="spin-dex-note-bottom">{dexNoteOpen?"DON'T CALL ME, ASSHOLE.":'TAP TO DECRYPT // ???'}</span></button></div>
   <p className="spin-legal">SAINTFOUR LUCKY SPIN — ШУТОЧНЫЙ АТТРАКЦИОН. НИКАКИХ ПОКУПОК, ДЕНЕГ И НАСТОЯЩИХ ПРИЗОВ. ПРЕТЕНЗИИ НАПРАВЛЯТЬ ПОППИ.</p>
  </section>
 }
