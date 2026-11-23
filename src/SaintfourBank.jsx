@@ -1,5 +1,5 @@
 import {useEffect,useState} from 'react'
-import {BANK_EVENT,getBank,bankTier,fmt,claimAid,claimFreeSpin,syncAchievements} from './saintfour-bank.js'
+import {BANK_EVENT,getBank,bankTier,fmt,claimAid,claimFreeSpin,syncAchievements,resetFinances} from './saintfour-bank.js'
 import './saintfour-bank.css'
 export default function SaintfourBank() {
  const [bank,setBank]=useState(getBank)
@@ -16,6 +16,7 @@ export default function SaintfourBank() {
  {message&&<p role="status">{message}</p>}</div></div>
  <div className="sf-bank-levels">{[['STANDARD','При первом посещении',true],['BLACK HELLEBORE','10 000 HBC заработано',bank.earned>=10000],['WARLOCK ELITE','100 000 HBC заработано',bank.earned>=100000]].map(([name,detail,unlocked])=><div key={name} className={'sf-bank-level '+(unlocked?'active':'')}><strong>{unlocked?'✦':'◇'} {name}</strong><small>{detail} · {unlocked?'ОТКРЫТО':'ЗАКРЫТО'}</small></div>)}</div>
  <div className="sf-bank-history"><h2>ИСТОРИЯ ОПЕРАЦИЙ</h2><ul>{bank.transactions.length?bank.transactions.slice(0,12).map((t,i)=><li key={t.at+'-'+i}><span>{t.type}</span><strong>{t.amount>0?'+':''}{fmt(t.amount)} HBC</strong></li>):<li>Пока операций нет.</li>}</ul></div>
+ <div className="sf-bank-reset"><button type="button" onClick={()=>{if(window.confirm("Сбросить только финансы? Баланс станет 1 000 HBC, история операций, заработок, карты и ставки обнулятся. Достижения и секреты сайта останутся, но HBC за уже полученные достижения повторно не начислятся.")){resetFinances();setMessage("Финансы сброшены: 1 000 HBC. Ачивки сохранены.")}}}>СБРОСИТЬ ФИНАНСЫ · НАЧАТЬ ЗАНОВО</button><small>Сбрасываются только деньги, ставки и финансовый прогресс. Ачивки и секреты остаются.</small></div>
  <p className="sf-bank-note">HBC — исключительно виртуальная игровая валюта. Не покупается за реальные деньги, не обменивается на деньги или призы. Данные хранятся только в этом браузере и могут быть удалены при очистке хранилища.</p>
  </section>
 }
