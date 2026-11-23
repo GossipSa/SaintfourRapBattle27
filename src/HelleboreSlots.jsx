@@ -13,7 +13,7 @@ const flavors=[
 ]
 const randomSymbol=()=>Math.floor(Math.random()*flavors.length)
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{spins:0,jackpot:false}}catch{return {spins:0,jackpot:false}}}
-function Can({index}){const f=flavors[index];return index===5?<div className="bh-slot-jackpot" aria-label="Семёрка джекпота">7</div>:<div className="bh-slot-photo" style={{'--can-position':f.position}} role="img" aria-label={'BLACK HELLEBORE '+f.name}><div className="bh-slot-photo-art"/><small>{f.name}</small></div>}
+function Can({index}){const f=flavors[index];return index===5?<div className="bh-slot-jackpot" aria-label="Семёрка джекпота">7</div>:<div className="bh-slot-standalone"><img src={`${import.meta.env.BASE_URL}media/sponsors/slots-${f.id}.svg`} alt={`BLACK HELLEBORE ${f.name}`} draggable="false"/></div>}
 export default function HelleboreSlots({onClose}){
  const [reels,setReels]=useState([0,1,2])
  const [record,setRecord]=useState(load)
