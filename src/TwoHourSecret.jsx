@@ -4,11 +4,12 @@ import './TwoHourSecret.css'
 const KEY='sf27-two-hour-resident-v1'
 const DURATION=120*60*1000
 export default function TwoHourSecret(){
+ const preview=new URLSearchParams(window.location.search).get('previewTwoHours')==='1'
  const [earned,setEarned]=useState(()=>{try{return localStorage.getItem(KEY)==='1'}catch{return false}})
- const [open,setOpen]=useState(false)
+ const [open,setOpen]=useState(preview)
  const started=useRef(null)
  useEffect(()=>{
-  if(earned)return
+  if(earned||preview)return
   // A fresh page load starts a fresh uninterrupted session.
   started.current=document.visibilityState==='visible'?performance.now():null
   const check=()=>{
@@ -25,10 +26,10 @@ export default function TwoHourSecret(){
   window.addEventListener('pagehide',onPageHide)
   const timer=window.setInterval(check,1000)
   return()=>{clearInterval(timer);document.removeEventListener('visibilitychange',onVisibility);window.removeEventListener('pagehide',onPageHide)}
- },[earned])
+ },[earned,preview])
  if(!open)return null
  return <div className="two-hour-backdrop" role="presentation"><section className="two-hour-dialog" role="dialog" aria-modal="true" aria-labelledby="two-hour-title" aria-describedby="two-hour-description">
-  <div className="two-hour-header"><span className="two-hour-kicker">◉ GOSSIP SAINTFOUR</span><span className="two-hour-private">PRIVATE MESSAGE · 02:00:00</span></div>
+  <div className="two-hour-header"><span className="two-hour-kicker">◉ GOSSIP SAINTFOUR</span><span className="two-hour-private">PRIVATE MESSAGE · 02:00:00 {preview?'· PREVIEW':''}</span></div>
   <button className="two-hour-close" type="button" aria-label="Закрыть" onClick={()=>setOpen(false)}><X size={19}/></button>
   <h2 id="two-hour-title">Серьёзно?</h2>
   <div id="two-hour-description" className="two-hour-story">
