@@ -41,7 +41,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const isBlocked=progress.blocked||achievementUnlocked
  // Resume the pre-block storyline on each visit, even if a previous call was dismissed.
  useEffect(()=>{if(!isBlocked&&!progress.firstSeen){const next={...progress,firstSeen:true};setProgress(next);saveState(next)}},[])
- useEffect(()=>{if(secretFound&&isBlocked){setVisible(true);setDismissed(false)}},[secretFound,isBlocked])
+ useEffect(()=>{if(secretFound&&isBlocked){setVisible(true)}},[secretFound,isBlocked])
  useEffect(()=>{const found=()=>{setSecretFound(true);if(isBlocked){setVisible(true);setDial('')}};window.addEventListener('sf27-howard-number-found',found);return()=>window.removeEventListener('sf27-howard-number-found',found)},[isBlocked])
  useEffect(()=>{if(!opened||mode!=='secret-connecting')return;const timer=setTimeout(()=>setMode('secret-answer'),1800);return()=>clearTimeout(timer)},[opened,mode])
  useEffect(()=>{
