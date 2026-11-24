@@ -3,13 +3,19 @@ import { Phone, PhoneOff, X, LockKeyhole } from 'lucide-react'
 import './HowardPhone.css'
 import { acquireAmbient, releaseAmbient, ambientElapsed, ambientRandom } from './ambient-timing.js'
 import { dexCallStories } from './dex-call-stories.js'
+import { poppyCallStories } from './poppy-call-stories.js'
 
 const STORE='sf27-howard-phone-v2'
 const SECRET_STORE='sf27-howard-second-number-v1'
 const SECRET_NUMBER='27042007'
 const DEX_NUMBER='66601313'
+const POPPY_NUMBER='77701927'
+const POPPY_STORE='sf27-poppy-contact-v1'
+const POPPY_CALLS='sf27-poppy-calls-v1'
 const DEX_STORE='sf27-dex-number-found-v1'
 const DEX_CALL_STORE='sf27-dex-call-history-v1'
+function readPoppyContact(){try{const found=JSON.parse(localStorage.getItem(POPPY_STORE)||'null');return found?.number===POPPY_NUMBER?found:null}catch{return null}}
+function readPoppyCalls(){try{const v=JSON.parse(localStorage.getItem(POPPY_CALLS)||'{}');return {introDone:Boolean(v.introDone),used:Array.isArray(v.used)?v.used:[]}}catch{return {introDone:false,used:[]}}}
 function hasDex(){try{return localStorage.getItem(DEX_STORE)===DEX_NUMBER}catch{return false}}
 function readDexCalls(){try{const v=JSON.parse(localStorage.getItem(DEX_CALL_STORE)||'[]');return Array.isArray(v)?v.filter(i=>Number.isInteger(i)&&i>=0&&i<dexCallStories.length):[]}catch{return []}}
 function nextDexStory(used){const remaining=dexCallStories.map((_,i)=>i).filter(i=>!used.includes(i));const pool=remaining.length?remaining:dexCallStories.map((_,i)=>i);const index=pool[Math.floor(Math.random()*pool.length)];const next=remaining.length?[...used,index]:[index];try{localStorage.setItem(DEX_CALL_STORE,JSON.stringify(next))}catch{}return {story:dexCallStories[index],count:next.length}}
@@ -37,6 +43,11 @@ function saveState(state){try{localStorage.setItem(STORE,JSON.stringify(state))}
 export default function HowardPhone({onBlocked,achievementUnlocked=false,suppressed=false}){
  const [secretFound,setSecretFound]=useState(hasSecret)
  const [dexFound,setDexFound]=useState(hasDex)
+ const [poppyContact,setPoppyContact]=useState(readPoppyContact)
+ const [poppyProgress,setPoppyProgress]=useState(readPoppyCalls)
+ const [poppyLines,setPoppyLines]=useState([])
+ const [poppySlide,setPoppySlide]=useState(0)
+ const [poppyBusy,setPoppyBusy]=useState(false)
  const [dexUsed,setDexUsed]=useState(readDexCalls)
  const [dexStory,setDexStory]=useState(null)
  const [dial,setDial]=useState('')
@@ -54,9 +65,10 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const suppressedRef=useRef(suppressed)
  suppressedRef.current=suppressed
  const isBlocked=progress.blocked||achievementUnlocked
+ const poppyFound=Boolean(poppyContact)
  // Resume the pre-block storyline on each visit, even if a previous call was dismissed.
  useEffect(()=>{if(!isBlocked&&!progress.firstSeen){const next={...progress,firstSeen:true};setProgress(next);saveState(next)}},[])
- useEffect(()=>{if((secretFound||dexFound)&&isBlocked){setVisible(true);setDismissed(false)}},[secretFound,dexFound,isBlocked])
+ useEffect(()=>{if((secretFound||dexFound||poppyFound)&&isBlocked){setVisible(true);setDismissed(false)}},[secretFound,dexFound,poppyFound,isBlocked])
  useEffect(()=>{const found=()=>{setDexFound(true);if(isBlocked)setVisible(true)};window.addEventListener('sf27-dex-number-found',found);return()=>window.removeEventListener('sf27-dex-number-found',found)},[isBlocked])
  useEffect(()=>{const found=()=>{setSecretFound(true);if(isBlocked){setVisible(true);setDismissed(false);setDial('')}};window.addEventListener('sf27-howard-number-found',found);return()=>window.removeEventListener('sf27-howard-number-found',found)},[isBlocked])
  useEffect(()=>{if(!opened||mode!=='secret-connecting')return;const timer=setTimeout(()=>setMode('secret-answer'),1800);return()=>clearTimeout(timer)},[opened,mode])
@@ -100,6 +112,61 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
   document.addEventListener('keydown',key)
   return()=>document.removeEventListener('keydown',key)
  },[opened])
+ const savePoppy=(source)=>{
+  if(poppyContact)return
+  const contact={number:POPPY_NUMBER,source}
+  setPoppyContact(contact)
+  try{localStorage.setItem(POPPY_STORE,JSON.stringify(contact))}catch{}
+ }
+ const revealPoppy=(source)=>{
+  savePoppy(source)
+  setPoppyLines(source==='howard'
+   ?['У мисс Эмерсон, очевидно, слишком много времени.','Запишите: 77701927.','Передайте: я лично рекомендовал обратиться к ней.']
+   :['Слышь, хочешь номер одной разговорчивой особы?','77701927. Поппи.','Спроси, кто записал Говарда на баттл. Хочу послушать, как она будет орать.'])
+  setPoppySlide(0)
+  setMode('poppy-unlock')
+ }
+ const advancePoppy=()=>{
+  if(poppySlide<poppyLines.length-1){setPoppySlide(v=>v+1);return}
+  if(mode==='poppy-unlock'){setMode('secret-idle');setDial('');return}
+  setMode('secret-idle')
+  setDial(POPPY_NUMBER)
+ }
+ const savePoppyProgress=(next)=>{
+  setPoppyProgress(next)
+  try{localStorage.setItem(POPPY_CALLS,JSON.stringify(next))}catch{}
+ }
+ const callPoppy=()=>{
+  if(!poppyFound||poppyBusy)return
+  setPoppyBusy(true)
+  setMode('poppy-connecting')
+ }
+ useEffect(()=>{
+  if(!opened||mode!=='poppy-connecting')return
+  const timer=window.setTimeout(()=>{
+   setPoppyBusy(false)
+   if(Math.random()<.2){
+    setPoppyLines([])
+    setMode('poppy-no-answer')
+    return
+   }
+   if(!poppyProgress.introDone){
+    setPoppyLines(poppyContact?.source==='dex'
+     ?['Поппи Эмерсон. Слушаю.','Кто записал Говарда на батл?!','Стойте. Декс дал вам мой номер?','Я его прибью. Передайте дословно.']
+     :['Пенелопа Эмерсон. Слушаю.','Мистер Говард дал вам мой номер?','Он решил сделать меня своей секретаршей?','Прекрасно. У нас с ним будет разговор.'])
+    savePoppyProgress({...poppyProgress,introDone:true})
+   }else{
+    const pool=poppyCallStories.map((_,i)=>i).filter(i=>!poppyProgress.used.includes(i))
+    const candidates=pool.length?pool:poppyCallStories.map((_,i)=>i)
+    const idx=candidates[Math.floor(Math.random()*candidates.length)]
+    setPoppyLines(poppyCallStories[idx])
+    savePoppyProgress({...poppyProgress,used:pool.length?[...poppyProgress.used,idx]:[idx]})
+   }
+   setPoppySlide(0)
+   setMode('poppy-answer')
+  },1800)
+  return()=>window.clearTimeout(timer)
+ },[opened,mode,poppyProgress,poppyContact])
  const markMissed=()=>{
   if(progress.firstSeen&&!progress.introDone&&!progress.missed){const next={...progress,missed:true};setProgress(next);saveState(next)}
  }
