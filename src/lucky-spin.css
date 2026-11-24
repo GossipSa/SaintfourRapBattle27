@@ -112,3 +112,18 @@
 .spin-slots-quick>span{display:flex;flex:1;min-width:0;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font:800 10px 'DM Sans',sans-serif;letter-spacing:.08em}
 .spin-slots-quick strong{color:#fff2d9;font:800 11px 'DM Sans',sans-serif}
 @media(max-width:600px){.spin-slots-quick{padding:12px}.spin-slots-quick>span{font-size:9px}.spin-slots-quick strong{font-size:10px}}
+
+
+/* Roulette achievement notices must not sit behind the floating Motorola. */
+@media(max-width:850px){
+ .spin-achievement-toast{
+  z-index:420;
+  top:calc(60px + env(safe-area-inset-top,0px));
+  bottom:auto;
+  left:50%;
+  right:auto;
+  width:min(390px,calc(100vw - 24px));
+  transform:translateX(-50%);
+  animation:none;
+ }
+}
