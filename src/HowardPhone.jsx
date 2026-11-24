@@ -189,8 +189,8 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const callNumber=()=>{if(mode==='secret-connecting'||mode==='dex-connecting'||mode==='poppy-connecting')return;if(dial===DEX_NUMBER&&dexFound){callDex();return}if(dial===SECRET_NUMBER&&secretFound){callSecret();return}if(dial===POPPY_NUMBER&&poppyFound){callPoppy();return}setMode('secret-wrong')}
  const callSecret=()=>{if(mode==='secret-connecting')return;if(dial!==SECRET_NUMBER){setMode('secret-wrong');return}if(!poppyFound&&Math.random()<1/100){revealPoppy('howard');return}const index=secretCalls%secretLines.length;setSecretReply(secretLines[index]);setSecretCalls(secretCalls+1);try{localStorage.setItem('sf27-howard-secret-calls',String(secretCalls+1))}catch{}setMode('secret-connecting')}
  const pressKey=k=>{if(!isBlocked||!(secretFound||dexFound||poppyFound))return;const digit=k.charAt(0);if(!/^[0-9]$/.test(digit))return;setDial(v=>(v+digit).slice(0,14));setMode('secret-idle')}
- const hang=()=>{if(mode==='incoming')markMissed();setMode(isBlocked&&(secretFound||dexFound||poppyFound)?'secret-idle':progress.blocked?'blocked':'idle')}
- const close=()=>{if(mode==='incoming')markMissed();if(!isBlocked){releaseAmbient('phone');setVisible(false);setNextReminder(n=>n+1)}setOpened(false);setMode('incoming')}
+ const hang=()=>{if(mode==='incoming')markMissed();if(mode==='poppy-connecting')setPoppyBusy(false);setMode(isBlocked&&(secretFound||dexFound||poppyFound)?'secret-idle':progress.blocked?'blocked':'idle')}
+ const close=()=>{if(mode==='incoming')markMissed();if(mode==='poppy-connecting')setPoppyBusy(false);if(!isBlocked){releaseAmbient('phone');setVisible(false);setNextReminder(n=>n+1)}setOpened(false);setMode('incoming')}
  const dismiss=()=>{releaseAmbient('phone');markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
  if(!visible&&!isBlocked)return null
  return <>
