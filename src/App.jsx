@@ -10,6 +10,7 @@ import HypePolls from './HypePolls.jsx'
 import SecretInterview from './SecretInterview.jsx'
 import PoppyNotebook from './PoppyNotebook.jsx'
 import HowardPhone from './HowardPhone.jsx'
+import { acquireAmbient, releaseAmbient, ambientElapsed, ambientRandom } from './ambient-timing.js'
 import SaintfourNotifications from './SaintfourNotifications.jsx'
 import TwoHourSecret from './TwoHourSecret.jsx'
 import SheriffComplaints from './SheriffComplaints.jsx'
@@ -332,21 +333,25 @@ export default function App() {
    document.addEventListener('visibilitychange',checkNight)
    return ()=>{window.clearTimeout(timer);window.clearInterval(interval);document.removeEventListener('visibilitychange',checkNight)}
  },[achievements.nightOwl])
+ const warlockDue=useRef(null)
  useEffect(()=>{
-   if(achievementToast)return undefined
    let seen=false
    try{seen=window.sessionStorage.getItem('sf27-warlock-notice-v1')==='1'}catch{/* private mode */}
    if(seen)return undefined
-   const timer=window.setTimeout(()=>{
+   if(warlockDue.current===null)warlockDue.current=ambientElapsed()+ambientRandom(150000,240000)
+   const timer=window.setInterval(()=>{
+     if(achievementToast||ambientElapsed()<warlockDue.current)return
+     if(!acquireAmbient('warlock'))return
      try{window.sessionStorage.setItem('sf27-warlock-notice-v1','1')}catch{/* private mode */}
      setWarlockNotice(true)
-   },150000)
-   return ()=>window.clearTimeout(timer)
+     window.clearInterval(timer)
+   },2000)
+   return()=>window.clearInterval(timer)
  },[achievementToast])
  useEffect(()=>{
    if(!warlockNotice)return undefined
-   const timer=window.setTimeout(()=>setWarlockNotice(false),8500)
-   return ()=>window.clearTimeout(timer)
+   const timer=window.setTimeout(()=>{setWarlockNotice(false);releaseAmbient('warlock')},8500)
+   return ()=>{window.clearTimeout(timer);releaseAmbient('warlock')}
  },[warlockNotice])
  useEffect(()=>{
    if(!achievementToast)return undefined
@@ -396,7 +401,7 @@ export default function App() {
   <div className="top-strip"><span>GOSSIP SAINTFOUR PRESENTS</span><span className="top-right"><span className="live-dot"/><span className="top-strip-slogan">THE UNDERGROUND IS CALLING</span></span></div>
   <header className="header"><button className="logo" onClick={()=>go('home')} aria-label="На главную"><span className="logo-mark">SF</span><span className="logo-type">SAINTFOUR<strong>RAP BATTLE <i>’27</i></strong></span></button><nav className="desktop-nav" aria-label="Навигация">{nav.map(n=><button key={n.id} className={page===n.id?'active':''} onClick={()=>go(n.id)}>{n.name}</button>)}</nav><div className="header-actions"><span className="edition">VOL. 001 / 2027</span><button className="sound-toggle sound-toggle-header" type="button" onClick={()=>chooseSound(soundChoice!=='on')} aria-label={soundChoice==='on'?'Выключить фоновую музыку':'Включить фоновую музыку'} aria-pressed={soundChoice==='on'} title={soundChoice==='on'?'Выключить музыку':'Включить музыку'}>{soundChoice==='on'?<Volume2 size={16}/>:<VolumeX size={16}/>} <span>MUSIC {soundChoice==='on'?'ON':'OFF'}</span></button>{!mobileAudio&&<div className="music-volume-wrap"><button type="button" className="music-volume-trigger" aria-label="Настроить громкость музыки" aria-expanded={musicPanelOpen} title="Громкость фоновой музыки" onClick={()=>setMusicPanelOpen(v=>!v)}><SlidersHorizontal size={17}/></button>{musicPanelOpen&&<div className="music-volume-popover"><label htmlFor="sf-music-volume">ГРОМКОСТЬ МУЗЫКИ <b>{desktopMusicVolume}%</b></label><input id="sf-music-volume" type="range" min="0" max="100" step="1" value={desktopMusicVolume} onChange={e=>changeDesktopVolume(e.target.value)} aria-label="Громкость фоновой музыки"/><small>Только для этого компьютера</small></div>}</div>}<button className="mobile-menu-button" onClick={()=>setMenuOpen(!menuOpen)} aria-label="Меню">{menuOpen?<X/>:<Menu/>}</button></div></header>
   {menuOpen&&<nav className="mobile-nav" aria-label="Мобильная навигация">{nav.map(n=><button key={n.id} onClick={()=>go(n.id)}><n.Icon size={17}/>{n.name}<ArrowRight size={16}/></button>)}</nav>}
-  <HowardPhone onBlocked={unlockHowardBlocked} achievementUnlocked={Boolean(achievements.howardBlocked)}/>
+  <HowardPhone onBlocked={unlockHowardBlocked} achievementUnlocked={Boolean(achievements.howardBlocked)} suppressed={Boolean(warlockNotice||achievementToast||wilsonOpen||soundChoice===null||howardMailOpen||fifthInterviewOpen||dexKittenOpen||daroRiderOpen||rudiLetterOpen||poppyNotebookOpen)}/>
   <SaintfourNotifications suppressed={Boolean(warlockNotice||achievementToast||wilsonOpen||soundChoice===null||howardMailOpen||fifthInterviewOpen||dexKittenOpen||daroRiderOpen||rudiLetterOpen||poppyNotebookOpen)}/>
   <main>
   {page==='bank'&&<SaintfourBank/>}
