@@ -339,20 +339,24 @@ export default function App() {
  },[achievements.nightOwl])
  const warlockDue=useRef(null)
  useEffect(()=>{
-   // WARLOCK can return after long visits, independently from Howard's phone arc.
-   if(warlockDue.current===null){
-     // Each fresh page visit gets an early WARLOCK alert, even if one was seen earlier.
-     warlockDue.current=ambientElapsed()+ambientRandom(150000,240000)
+   // WARLOCK is deliberately sequenced AFTER the first ambient message.
+   // On each visit: first message (30–60s), then WARLOCK (another 2–3m).
+   if(!howardStoryCompleted){warlockDue.current=null;return undefined}
+   warlockDue.current=null
+   const onFirstMessage=()=>{
+     if(warlockDue.current===null){
+       warlockDue.current=ambientElapsed()+ambientRandom(120000,180000)
+     }
    }
+   window.addEventListener('sf27-first-ambient-message',onFirstMessage)
    const timer=window.setInterval(()=>{
-     if(achievementToast||ambientElapsed()<warlockDue.current)return
+     if(warlockDue.current===null||ambientElapsed()<warlockDue.current)return
      if(!acquireAmbient('warlock'))return
-     try{window.sessionStorage.setItem('sf27-warlock-notice-v1','1')}catch{/* private mode */}
      warlockDue.current=ambientElapsed()+ambientRandom(720000,1080000)
      setWarlockNotice(true)
-   },2000)
-   return()=>window.clearInterval(timer)
- },[achievementToast])
+   },1000)
+   return()=>{window.clearInterval(timer);window.removeEventListener('sf27-first-ambient-message',onFirstMessage);releaseAmbient('warlock')}
+ },[howardStoryCompleted])
  useEffect(()=>{
    if(!warlockNotice)return undefined
    const timer=window.setTimeout(()=>{setWarlockNotice(false);releaseAmbient('warlock')},8500)
