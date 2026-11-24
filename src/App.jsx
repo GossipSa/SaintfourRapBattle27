@@ -408,6 +408,7 @@ export default function App() {
      <div className="achievement-progress"><strong>{unlockedCount} <span>/ 05</span></strong><div className="achievement-track"><div style={{width:`${unlockedCount*20}%`}}/></div><span>DISCOVERED</span></div>
     </div>
     <div className={'achievement-reward '+(unlockedCount===5?'achievement-reward-ready':'')} role={unlockedCount===5?'button':undefined} tabIndex={unlockedCount===5?0:undefined} aria-label={unlockedCount===5?'Открыть коллекционный ALL ACCESS TICKET':undefined} onClick={()=>{if(unlockedCount===5)setAllAccessOpen(true)}} onKeyDown={e=>{if(unlockedCount===5&&(e.key==='Enter'||e.key===' ')){e.preventDefault();setAllAccessOpen(true)}}}><div><span>FINAL REWARD / COLLECTION 01</span><h2><Ticket size={25}/> ALL ACCESS TICKET</h2><p>{unlockedCount===5?'Вся коллекция собрана! Твой коллекционный билет доступен. Нажми, чтобы открыть его.':'Коллекционный билет на шоу откроется, когда ты соберёшь всю первую коллекцию. Само шоу бесплатно для всех.'}</p>{unlockedCount===5&&<span className="achievement-reward-open">ПОСМОТРЕТЬ БИЛЕТ <ArrowRight size={15}/></span>}</div><span className="achievement-reward-lock">{unlockedCount===5?<CheckCircle2 size={17}/>:<LockKeyhole size={17}/>} {unlockedCount===5?'UNLOCKED / 5 OF 5':`LOCKED / ${unlockedCount} OF 5`}</span></div>
+    {slotsDiscovered&&<button type="button" className="sf-slots-shortcut" onClick={()=>go('slots')}><span className="sf-slots-shortcut-icon"><Zap size={22}/></span><span className="sf-slots-shortcut-copy"><small>BLACK HELLEBORE / SECRET UNLOCKED</small><strong>LUCKY 777 · ИГРАТЬ В СЛОТЫ</strong><span>Секретная игра уже открыта. Вернуться можно в любой момент.</span></span><ArrowRight size={21}/></button>}
     <div className="achievement-category-nav" aria-label="Категории достижений"><a href="#sf-achievement-active" onClick={e=>{e.preventDefault();document.getElementById('sf-achievement-active')?.scrollIntoView({behavior:'smooth',block:'start'})}}>ЗА АКТИВНОСТЬ <span>{activityCount} / 2</span></a><a href="#sf-achievement-secrets" onClick={e=>{e.preventDefault();document.getElementById('sf-achievement-secrets')?.scrollIntoView({behavior:'smooth',block:'start'})}}>СЕКРЕТНЫЕ <span>{foundSecrets} / ???</span></a></div>
     <section className="achievement-category" id="sf-achievement-active">
       <div className="achievement-category-heading"><div><span className="achievement-category-kicker">01 / THE PARTICIPANTS</span><h2>ЗА <em>АКТИВНОСТЬ.</em></h2><p>Посещай сайт, участвуй в голосованиях и следи за премьерами.</p></div><span className="achievement-category-count">{String(activityCount).padStart(2,'0')} <i>/ 02</i></span></div>
@@ -428,32 +429,32 @@ export default function App() {
        <div className="achievement-item-copy"><span>BONUS ACHIEVEMENT / 006</span><h2>{achievements.shakeBonus?'SHAKE RESPONSIBLY':'UNDISCOVERED'}</h2><p>{achievements.shakeBonus?'Десять встряхиваний BLACK HELLEBORE. Промокод SHAKE10GET0 — скидка 0%, уважение 100%.':'Иногда любопытство заканчивается слишком громким пшшш.'}</p></div>
        <div className="achievement-status">{achievements.shakeBonus?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
-      <article className={'achievement-item achievement-tier-6 '+(achievements.howardBlocked?'is-earned':'is-locked')}>
+      <article className={'achievement-item achievement-tier-7 '+(achievements.howardBlocked?'is-earned':'is-locked')}>
        <div className="achievement-emblem">{achievements.howardBlocked?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><PhoneOff size={27} strokeWidth={1.6}/><i>07</i></div>:<LockKeyhole size={27}/>}</div>
        <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 007</span><h2>{achievements.howardBlocked?'ГОВАРД ЗАБЛОКИРОВАЛ ВАС':'UNDISCOVERED'}</h2><p>{achievements.howardBlocked?'Вы так настойчиво перезванивали Натаниэлю Говарду, что ваш номер внесли в чёрный список Warlock Industries.':'Секрет ещё не раскрыт.'}</p></div>
        <div className="achievement-status">{achievements.howardBlocked?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
-      <article className={'achievement-item achievement-tier-6 '+(achievements.nightOwl?'is-earned':'is-locked')}>
+      <article className={'achievement-item achievement-tier-8 '+(achievements.nightOwl?'is-earned':'is-locked')}>
        <div className="achievement-emblem">{achievements.nightOwl?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Eye size={27} strokeWidth={1.6}/><i>08</i></div>:<LockKeyhole size={27}/>}</div>
        <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 008</span><h2>{achievements.nightOwl?'ТЫ ВООБЩЕ СПИШЬ?':'UNDISCOVERED'}</h2><p>{achievements.nightOwl?'Зайти на сайт между 02:00 и 05:00 по местному времени. Поппи просит тебя лечь спать.':'Секрет ещё не раскрыт.'}</p></div>
        <div className="achievement-status">{achievements.nightOwl?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
-      <article className={'achievement-item achievement-tier-6 '+(achievements.wilsonSnitch?'is-earned':'is-locked')}>
+      <article className={'achievement-item achievement-tier-9 '+(achievements.wilsonSnitch?'is-earned':'is-locked')}>
        <div className="achievement-emblem">{achievements.wilsonSnitch?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><FileWarning size={27} strokeWidth={1.6}/><i>09</i></div>:<LockKeyhole size={27}/>}</div>
        <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 009</span><h2>{achievements.wilsonSnitch?'СТУКАЧ СЕНТФОРА':'UNDISCOVERED'}</h2><p>{achievements.wilsonSnitch?'Шериф Уилсон благодарит вас за сотрудничество. Остальные — нет.':'Секрет ещё не раскрыт.'}</p></div>
        <div className="achievement-status">{achievements.wilsonSnitch?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
-      <article className={'achievement-item achievement-tier-6 '+(slotsJackpot?'is-earned':'is-locked')}>
+      <article className={'achievement-item achievement-tier-10 '+(slotsJackpot?'is-earned':'is-locked')}>
        <div className="achievement-emblem">{slotsJackpot?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Trophy size={27} strokeWidth={1.6}/><i>10</i></div>:<LockKeyhole size={27}/>}</div>
        <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 010</span><h2>{slotsJackpot?'СЕМЬ-СЕМЬ-СЕМЬ':'UNDISCOVERED'}</h2><p>{slotsJackpot?'Три семёрки в BLACK HELLEBORE LUCKY 777. Поппи требует проверить автомат.':'Секрет ещё не раскрыт.'}</p></div>
        <div className="achievement-status">{slotsJackpot?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
-      <article className={'achievement-item achievement-tier-6 '+(slotsDiscovered?'is-earned':'is-locked')}>
+      <article className={'achievement-item achievement-tier-11 '+(slotsDiscovered?'is-earned':'is-locked')}>
        <div className="achievement-emblem">{slotsDiscovered?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Zap size={27} strokeWidth={1.6}/><i>11</i></div>:<LockKeyhole size={27}/>}</div>
-       <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 011</span><h2>{slotsDiscovered?'НЕ ТУДА ПОПАЛ':'UNDISCOVERED'}</h2><p>{slotsDiscovered?'Колесо удачи открыло секретную игру BLACK HELLEBORE. Доступ сохранён.':'Секрет ещё не раскрыт.'}</p>{slotsDiscovered&&<button type="button" className="spin-secret-portal" onClick={()=>go('slots')}>ВЕРНУТЬСЯ К НАХОДКЕ →</button>}</div>
+       <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 011</span><h2>{slotsDiscovered?'НЕ ТУДА ПОПАЛ':'UNDISCOVERED'}</h2><p>{slotsDiscovered?'Колесо удачи открыло секретную игру BLACK HELLEBORE. Доступ сохранён.':'Секрет ещё не раскрыт.'}</p></div>
        <div className="achievement-status">{slotsDiscovered?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
       </article>
-      <article className={'achievement-item achievement-tier-6 '+(achievements.dexOnTheLine?'is-earned':'is-locked')}>
+      <article className={'achievement-item achievement-tier-12 '+(achievements.dexOnTheLine?'is-earned':'is-locked')}>
        <div className="achievement-emblem">{achievements.dexOnTheLine?<div className="sf-medallion"><span className="sf-medallion-rays" aria-hidden="true">✦</span><Phone size={27} strokeWidth={1.6}/><i>12</i></div>:<LockKeyhole size={27}/>}</div>
        <div className="achievement-item-copy"><span>SECRET ACHIEVEMENT / 012</span><h2>{achievements.dexOnTheLine?'НА УХЕ У LIL DEX':'UNDISCOVERED'}</h2><p>{achievements.dexOnTheLine?'Вы провели на линии с Дексом неприлично много времени. И, судя по всему, это ещё не конец.':'Секрет ещё не раскрыт.'}</p></div>
        <div className="achievement-status">{achievements.dexOnTheLine?<><CheckCircle2 size={16}/> UNLOCKED</>:'LOCKED'}</div>
