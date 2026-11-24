@@ -664,3 +664,21 @@
 .sf-slots-shortcut-copy strong{font:900 23px/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.04em;color:#fff1d7}
 .sf-slots-shortcut-copy>span{font:500 11px/1.4 'DM Sans',sans-serif;color:#dec5a5}
 @media(max-width:600px){.sf-slots-shortcut{padding:12px 13px;gap:10px}.sf-slots-shortcut-icon{width:40px;height:40px}.sf-slots-shortcut-copy strong{font-size:19px}.sf-slots-shortcut-copy>span{font-size:10px}.sf-slots-shortcut-copy small{font-size:8px}}
+
+
+/* Motorola floats at the bottom on iPhone; achievement notices live at the top.
+   Keep them readable even while the flip phone or its modal is on screen. */
+@media(max-width:760px){
+ .app .achievement-toast{
+  position:fixed;
+  z-index:420;
+  top:calc(60px + env(safe-area-inset-top,0px));
+  bottom:auto;
+  left:50%;
+  right:auto;
+  width:min(340px,calc(100vw - 24px));
+  max-width:calc(100vw - 24px);
+  transform:translateX(-50%);
+  animation:none;
+ }
+}
