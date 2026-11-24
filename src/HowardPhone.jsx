@@ -169,7 +169,14 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  suppressedRef.current=suppressed
  const isBlocked=progress.blocked||achievementUnlocked
  const poppyFound=Boolean(poppyContact)
- const [chain,setChain]=useState(()=>{try{const old=JSON.parse(localStorage.getItem('sf27-phone-chain-v1')||'null');if(old)return old}catch{}return {dex:dexUsed.length+(poppyContact?.source==='dex'?1:0),howard:secretCalls+(poppyContact?.source==='howard'?1:0),poppy:(poppyProgress.used?.length||0)+(poppyProgress.introDone?1:0),first:null,second:false,due:0,darren:0,rudy:0}})
+ const smsClock=useRef(0)
+ const smsLastTick=useRef(null)
+ const smsLastDelivery=useRef(-60000)
+ const smsSchedule=useRef(null)
+ if(smsSchedule.current===null){try{smsSchedule.current=JSON.parse(localStorage.getItem('sf27-sms-active-clock-v1')||'null')}catch{}if(!smsSchedule.current)smsSchedule.current={now:0,last:-60000,intro:0,gossip:0};smsClock.current=smsSchedule.current.now||0;smsLastDelivery.current=smsSchedule.current.last??-60000}
+ const persistSmsClock=()=>{smsSchedule.current.now=smsClock.current;smsSchedule.current.last=smsLastDelivery.current;try{localStorage.setItem('sf27-sms-active-clock-v1',JSON.stringify(smsSchedule.current))}catch{}}
+ const phoneNow=()=>smsClock.current
+ const [chain,setChain]=useState(()=>{try{const old=JSON.parse(localStorage.getItem('sf27-phone-chain-v1')||'null');if(old){for(const [key,min,max] of [['due',60000,120000],['warningDue',30000,60000],['blockedUntil',180000,300000],['rudyDue',180000,300000]])if(old[key]>1000000000000)old[key]=smsClock.current+ambientRandom(min,max);return old}}catch{}return {dex:dexUsed.length+(poppyContact?.source==='dex'?1:0),howard:secretCalls+(poppyContact?.source==='howard'?1:0),poppy:(poppyProgress.used?.length||0)+(poppyProgress.introDone?1:0),first:null,second:false,due:0,darren:0,rudy:0}})
  const chainRef=useRef(chain)
  const updateChain=fn=>{const next=fn(chainRef.current);chainRef.current=next;setChain(next);try{localStorage.setItem('sf27-phone-chain-v1',JSON.stringify(next))}catch{}}
  const countCall=name=>updateChain(v=>({...v,[name]:(v[name]||0)+1}))
@@ -185,7 +192,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const [newLine,setNewLine]=useState('')
  const [newSpeaker,setNewSpeaker]=useState('')
  const pickLine=(name)=>{const v=chainRef.current;const pool=newPhoneStories[name];const used=v['used_'+name]||[];const avail=pool.map((_,i)=>i).filter(i=>!used.includes(i));const i=(avail.length?avail:pool.map((_,j)=>j))[Math.floor(Math.random()*(avail.length||pool.length))];updateChain(x=>({...x,['used_'+name]:avail.length?[...used,i]:[i]}));return pool[i]}
- const sendPhoneSms=(id,sender,number,text)=>window.dispatchEvent(new CustomEvent('sf27-phone-sms',{detail:{id,sender,number,text}}))
+ const sendPhoneSms=(id,sender,number,text)=>{smsLastDelivery.current=phoneNow();persistSmsClock();window.dispatchEvent(new CustomEvent('sf27-phone-sms',{detail:{id,sender,number,text}}))}
 
  const [inbox,setInbox]=useState(()=>{try{return JSON.parse(localStorage.getItem('sf27-phone-inbox-v1')||'[]')}catch{return []}})
  const [menuIndex,setMenuIndex]=useState(0)
@@ -204,26 +211,11 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
   window.addEventListener('sf27-phone-sms',receive);return()=>window.removeEventListener('sf27-phone-sms',receive)
  },[])
  useEffect(()=>{
-  if(!menuReady||inbox.some(m=>m.id==='gossip-intro'))return
-  const timer=setInterval(()=>{let due=0;try{due=Number(localStorage.getItem('sf27-phone-intro-due'))||0;if(!due){due=Date.now()+60000+Math.random()*60000;localStorage.setItem('sf27-phone-intro-due',String(due))}}catch{}if(Date.now()<due||document.hidden||opened||suppressed)return;window.dispatchEvent(new CustomEvent('sf27-phone-sms',{detail:{id:'gossip-intro',sender:'GOSSIP SAINTFOUR',number:'????????',text:'Материалы по Бруксу получила. Пока ничего не публикуем.'}}))},1000)
-  return()=>clearInterval(timer)
- },[menuReady,inbox,opened,suppressed])
- useEffect(()=>{
-  if(!menuReady||!inbox.some(m=>m.id==='gossip-intro'))return
-  const tick=()=>{
-   let due=0;try{due=Number(localStorage.getItem('sf27-gossip-next-due'))||0;if(!due){due=Date.now()+ambientRandom(240000,480000);localStorage.setItem('sf27-gossip-next-due',String(due))}}catch{return}
-   if(Date.now()<due||document.hidden||opened||suppressed)return
-   const regular=inbox.filter(m=>/^gossip-regular-/.test(m.id))
-   const used=new Set(regular.map(m=>m.id.split('-').slice(-2).join('-')))
-   const cycle=Math.floor(regular.length/gossipSms.length)
-   const available=gossipSms.map((_,i)=>i).filter(i=>!used.has(cycle+'-'+i))
-   if(!available.length)return
-   const i=available[Math.floor(Math.random()*available.length)]
-   try{localStorage.setItem('sf27-gossip-next-due',String(Date.now()+ambientRandom(240000,480000)))}catch{}
-   window.dispatchEvent(new CustomEvent('sf27-phone-sms',{detail:{id:'gossip-regular-'+cycle+'-'+i,sender:'GOSSIP SAINTFOUR',number:'????????',text:gossipSms[i]}}))
-  }
-  const timer=setInterval(tick,1000);return()=>clearInterval(timer)
- },[menuReady,inbox,opened,suppressed])
+  const reset=()=>{smsLastTick.current=null;persistSmsClock()}
+  const tick=()=>{if(document.hidden){smsLastTick.current=null;return}const now=performance.now();const last=smsLastTick.current;smsLastTick.current=now;if(last!==null&&now-last<=2500){smsClock.current+=Math.max(0,now-last);persistSmsClock()}}
+  document.addEventListener('visibilitychange',reset);window.addEventListener('pagehide',reset);window.addEventListener('pageshow',reset)
+  const t=setInterval(tick,1000);return()=>{clearInterval(t);document.removeEventListener('visibilitychange',reset);window.removeEventListener('pagehide',reset);window.removeEventListener('pageshow',reset);reset()}
+ },[])
  const inspectGossip=()=>{
   let n=probeCount.current;try{n=Number(localStorage.getItem('sf27-gossip-probe-count'))||0}catch{}
   n++;probeCount.current=n;try{localStorage.setItem('sf27-gossip-probe-count',String(n))}catch{}
@@ -232,34 +224,44 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
   if(n>=5&&!probeDone&&!inbox.some(m=>m.id==='gossip-probe-reply')){
    setProbeDone(true);try{localStorage.setItem('sf27-gossip-probe-done','1')}catch{}
    // Append while reading so that the selected message remains at the same index.
-   saveInbox([...inbox,{id:'gossip-probe-reply',sender:'GOSSIP SAINTFOUR',number:'????????',text:'Вы сейчас серьёзно пытаетесь узнать мой номер? Уилсон, перелогиньтесь.',read:false}])
+   smsLastDelivery.current=phoneNow();persistSmsClock();saveInbox([...inbox,{id:'gossip-probe-reply',sender:'GOSSIP SAINTFOUR',number:'????????',text:'Вы сейчас серьёзно пытаетесь узнать мой номер? Уилсон, перелогиньтесь.',read:false}])
   }
  }
  useEffect(()=>{
   if(!menuReady)return
   const tick=()=>{
-   const v=chainRef.current
-   if(v.second)return
-   if(!v.first&&v.poppy<5)return
-   if(v.first&&(v[v.first]||0)<5)return
-   if(!v.due){updateChain(x=>({...x,due:Date.now()+ambientRandom(60000,120000)}));return}
-   if(Date.now()<v.due||document.hidden||opened||suppressed)return
-   const name=v.first?(v.first==='darren'?'rudy':'darren'):(Math.random()<.5?'darren':'rudy')
-   const id=v.first?'gossip-contact-second':'gossip-contact-first'
-   if(!inbox.some(m=>m.id===id))window.dispatchEvent(new CustomEvent('sf27-phone-sms',{detail:{id,sender:'GOSSIP SAINTFOUR',number:'????????',text:(v.first?'Ну что, познакомились? Ладно, держите второй номер. Только не надо потом говорить, что это я организовала телефонный терроризм в Сентфоре.':'Кажется, вы ещё не разговаривали с Дарреном и Руди. Где-то у меня был номер одного из них. А, вот. Позвоните, узнайте, чей он. ;)')+' '+newContacts[name]}}))
-   updateChain(x=>({...x,first:x.first||name,second:Boolean(x.first),due:0}))
+   const now=phoneNow(),v=chainRef.current,sch=smsSchedule.current
+   const intro=inbox.some(m=>m.id==='gossip-intro')
+   if(!intro&&!sch.intro){sch.intro=now+ambientRandom(60000,120000);persistSmsClock()}
+   if(intro&&!sch.gossip){sch.gossip=now+ambientRandom(240000,480000);persistSmsClock()}
+   const eligible=!v.second&&(!v.first?v.poppy>=5:(v[v.first]||0)>=5)
+   if(eligible&&!v.due)updateChain(x=>({...x,due:now+ambientRandom(60000,120000)}))
+   if(document.hidden||opened||suppressed||now-smsLastDelivery.current<60000)return
+   if(v.warningDue&&now>=v.warningDue&&!v.abigailOpen){updateChain(x=>({...x,abigailOpen:true,warningDue:0}));sendPhoneSms('abi-warning','ABIGAIL',newContacts.abigail,'Я записала твой номер. Ещё раз позвонишь Руди — окажешься в чёрном списке. Надеюсь, понятно объяснила.');return}
+   if(v.blockedUntil&&now>=v.blockedUntil){updateChain(x=>({...x,blockedUntil:0,enemyDue:now+60000}));sendPhoneSms('rudy-unblock','RUDY BROOKS',newContacts.rudy,'Слушай, а почему твой номер оказался у меня в чёрном списке? Странно. Я тебя разблокировал, если что :)');return}
+   if(v.enemyDue&&now>=v.enemyDue){updateChain(x=>({...x,enemyDue:0}));sendPhoneSms('gossip-abi-enemy','GOSSIP SAINTFOUR','????????','Поздравляю. Кажется, у Эбигейл появился новый личный враг.');return}
+   if(eligible&&v.due&&now>=v.due){
+    const name=v.first?(v.first==='darren'?'rudy':'darren'):(Math.random()<.5?'darren':'rudy')
+    const id=v.first?'gossip-contact-second':'gossip-contact-first'
+    if(!inbox.some(m=>m.id===id))sendPhoneSms(id,'GOSSIP SAINTFOUR','????????',(v.first?'Ну что, познакомились? Ладно, держите второй номер. Только не надо потом говорить, что это я организовала телефонный терроризм в Сентфоре.':'Кажется, вы ещё не разговаривали с Дарреном и Руди. Где-то у меня был номер одного из них. А, вот. Позвоните, узнайте, чей он. ;)')+' '+newContacts[name])
+    updateChain(x=>({...x,first:x.first||name,second:Boolean(x.first),due:0}));return
+   }
+   if(!intro&&sch.intro&&now>=sch.intro){sendPhoneSms('gossip-intro','GOSSIP SAINTFOUR','????????','Материалы по Бруксу получила. Пока ничего не публикуем.');return}
+   if(unread>=5)return
+   if(v.rudyDue&&now>=v.rudyDue){const text=pickLine('sms');const n=(v.rudySms||0)+1;updateChain(x=>({...x,rudySms:n,rudyDue:now+ambientRandom(420000,900000)}));sendPhoneSms('rudy-sms-'+n,'RUDY BROOKS',newContacts.rudy,text);return}
+   if(intro&&sch.gossip&&now>=sch.gossip){
+    const regular=inbox.filter(m=>/^gossip-regular-/.test(m.id))
+    const used=new Set(regular.map(m=>m.id.split('-').slice(-2).join('-')))
+    const cycle=Math.floor(regular.length/gossipSms.length)
+    const available=gossipSms.map((_,i)=>i).filter(i=>!used.has(cycle+'-'+i))
+    if(!available.length)return
+    const i=available[Math.floor(Math.random()*available.length)]
+    sch.gossip=now+ambientRandom(240000,480000);persistSmsClock()
+    sendPhoneSms('gossip-regular-'+cycle+'-'+i,'GOSSIP SAINTFOUR','????????',gossipSms[i])
+   }
   }
-  const timer=setInterval(tick,1000);return()=>clearInterval(timer)
- },[menuReady,opened,suppressed,inbox])
- useEffect(()=>{
-  if(!menuReady)return
-  const tick=()=>{
-   const v=chainRef.current;if(document.hidden||opened||suppressed)return
-   if(v.warningDue&&Date.now()>=v.warningDue&&!v.abigailOpen){updateChain(x=>({...x,abigailOpen:true,warningDue:0}));sendPhoneSms('abi-warning','ABIGAIL',newContacts.abigail,'Я записала твой номер. Ещё раз позвонишь Руди — окажешься в чёрном списке. Надеюсь, понятно объяснила.');return}
-   if(v.blockedUntil&&Date.now()>=v.blockedUntil){updateChain(x=>({...x,blockedUntil:0}));sendPhoneSms('rudy-unblock','RUDY BROOKS',newContacts.rudy,'Слушай, а почему твой номер оказался у меня в чёрном списке? Странно. Я тебя разблокировал, если что :)');sendPhoneSms('gossip-abi-enemy','GOSSIP SAINTFOUR','????????','Поздравляю. Кажется, у Эбигейл появился новый личный враг.');return}
-   if(v.rudyDue&&Date.now()>=v.rudyDue){const text=pickLine('sms');const n=(v.rudySms||0)+1;updateChain(x=>({...x,rudySms:n,rudyDue:Date.now()+ambientRandom(420000,900000)}));sendPhoneSms('rudy-sms-'+n,'RUDY BROOKS',newContacts.rudy,text)}
-  };const t=setInterval(tick,1000);return()=>clearInterval(t)
- },[menuReady,opened,suppressed])
+  const t=setInterval(tick,1000);return()=>clearInterval(t)
+ },[menuReady,opened,suppressed,inbox,unread])
  const readSms=i=>{setProbe('');setSmsIndex(i);setSmsPage(0);setMode('sms-read');saveInbox(inbox.map((m,j)=>j===i?{...m,read:true}:m))}
  const openInbox=()=>{setSmsIndex(0);setMode(inbox.length?'sms-list':'sms-empty')}
  const moveSelection=delta=>{if(mode==='phone-menu')setMenuIndex(v=>(v+delta+3)%3);if(mode==='phone-book'&&phoneBook.length)setBookIndex(v=>(v+delta+phoneBook.length)%phoneBook.length);if(mode==='sms-list'&&inbox.length)setSmsIndex(v=>(v+delta+inbox.length)%inbox.length)}
@@ -396,11 +398,11 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
    let speaker=name,line=''
    if(name==='rudy'){
     if(v.blockedUntil){speaker='blocked';line='ВАШ НОМЕР В ЧЁРНОМ СПИСКЕ'}
-    else if(v.abigailOpen&&!v.blockedOnce){speaker='abigail';line='Я же предупреждала... Всё. Больше ты ему не позвонишь.';updateChain(x=>({...x,blockedOnce:true,blockedUntil:Date.now()+ambientRandom(180000,300000)}))}
-    else {const roll=Math.random();if(roll<.2){speaker='abigail';const n=(v.abiAnswers||0)+1;updateChain(x=>({...x,abiAnswers:n,warningDue:n===3&&!x.abigailOpen?Date.now()+ambientRandom(30000,60000):x.warningDue}))}else if(roll<.35)speaker='voicemail'}
+    else if(v.abigailOpen&&!v.blockedOnce){speaker='abigail';line='Я же предупреждала... Всё. Больше ты ему не позвонишь.';updateChain(x=>({...x,blockedOnce:true,blockedUntil:phoneNow()+ambientRandom(180000,300000)}))}
+    else {const roll=Math.random();if(roll<.2){speaker='abigail';const n=(v.abiAnswers||0)+1;updateChain(x=>({...x,abiAnswers:n,warningDue:n===3&&!x.abigailOpen?phoneNow()+ambientRandom(30000,60000):x.warningDue}))}else if(roll<.35)speaker='voicemail'}
    }
    if(!line)line=pickLine(speaker)
-   if(speaker===name){updateChain(x=>({...x,['known_'+name]:true,...(name==='rudy'&&!x.rudyDue?{rudyDue:Date.now()+ambientRandom(180000,300000)}:{})}))}
+   if(speaker===name){updateChain(x=>({...x,['known_'+name]:true,...(name==='rudy'&&!x.rudyDue?{rudyDue:phoneNow()+ambientRandom(180000,300000)}:{})}))}
    setNewSpeaker(speaker);setNewLine(line);setMode('new-contact-answer')
   },1800);return()=>clearTimeout(t)
  },[opened,mode,newContactName])
