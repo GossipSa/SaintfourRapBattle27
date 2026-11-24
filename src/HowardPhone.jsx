@@ -209,7 +209,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
   let n=probeCount.current;try{n=Number(localStorage.getItem('sf27-gossip-probe-count'))||0}catch{}
   n++;probeCount.current=n;try{localStorage.setItem('sf27-gossip-probe-count',String(n))}catch{}
   const fake=()=>String(ambientRandom(80000000,89999999))
-  setProbe(n===1?'НОМЕР СКРЫТ':n===2?'ДАННЫЕ НЕДОСТУПНЫ':n===5?'ОШИБКА ИДЕНТИФИКАЦИИ':'ЛОЖНЫЙ НОМЕР: '+fake())
+  setProbe(n===1?'НОМЕР СКРЫТ':n===2?'ДАННЫЕ НЕДОСТУПНЫ':n===5?'ОШИБКА ИДЕНТИФИКАЦИИ':fake())
   if(n>=5&&!probeDone&&!inbox.some(m=>m.id==='gossip-probe-reply')){
    setProbeDone(true);try{localStorage.setItem('sf27-gossip-probe-done','1')}catch{}
    // Append while reading so that the selected message remains at the same index.
