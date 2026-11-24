@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Phone, PhoneOff, X, LockKeyhole, Mail, Trophy } from 'lucide-react'
 import './HowardPhone.css'
 import {rudyCallStories,rudyAfterUnblock} from './rudy-call-stories.js'
-import {rudySmsStories} from './rudy-sms-stories.js'
 import {reconcilePhoneArchive} from './PhoneArchive.jsx'
 import { acquireAmbient, releaseAmbient, ambientElapsed, ambientRandom } from './ambient-timing.js'
 import { dexCallStories } from './dex-call-stories.js'
@@ -203,7 +202,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const pickLine=(name)=>{const v=chainRef.current;const pool=newPhoneStories[name];const used=v['used_'+name]||[];const avail=pool.map((_,i)=>i).filter(i=>!used.includes(i));const i=avail.length?avail[0]:Math.max(5,pool.length-10)+Math.floor(Math.random()*Math.min(10,pool.length));updateChain(x=>({...x,['used_'+name]:avail.length?[...used,i]:[i]}));return pool[i]}
  const sendPhoneSms=(id,sender,number,text,options)=>{smsLastDelivery.current=phoneNow();persistSmsClock();window.dispatchEvent(new CustomEvent('sf27-phone-sms',{detail:{id,sender,number,text,options}}))}
 
- const [inbox,setInbox]=useState(()=>{try{return JSON.parse(localStorage.getItem('sf27-phone-inbox-v1')||'[]')}catch{return []}})
+ const [inbox,setInbox]=useState(()=>{try{const items=JSON.parse(localStorage.getItem('sf27-phone-inbox-v1')||'[]');const kept=items.filter(m=>m.sender==='GOSSIP SAINTFOUR');localStorage.setItem('sf27-phone-inbox-v1',JSON.stringify(kept));return kept}catch{return []}})
  const [menuIndex,setMenuIndex]=useState(0)
  const [smsIndex,setSmsIndex]=useState(0)
  const [threadSender,setThreadSender]=useState('')
@@ -224,10 +223,10 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  useEffect(()=>{if(mode!=='sms-read'||!threadScroll.current)return;const el=threadScroll.current;const target=Array.from(el.querySelectorAll('[data-sms-id]')).find(n=>n.dataset.smsId===threadStart);if(target)el.scrollTop+=target.getBoundingClientRect().top-el.getBoundingClientRect().top;else el.scrollTop=el.scrollHeight},[mode,threadSender,threadStart])
  useEffect(()=>{if(mode!=='sms-read'||!threadScroll.current||probe)return;const root=threadScroll.current;const check=()=>{const bounds=root.getBoundingClientRect();const ids=Array.from(root.querySelectorAll('[data-sms-id]')).filter(n=>{const b=n.getBoundingClientRect();return Math.min(b.bottom,bounds.bottom)-Math.max(b.top,bounds.top)>=Math.min(b.height,bounds.height)*.65}).map(n=>n.dataset.smsId);if(inbox.some(m=>!m.read&&ids.includes(m.id)))saveInbox(prev=>prev.map(m=>ids.includes(m.id)?{...m,read:true}:m))};const timer=setTimeout(check,450);root.addEventListener('scroll',check,{passive:true});return()=>{clearTimeout(timer);root.removeEventListener('scroll',check)}},[mode,threadSender,inbox,probe])
  const menuReady=isBlocked&&poppyFound
- useEffect(()=>{if(!isBlocked)return;const g=inbox.filter(m=>m.sender==='GOSSIP SAINTFOUR').length,r=inbox.filter(m=>m.sender==='RUDY BROOKS'&&!m.outgoing).length;const total=(progress.calls||0)+(chain.dex||0)+(chain.howard||0)+(chain.poppy||0)+(chain.darren||0)+(chain.rudy||0)+(chain.abigail||0)+(chain.wrongCalls||0);reconcilePhoneArchive({firstSms:g>0,gossip25:g>=25,firstContact:!!chain.first,darren25:chain.darren>=25,darren60:chain.darren>=60,rudyFirst:!!chain.known_rudy,rudySms:r>0,rudy25:r>=25,abiBlock:!!chain.blockedOnce,rudyUnblock:inbox.some(m=>m.id==='rudy-unblock'),abi25:chain.abigail>=25,allContacts:secretFound&&dexFound&&poppyFound&&!!chain.first&&!!chain.second&&!!chain.abigailOpen,calls250:total>=250,calls1000:total>=1000,wrong25:(chain.wrongNumbers||[]).length>=25,probe5:probeDone})},[isBlocked,chain,inbox,probeDone,secretFound,dexFound,poppyFound,progress.calls])
+ useEffect(()=>{if(!isBlocked)return;const g=inbox.filter(m=>m.sender==='GOSSIP SAINTFOUR').length,r=inbox.filter(m=>m.sender==='RUDY BROOKS'&&!m.outgoing).length;const total=(progress.calls||0)+(chain.dex||0)+(chain.howard||0)+(chain.poppy||0)+(chain.darren||0)+(chain.rudy||0)+(chain.abigail||0)+(chain.wrongCalls||0);reconcilePhoneArchive({firstSms:g>0,gossip25:g>=25,firstContact:!!chain.first,darren25:chain.darren>=25,darren60:chain.darren>=60,rudyFirst:!!chain.known_rudy,rudySms:false,rudy25:chain.rudy>=25,abiBlock:!!chain.blockedOnce,rudyUnblock:!!chain.rudyUnblocked||!!chain.blockedOnce&&!chain.blockedUntil,abi25:chain.abigail>=25,allContacts:secretFound&&dexFound&&poppyFound&&!!chain.first&&!!chain.second&&!!chain.abigailOpen,calls250:total>=250,calls1000:total>=1000,wrong25:(chain.wrongNumbers||[]).length>=25,probe5:probeDone})},[isBlocked,chain,inbox,probeDone,secretFound,dexFound,poppyFound,progress.calls])
  const saveInbox=next=>{setInbox(prev=>{const value=typeof next==='function'?next(prev):next;try{localStorage.setItem('sf27-phone-inbox-v1',JSON.stringify(value))}catch{}return value})}
  useEffect(()=>{
-  const receive=e=>{const m=e.detail;if(!m?.id||!m?.text)return;setInbox(prev=>{if(prev.some(x=>x.id===m.id))return prev;const next=[{...m,receivedAt:Date.now(),read:false},...prev];try{localStorage.setItem('sf27-phone-inbox-v1',JSON.stringify(next))}catch{}return next})}
+  const receive=e=>{const m=e.detail;if(!m?.id||!m?.text||m.sender!=='GOSSIP SAINTFOUR')return;setInbox(prev=>{if(prev.some(x=>x.id===m.id))return prev;const next=[{...m,receivedAt:Date.now(),read:false},...prev];try{localStorage.setItem('sf27-phone-inbox-v1',JSON.stringify(next))}catch{}return next})}
   window.addEventListener('sf27-phone-sms',receive);return()=>window.removeEventListener('sf27-phone-sms',receive)
  },[])
  useEffect(()=>{
@@ -256,16 +255,11 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
    if(intro&&!sch.gossip){sch.gossip=now+ambientRandom(300000,420000);persistSmsClock()}
    const eligible=!v.second&&(!v.first?v.poppy>=5:(v[v.first]||0)>=5)
    if(eligible&&!v.due)updateChain(x=>({...x,due:now+ambientRandom(60000,120000)}))
-   if(document.hidden||(!opened&&suppressed)||(now-smsLastDelivery.current<60000&&!(v.rudyReply&&!v.blockedUntil&&now>=v.rudyReply.due)))return
-   if(v.warningDue&&now>=v.warningDue&&!v.abigailOpen){updateChain(x=>({...x,abigailOpen:true,warningDue:0}));sendPhoneSms('abi-warning','ABIGAIL',newContacts.abigail,'Я записала твой номер. Ещё раз позвонишь Руди — окажешься в чёрном списке. Надеюсь, понятно объяснила.');return}
-   if(v.blockedUntil&&now>=v.blockedUntil){updateChain(x=>({...x,blockedUntil:0,enemyDue:now+60000}));sendPhoneSms('rudy-unblock','RUDY BROOKS',newContacts.rudy,'Слушай, а почему твой номер оказался у меня в чёрном списке? Странно. Я тебя разблокировал, если что :)');return}
+   if(document.hidden)return
+   if(v.blockedUntil&&now>=v.blockedUntil){updateChain(x=>({...x,blockedUntil:0,rudyUnblocked:true,enemyDue:now+60000}));return}
+   if((!opened&&suppressed)||now-smsLastDelivery.current<60000)return
+   if(v.warningDue&&now>=v.warningDue&&!v.abigailOpen){updateChain(x=>({...x,abigailOpen:true,warningDue:0}));sendPhoneSms('abi-warning','GOSSIP SAINTFOUR','????????','Кажется, Эбигейл уже заметила ваши звонки Руди. Если хотите познакомиться с ней лично, вот номер: '+newContacts.abigail);return}
    if(v.enemyDue&&now>=v.enemyDue){updateChain(x=>({...x,enemyDue:0}));sendPhoneSms('gossip-abi-enemy','GOSSIP SAINTFOUR','????????','Поздравляю. Кажется, у Эбигейл появился новый личный враг.');return}
-   if(v.abiStoryDue&&now>=v.abiStoryDue&&!v.blockedUntil){
-    const step=v.abiStoryStep
-    const story={1:'Я смотрю, тебя даже чёрный список ничему не научил.',2:'Он тебя разблокировал? Прекрасно. С ним я тоже поговорю.',3:'Слушай, что у вас вообще происходит с Эбигейл? Почему она постоянно упоминает тебя?'}[step]
-    updateChain(x=>({...x,abiStoryDue:0}))
-    if(story){sendPhoneSms('abi-story-'+step,step===3?'RUDY BROOKS':'ABIGAIL',step===3?newContacts.rudy:newContacts.abigail,story);return}
-   }
    if(eligible&&v.due&&now>=v.due){
     const name=v.first?(v.first==='darren'?'rudy':'darren'):(Math.random()<.5?'darren':'rudy')
     const id=v.first?'gossip-contact-second':'gossip-contact-first'
@@ -273,8 +267,6 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
     updateChain(x=>({...x,first:x.first||name,second:Boolean(x.first),due:0}));return
    }
    if(!intro&&sch.intro&&now>=sch.intro){sendPhoneSms('gossip-intro','GOSSIP SAINTFOUR','????????','Материалы по Бруксу получила. Пока ничего не публикуем.');return}
-   if(!v.blockedUntil&&v.rudyReply&&now>=v.rudyReply.due){const reply=v.rudyReply;updateChain(x=>({...x,rudyReply:null,rudyDue:now+ambientRandom(240000,360000)}));sendPhoneSms(reply.id+'-reply','RUDY BROOKS',newContacts.rudy,reply.reply);return}
-   if(!v.blockedUntil&&!v.rudyWaiting&&!v.rudyReply&&v.rudyDue&&now>=v.rudyDue){const n=(v.rudySms||0)+1;const story=rudySmsStories[n-1];if(!story){updateChain(x=>({...x,rudyDue:0,rudyFinished:true}));return}const id='rudy-sms-'+n;updateChain(x=>({...x,rudySms:n,rudyWaiting:story.options?id:null,rudyDue:story.options?0:now+ambientRandom(240000,360000)}));sendPhoneSms(id,'RUDY BROOKS',newContacts.rudy,story.text,story.options);return}
    if(intro&&sch.gossip&&now>=sch.gossip){
     const regular=inbox.filter(m=>/^gossip-regular-/.test(m.id))
     const used=new Set(regular.map(m=>m.id.split('-').slice(-2).join('-')))
@@ -438,11 +430,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
    setRudyCallSlides([]);setRudyCallSlide(0)
    if(speaker==='rudy'&&name==='rudy'&&!line){const known=Boolean(v.known_rudy);const prior=v.rudyStoryIndex??(known?Math.max(1,(v.used_rudy||[]).length):0);const post=v.rudyPostIntro||0;let story;if(v.blockedOnce&&!v.blockedUntil&&post<rudyAfterUnblock.length){story=rudyAfterUnblock[post];updateChain(x=>({...x,rudyPostIntro:post+1}))}else{const index=known?Math.max(1,prior):0;story=rudyCallStories[index<rudyCallStories.length?index:10+(index-10)%(rudyCallStories.length-10)];updateChain(x=>({...x,rudyStoryIndex:index+1}))}setRudyCallSlides(story);line=story[0]}
    if(!line){if(speaker==='abigail'&&name==='rudy'){const replies=['Алло? Это Эбигейл. Руди сейчас не может говорить. А ты кто?','Снова ты? Руди занят.','Я уже запомнила твой номер.','Ты опять? Я думала, мы всё выяснили.','Я не собираюсь каждый раз объяснять тебе одно и то же.'];line=replies[Math.min(replies.length-1,Math.max(0,(chainRef.current.abiAnswers||1)-1))]}else line=pickLine(speaker)}
-   if(name==='rudy'&&v.blockedOnce&&!v.blockedUntil){
-    const n=(v.abiAfterCalls||0)+1
-    updateChain(x=>({...x,abiAfterCalls:n,...(n===5?{abiStoryDue:phoneNow()+ambientRandom(30000,60000),abiStoryStep:1}:n===12?{abiStoryDue:phoneNow()+ambientRandom(30000,60000),abiStoryStep:2}:n===20?{abiStoryDue:phoneNow()+ambientRandom(30000,60000),abiStoryStep:3}:{})}))
-   }
-   if(speaker===name){updateChain(x=>({...x,['known_'+name]:true,...(name==='rudy'&&!x.rudyDue&&!x.rudyWaiting&&!x.rudyReply&&!x.rudyFinished?{rudyDue:phoneNow()+ambientRandom(60000,120000)}:{})}))}
+   if(speaker===name){updateChain(x=>({...x,['known_'+name]:true,}))}
    setNewSpeaker(speaker);setNewLine(line);setMode('new-contact-answer')
   },1800);return()=>clearTimeout(t)
  },[opened,mode,newContactName])
