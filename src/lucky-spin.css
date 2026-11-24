@@ -104,3 +104,11 @@
 @keyframes spin-dex-flicker{0%,92%,94%,100%{transform:none;filter:none}92.4%{transform:translateX(2px);filter:hue-rotate(70deg)}93%{transform:translateX(-2px)}}
 @media(max-width:600px){.spin-dex-secret-area{min-height:150px;padding:18px 28px 10px}.spin-dex-note{width:212px}}
 @media(prefers-reduced-motion:reduce){.spin-dex-note-name{animation:none}}
+
+
+/* Secret slots remain hidden until discovery, then reachable without scrolling. */
+.spin-slots-quick{width:100%;display:flex;align-items:center;gap:12px;text-align:left;margin:18px 0 0;padding:13px 16px;border:1px solid #c39b61;border-radius:8px;background:linear-gradient(110deg,#392524,#211323 70%);color:#f4d299;box-shadow:inset 3px 0 #e9bf6f;cursor:pointer}
+.spin-slots-quick:hover,.spin-slots-quick:focus-visible{background:linear-gradient(110deg,#4a3026,#291831)}
+.spin-slots-quick>span{display:flex;flex:1;min-width:0;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font:800 10px 'DM Sans',sans-serif;letter-spacing:.08em}
+.spin-slots-quick strong{color:#fff2d9;font:800 11px 'DM Sans',sans-serif}
+@media(max-width:600px){.spin-slots-quick{padding:12px}.spin-slots-quick>span{font-size:9px}.spin-slots-quick strong{font-size:10px}}
