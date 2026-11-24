@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Phone, PhoneOff, X, LockKeyhole, Mail, Trophy } from 'lucide-react'
+import { Phone, PhoneOff, X, LockKeyhole, Mail } from 'lucide-react'
 import './HowardPhone.css'
 import {rudySmsStories} from './rudy-sms-stories.js'
 import {reconcilePhoneArchive} from './PhoneArchive.jsx'
@@ -183,10 +183,6 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const chainRef=useRef(chain)
  const updateChain=fn=>{const next=fn(chainRef.current);chainRef.current=next;setChain(next);try{localStorage.setItem('sf27-phone-chain-v1',JSON.stringify(next))}catch{}}
  const countCall=name=>updateChain(v=>({...v,[name]:(v[name]||0)+1}))
- const [noticeQueue,setNoticeQueue]=useState([])
- const enqueueNotice=n=>setNoticeQueue(q=>[...q,n])
- useEffect(()=>{if(!noticeQueue.length)return;const t=setTimeout(()=>setNoticeQueue(q=>q.slice(1)),4000);return()=>clearTimeout(t)},[noticeQueue[0]])
- useEffect(()=>{const handler=e=>setNoticeQueue(q=>[...q,...e.detail.map(a=>({...a,kind:'award'}))]);window.addEventListener('sf27-phone-archive',handler);return()=>window.removeEventListener('sf27-phone-archive',handler)},[])
  const newContacts={darren:'31415926',rudy:'23231927',abigail:'14021927'}
  const hasNewContact=name=>name==='abigail'?Boolean(chain.abigailOpen):chain.first===name||Boolean(chain.first&&chain.second)
  const [savedNumbers,setSavedNumbers]=useState(()=>{try{const a=JSON.parse(localStorage.getItem('sf27-phone-book-v1')||'[]');return Array.isArray(a)?a:[]}catch{return []}})
@@ -225,7 +221,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  useEffect(()=>{if(!isBlocked)return;const g=inbox.filter(m=>m.sender==='GOSSIP SAINTFOUR').length,r=inbox.filter(m=>m.sender==='RUDY BROOKS'&&!m.outgoing).length;const total=(progress.calls||0)+(chain.dex||0)+(chain.howard||0)+(chain.poppy||0)+(chain.darren||0)+(chain.rudy||0)+(chain.abigail||0)+(chain.wrongCalls||0);reconcilePhoneArchive({firstSms:g>0,gossip25:g>=25,firstContact:!!chain.first,darren25:chain.darren>=25,darren60:chain.darren>=60,rudyFirst:!!chain.known_rudy,rudySms:r>0,rudy25:r>=25,abiBlock:!!chain.blockedOnce,rudyUnblock:inbox.some(m=>m.id==='rudy-unblock'),abi25:chain.abigail>=25,allContacts:secretFound&&dexFound&&poppyFound&&!!chain.first&&!!chain.second&&!!chain.abigailOpen,calls250:total>=250,calls1000:total>=1000,wrong25:(chain.wrongNumbers||[]).length>=25,probe5:probeDone})},[isBlocked,chain,inbox,probeDone,secretFound,dexFound,poppyFound,progress.calls])
  const saveInbox=next=>{setInbox(prev=>{const value=typeof next==='function'?next(prev):next;try{localStorage.setItem('sf27-phone-inbox-v1',JSON.stringify(value))}catch{}return value})}
  useEffect(()=>{
-  const receive=e=>{const m=e.detail;if(!m?.id||!m?.text)return;enqueueNotice({kind:'sms',id:m.id,title:m.sender});setInbox(prev=>{if(prev.some(x=>x.id===m.id))return prev;const next=[{...m,receivedAt:Date.now(),read:false},...prev];try{localStorage.setItem('sf27-phone-inbox-v1',JSON.stringify(next))}catch{}return next})}
+  const receive=e=>{const m=e.detail;if(!m?.id||!m?.text)return;setInbox(prev=>{if(prev.some(x=>x.id===m.id))return prev;const next=[{...m,receivedAt:Date.now(),read:false},...prev];try{localStorage.setItem('sf27-phone-inbox-v1',JSON.stringify(next))}catch{}return next})}
   window.addEventListener('sf27-phone-sms',receive);return()=>window.removeEventListener('sf27-phone-sms',receive)
  },[])
  useEffect(()=>{
@@ -242,7 +238,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
   if(n>=5&&!probeDone&&!inbox.some(m=>m.id==='gossip-probe-reply')){
    setProbeDone(true);try{localStorage.setItem('sf27-gossip-probe-done','1')}catch{}
    // Append while reading so that the selected message remains at the same index.
-   enqueueNotice({kind:'sms',id:'gossip-probe-reply',title:'GOSSIP SAINTFOUR'});smsLastDelivery.current=phoneNow();persistSmsClock();saveInbox([...inbox,{id:'gossip-probe-reply',sender:'GOSSIP SAINTFOUR',number:'????????',text:'Вы сейчас серьёзно пытаетесь узнать мой номер? Уилсон, перелогиньтесь.',receivedAt:Date.now(),read:false}])
+   smsLastDelivery.current=phoneNow();persistSmsClock();saveInbox([...inbox,{id:'gossip-probe-reply',sender:'GOSSIP SAINTFOUR',number:'????????',text:'Вы сейчас серьёзно пытаетесь узнать мой номер? Уилсон, перелогиньтесь.',receivedAt:Date.now(),read:false}])
   }
  }
  useEffect(()=>{
@@ -431,7 +427,6 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const dismiss=()=>{releaseAmbient('phone');markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
  if(!visible&&!isBlocked)return null
  return <>
-  {noticeQueue[0]&&!document.hidden&&<aside key={noticeQueue[0].id} className={'sf-notification hp-live-notice hp-live-'+noticeQueue[0].kind+' hp-live-tone-'+(noticeQueue[0].kind==='sms'?(noticeQueue[0].title==='RUDY BROOKS'?'green':noticeQueue[0].title==='ABIGAIL'?'rose':'violet'):({firstSms:'violet',gossip25:'violet',firstContact:'cyan',darren25:'gold',darren60:'gold',rudyFirst:'green',rudySms:'green',rudy25:'green',abiBlock:'rose',rudyUnblock:'green',abi25:'rose',allContacts:'cyan',calls250:'orange',calls1000:'gold',wrong25:'cyan',probe5:'violet'}[noticeQueue[0].id]||'gold'))} role="status" aria-live="polite"><div className="sf-notification-top"><span>{noticeQueue[0].kind==='sms'?<Mail size={14}/>:<Trophy size={14}/>} {noticeQueue[0].kind==='sms'?'MOTOROLA / INBOX':'PHONE ARCHIVE / SECRET'}</span><button type="button" aria-label="Закрыть уведомление" onClick={()=>setNoticeQueue(q=>q.slice(1))}><X size={16}/></button></div><strong>{noticeQueue[0].title}</strong><small>{noticeQueue[0].kind==='sms'?'НОВОЕ СООБЩЕНИЕ':'НОВОЕ СЕКРЕТНОЕ ДОСТИЖЕНИЕ'}</small></aside>}
   {isBlocked&&!opened&&<button type="button" className="hp-pocket-launcher" onClick={open} aria-label="Достать Motorola"><Phone size={17}/><span>MOTOROLA</span>{unread>0&&<span className="hp-sms-alert" style={{color:'#ffb6f4',animation:'hp-blink 1.2s infinite'}}>✉ {unread}</span>}</button>}
   {!isBlocked&&!opened&&!suppressed&&<div className="hp-floating">
     <button type="button" className="hp-closed" onClick={open} aria-label="Открыть звонящую фиолетовую раскладушку">
