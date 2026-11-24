@@ -212,3 +212,28 @@ body:has(.hp-overlay) .achievement-toast,body:has(.hp-overlay) .spin-achievement
 .hp-live-notice.hp-live-tone-cyan{--hp-accent:#83cedb}
 .hp-live-notice.hp-live-tone-orange{--hp-accent:#f2a476}
 .phone-archive-heading{display:flex;align-items:center;gap:12px;margin:16px 0;color:#d6a5ea}.phone-archive-heading h2{margin:0;font-size:22px}.phone-archive-heading small{font:700 10px monospace;letter-spacing:1px}.phone-archive-grid{display:grid;gap:10px}.phone-archive-grid .achievement-status{color:#b7e5a4}.phone-archive-grid .achievement-emblem{color:#e2b875}
+
+/* Expanded LCD for the full phone interface, while retaining physical keypad. */
+.hp-phone-expanded{width:252px}
+.hp-phone-expanded .hp-upper{height:310px;padding:10px 10px 5px}
+.hp-phone-expanded .hp-screen{flex:1;min-height:0;height:auto;margin-top:7px}
+.hp-phone-expanded .hp-status{flex:none;padding:6px 7px 4px}
+.hp-phone-expanded .hp-upper-mark{flex:none;padding-top:4px}
+.hp-phone-expanded .hp-screen-body{overflow:hidden;min-height:0;padding:5px 7px;gap:6px}
+.hp-phone-expanded .hp-mode-phone-menu{justify-content:center}
+.hp-phone-expanded .hp-mode-phone-menu button{flex-shrink:0;min-height:29px}
+.hp-phone-expanded .hp-mode-phone-book,.hp-phone-expanded .hp-mode-sms-list,.hp-phone-expanded .hp-mode-sms-read{justify-content:flex-start}
+.hp-phone-expanded .hp-thread-list,.hp-phone-expanded .hp-thread-scroll,.hp-phone-expanded .hp-book-list{flex:1 1 0;min-height:0;max-height:none;overflow-y:auto;position:relative;-webkit-overflow-scrolling:touch}
+.hp-phone-expanded .hp-thread-message{font-size:12px;line-height:1.4}
+.hp-phone-expanded .hp-thread-mark{min-height:25px;position:relative;z-index:2;touch-action:manipulation}
+.hp-phone-expanded .hp-lower{height:239px;padding:8px 11px 7px}
+.hp-phone-expanded .hp-actions{height:64px;flex-shrink:0}
+.hp-phone-expanded .hp-keys{margin-top:5px;gap:4px}
+.hp-phone-expanded .hp-keys button{height:30px;min-height:30px}
+.hp-phone-expanded .hp-bottom-mark{flex-shrink:0}
+.hp-phone-expanded .hp-poppy-story,.hp-phone-expanded .hp-dex-story{overflow-y:auto;max-height:100%}
+@media(max-width:600px){.hp-phone-expanded{width:252px;zoom:.91}.hp-window:has(.hp-phone-expanded){padding-inline:24px}}
+@media(max-width:600px) and (max-height:780px){.hp-phone-expanded{zoom:.82}}
+@media(max-width:600px) and (max-height:620px){.hp-phone-expanded{zoom:.67}}
+@media(max-width:350px){.hp-phone-expanded{zoom:.76}}
+@media(max-width:350px) and (max-height:620px){.hp-phone-expanded{zoom:.62}}
