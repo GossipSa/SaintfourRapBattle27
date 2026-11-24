@@ -18,7 +18,7 @@ function drawPrize(){const n=Math.random()*100;let cursor=0;let category='Фан
 const wheelIcons=[Cigarette,Flower2,CircleDot,Zap,Cat,Disc3,Flame,Music2,Mic2,Crown,Star,Diamond]
 const blank={spins:0,history:[],found:[],secret:false}
 function load(){try{const s=JSON.parse(localStorage.getItem(storageKey));if(s&&Number.isFinite(s.spins)&&Array.isArray(s.history)&&Array.isArray(s.found))return {...blank,...s}}catch{/* storage disabled */}return blank}
-export default function LuckySpin({onBack,onAchievements,onSlotsDiscovered,onOpenSlots}){
+export default function LuckySpin({onBack,onAchievements,onSlotsDiscovered,onOpenSlots,slotsDiscovered=false}){
  const [record,setRecord]=useState(load)
  const [dexNoteOpen,setDexNoteOpen]=useState(false)
  const revealDexNumber=()=>{setDexNoteOpen(v=>!v);try{localStorage.setItem(dexContactKey,'66601313')}catch{/* storage disabled */}window.dispatchEvent(new Event('sf27-dex-number-found'))}
@@ -54,6 +54,7 @@ export default function LuckySpin({onBack,onAchievements,onSlotsDiscovered,onOpe
  }
  return <section className="spin-page wrap">
   <div className="spin-top"><button type="button" onClick={onBack}><ArrowLeft size={16}/> НАЗАД НА ГЛАВНУЮ</button><span>SAINTFOUR / UNOFFICIAL ENTERTAINMENT</span></div>
+  {slotsDiscovered&&<button type="button" className="spin-slots-quick" onClick={onOpenSlots}><Zap size={18}/><span>BLACK HELLEBORE LUCKY 777 <strong>ИГРАТЬ В СЛОТЫ →</strong></span></button>}
   <div className="spin-heading"><span className="spin-eyebrow">WELCOME TO POPPY'S QUESTIONABLE ATTRACTION</span><h1 className="spin-glitch-title" aria-label="LUCKY SPIN."><span className="spin-glitch-base">LUCKY <em>SPIN.</em></span><span className="spin-glitch-layer spin-glitch-red" aria-hidden="true">LUCKY <em>SPIN.</em></span><span className="spin-glitch-layer spin-glitch-blue" aria-hidden="true">LUCKY <em>SPIN.</em></span></h1><p>Крути колесо. Выигрывай что угодно. Не рассчитывай получить это в реальной жизни.</p></div>
   <div className="spin-layout">
    <div className="spin-machine">
