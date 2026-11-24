@@ -104,6 +104,8 @@ export default function App() {
    return value==='on'||value==='off'?value:null
   }catch{return null}
  })
+ const soundChoiceRef=useRef(soundChoice)
+ soundChoiceRef.current=soundChoice
  const stopMusic=()=>{
   if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)
   musicFadeRef.current=null
@@ -112,16 +114,17 @@ export default function App() {
  }
  const startMusic=()=>{
   const audio=musicRef.current
-  if(!audio)return
+  if(!audio||document.hidden)return
   if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)
   musicFadeRef.current=null
   if(!audio.paused){audio.volume=mobileAudio?.02:desktopVolumeRef.current/100*.12;return}
   audio.volume=0
   const attempt=audio.play()
   if(attempt&&typeof attempt.then==='function')void attempt.then(()=>{
+   if(document.hidden||soundChoiceRef.current!=='on'){audio.pause();return}
    const start=window.performance.now()
    const fade=(now)=>{
-    if(audio.paused)return
+    if(audio.paused||document.hidden||soundChoiceRef.current!=='on')return
     const target=mobileAudio?.02:desktopVolumeRef.current/100*.12
     audio.volume=Math.max(0,Math.min(1,(now-start)/1800))*target
     if(now-start<1800)musicFadeRef.current=window.requestAnimationFrame(fade)
@@ -141,6 +144,7 @@ export default function App() {
  }
  const chooseSound=(enabled)=>{
   const next=enabled?'on':'off'
+  soundChoiceRef.current=next
   setSoundChoice(next)
   try{window.localStorage.setItem(soundPrefKey,next)}catch{/* private mode */}
   if(enabled)startMusic()
@@ -151,18 +155,28 @@ export default function App() {
   if(!audio)return
   let mounted=true
   const restore=()=>{
-   if(!mounted||window.localStorage.getItem(soundPrefKey)!=='on'||!audio.paused)return
+   if(!mounted||document.hidden||soundChoiceRef.current!=='on'||!audio.paused)return
    const attempt=audio.play()
    if(attempt&&typeof attempt.then==='function')void attempt.then(()=>{
-    if(mounted)audio.volume=mobileAudio?.02:desktopVolumeRef.current/100*.12
+    if(!mounted||document.hidden||soundChoiceRef.current!=='on'){audio.pause();return}
+    audio.volume=mobileAudio?.02:desktopVolumeRef.current/100*.12
    }).catch(()=>{})
   }
+  const suspend=()=>stopMusic()
+  const onVisibility=()=>{if(document.hidden)suspend();else restore()}
+  document.addEventListener('visibilitychange',onVisibility)
+  window.addEventListener('pagehide',suspend)
+  window.addEventListener('pageshow',onVisibility)
   restore()
   const onGesture=()=>restore()
   document.addEventListener('pointerdown',onGesture)
   document.addEventListener('keydown',onGesture)
   return ()=>{
    mounted=false
+   document.removeEventListener('visibilitychange',onVisibility)
+   window.removeEventListener('pagehide',suspend)
+   window.removeEventListener('pageshow',onVisibility)
+   suspend()
    document.removeEventListener('pointerdown',onGesture)
    document.removeEventListener('keydown',onGesture)
    if(musicFadeRef.current!==null)window.cancelAnimationFrame(musicFadeRef.current)
