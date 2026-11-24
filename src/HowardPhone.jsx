@@ -145,7 +145,7 @@ function readState(){try{
  if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){localStorage.removeItem(STORE);sessionStorage.removeItem('sf27-howard-seen');return {calls:0,introDone:false,blocked:false,limit:0,firstSeen:false,missed:false,reminders:0}}
 const data=JSON.parse(localStorage.getItem(STORE)||'{}');return {calls:Math.max(0,Number(data.calls)||0),introDone:Boolean(data.introDone),blocked:Boolean(data.blocked),limit:Number(data.limit)||0,firstSeen:Boolean(data.firstSeen||data.introDone),missed:Boolean(data.missed),reminders:Math.max(0,Number(data.reminders)||0)}}catch{return {calls:0,introDone:false,blocked:false,limit:0}}}
 function saveState(state){try{localStorage.setItem(STORE,JSON.stringify(state))}catch{/* storage disabled */}}
-export default function HowardPhone({onBlocked,achievementUnlocked=false,suppressed=false}){
+export default function HowardPhone({onBlocked,achievementUnlocked=false,suppressed=false,hidden=false}){
  const [secretFound,setSecretFound]=useState(hasSecret)
  const [dexFound,setDexFound]=useState(hasDex)
  const [poppyContact,setPoppyContact]=useState(readPoppyContact)
@@ -169,7 +169,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const [nextReminder,setNextReminder]=useState(0)
  const dueAt=useRef(ambientElapsed()+ambientRandom(30000,90000))
  const suppressedRef=useRef(suppressed)
- suppressedRef.current=suppressed
+ suppressedRef.current=suppressed||hidden
  const isBlocked=progress.blocked||achievementUnlocked
  const poppyFound=Boolean(poppyContact)
  const smsClock=useRef(0)
@@ -394,6 +394,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const markMissed=()=>{
   if(progress.firstSeen&&!progress.introDone&&!progress.missed){const next={...progress,missed:true};setProgress(next);saveState(next)}
  }
+ useEffect(()=>{if(hidden&&opened){setOpened(false);setPoppyBusy(false)}},[hidden,opened])
  const open=()=>{if(isBlocked){setOpened(true);setMenuIndex(0);setMode('phone-menu');return}setOpened(true);setMode(progress.firstSeen&&progress.missed&&!progress.introDone?'idle':progress.introDone?'idle':'incoming')}
  const call=()=>{
   if(isBlocked){setMode('blocked');return}
@@ -433,15 +434,15 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  return <>
   {noticeQueue[0]&&!document.hidden&&<aside key={noticeQueue[0].id} className={'sf-notification hp-live-notice hp-live-award hp-live-tone-'+({firstSms:'violet',gossip25:'violet',firstContact:'cyan',darren25:'gold',darren60:'gold',rudyFirst:'green',rudySms:'green',rudy25:'green',abiBlock:'rose',rudyUnblock:'green',abi25:'rose',allContacts:'cyan',calls250:'orange',calls1000:'gold',wrong25:'cyan',probe5:'violet'}[noticeQueue[0].id]||'gold')} role="status" aria-live="polite"><div className="sf-notification-top"><span><Trophy size={14}/> PHONE ARCHIVE / SECRET</span><button type="button" aria-label="Закрыть уведомление" onClick={()=>setNoticeQueue(q=>q.slice(1))}><X size={16}/></button></div><strong>{noticeQueue[0].title}</strong><small>НОВОЕ СЕКРЕТНОЕ ДОСТИЖЕНИЕ</small></aside>}
 
-  {isBlocked&&!opened&&<button type="button" className="hp-pocket-launcher" onClick={open} aria-label="Достать Motorola"><Phone size={17}/><span>MOTOROLA</span>{unread>0&&<span className="hp-sms-alert" style={{color:'#ffb6f4',animation:'hp-blink 1.2s infinite'}}>✉ {unread}</span>}</button>}
-  {!isBlocked&&!opened&&!suppressed&&<div className="hp-floating">
+  {isBlocked&&!opened&&!hidden&&<button type="button" className="hp-pocket-launcher" onClick={open} aria-label="Достать Motorola"><Phone size={17}/><span>MOTOROLA</span>{unread>0&&<span className="hp-sms-alert" style={{color:'#ffb6f4',animation:'hp-blink 1.2s infinite'}}>✉ {unread}</span>}</button>}
+  {!isBlocked&&!opened&&!suppressed&&!hidden&&<div className="hp-floating">
     <button type="button" className="hp-closed" onClick={open} aria-label="Открыть звонящую фиолетовую раскладушку">
      <span className="hp-closed-hinge"/><span className="hp-closed-logo">M</span><span className="hp-closed-display"><Phone size={20}/><small>{isBlocked?'CONTACTS':progress.introDone||progress.missed?'CALL LOG':'INCOMING'}</small></span><span className="hp-closed-led"/>
     </button>
     {(isBlocked&&secretFound||progress.missed||progress.introDone)&&<div className="hp-reminder">{isBlocked&&secretFound?'Может, попробуем позвонить по этому номеру?':progress.missed&&!progress.introDone?'1 ПРОПУЩЕННЫЙ ВЫЗОВ · ПЕРЕЗВОНИТЬ?':reminderLines[Math.max(0,progress.reminders-1)%reminderLines.length]}</div>}
     <button type="button" className="hp-dismiss" aria-label="Убрать телефон" onClick={dismiss}><X size={15}/></button>
    </div>}
-  {opened&&<div className="hp-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)close()}}>
+  {opened&&!hidden&&<div className="hp-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)close()}}>
    <div className="hp-window" role="dialog" aria-modal="true" aria-label="Телефон Натаниэля Говарда">
     <button type="button" className="hp-exit" onClick={close} aria-label="Закрыть раскладушку"><X size={20}/></button>
     {!menuReady&&(secretFound||dexFound||poppyFound)&&isBlocked&&<aside className="hp-number-notes" aria-label="Сохранённые номера">
