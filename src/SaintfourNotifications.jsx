@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { X, MessageCircle, Mail, ShieldAlert, Zap, Eye, ImageOff } from 'lucide-react'
 import './SaintfourNotifications.css'
+import { acquireAmbient, releaseAmbient, ambientElapsed, ambientRandom } from './ambient-timing.js'
 
 const messages=[
  {from:'POPPY EMERSON',kind:'message',title:'Кто-нибудь видел организатора?',body:'Мне нужно согласовать следующий выпуск. Желательно до его выхода.',action:'ОТВЕТИТЬ',reply:'POPPY: Отлично. Тогда найдите его и передайте, что я жду.',ttl:16000},
@@ -33,33 +34,30 @@ export default function SaintfourNotifications({suppressed=false}){
  const dismissTimer=useRef(null)
  useEffect(()=>{suppressedRef.current=suppressed},[suppressed])
  useEffect(()=>{
-  let mounted=true
-  let timer
-  const schedule=(first=false)=>{
-   timer=window.setTimeout(()=>{
-    if(!mounted)return
-    if(document.hidden||suppressedRef.current||busy.current){schedule(false);return}
-    const chosen=choose(history.current)
-    history.current=chosen.next
-    busy.current=true
-    setExpanded(false)
-    setActive({id:chosen.index,...messages[chosen.index]})
-    schedule(false)
-   },first?between(90000,150000):between(420000,720000))
-  }
-  schedule(true)
-  return()=>{mounted=false;clearTimeout(timer);clearTimeout(dismissTimer.current)}
+  // First message after 90–150 seconds, then 7–12 minutes of active time.
+  let due=ambientElapsed()+ambientRandom(90000,150000)
+  const timer=window.setInterval(()=>{
+   if(ambientElapsed()<due||suppressedRef.current||busy.current)return
+   if(!acquireAmbient('messages'))return
+   const chosen=choose(history.current)
+   history.current=chosen.next
+   busy.current=true
+   setExpanded(false)
+   setActive({id:chosen.index,...messages[chosen.index]})
+   due=ambientElapsed()+ambientRandom(420000,720000)
+  },2000)
+  return()=>{clearInterval(timer);clearTimeout(dismissTimer.current);releaseAmbient('messages')}
  },[])
  useEffect(()=>{
   if(!active)return
   clearTimeout(dismissTimer.current)
-  dismissTimer.current=window.setTimeout(()=>{setActive(null);setExpanded(false);busy.current=false},expanded?6500:active.ttl)
+  dismissTimer.current=window.setTimeout(()=>{setActive(null);setExpanded(false);busy.current=false;releaseAmbient('messages')},expanded?6500:active.ttl)
   return()=>clearTimeout(dismissTimer.current)
  },[active,expanded])
- useEffect(()=>{if(suppressed&&active){setActive(null);setExpanded(false);busy.current=false}},[suppressed,active])
+ useEffect(()=>{if(suppressed&&active){setActive(null);setExpanded(false);busy.current=false;releaseAmbient('messages')}},[suppressed,active])
  if(!active)return null
  const Icon=icons[active.kind]||MessageCircle
- const close=()=>{setActive(null);setExpanded(false);busy.current=false}
+ const close=()=>{setActive(null);setExpanded(false);busy.current=false;releaseAmbient('messages')}
  return <aside className={'sf-notification sf-notification--'+active.kind} role="status" aria-live="polite">
   <div className="sf-notification-top"><span><Icon size={14}/> {active.from} / INBOX</span><button type="button" aria-label="Закрыть уведомление" onClick={close}><X size={16}/></button></div>
   <strong>{expanded?active.reply:active.title}</strong>
