@@ -36,10 +36,11 @@ export default function SaintfourNotifications({suppressed=false,enabled=false})
  useEffect(()=>{suppressedRef.current=suppressed},[suppressed])
  useEffect(()=>{enabledRef.current=enabled},[enabled])
  useEffect(()=>{
-  // Ambient messages must never begin during Howard's phone storyline.
-  // When Howard blocks the visitor, start a fresh 90–150s active-time countdown.
+  // Once Howard's first block is complete, launch the ambient sequence on every visit.
+  // Due times are never reset when the visitor opens a modal or another popup.
   if(!enabled)return undefined
-  let due=ambientElapsed()+ambientRandom(90000,150000)
+  let first=true
+  let due=ambientElapsed()+ambientRandom(30000,60000)
   const timer=window.setInterval(()=>{
    if(!enabledRef.current||ambientElapsed()<due||suppressedRef.current||busy.current)return
    if(!acquireAmbient('messages'))return
@@ -48,9 +49,14 @@ export default function SaintfourNotifications({suppressed=false,enabled=false})
    busy.current=true
    setExpanded(false)
    setActive({id:chosen.index,...messages[chosen.index]})
-   due=ambientElapsed()+ambientRandom(420000,720000)
-  },2000)
-  return()=>{clearInterval(timer);clearTimeout(dismissTimer.current);releaseAmbient('messages')}
+   if(first){
+    first=false
+    window.dispatchEvent(new Event('sf27-first-ambient-message'))
+   }
+   // Next message is due 2–4 active minutes after this one.
+   due=ambientElapsed()+ambientRandom(120000,240000)
+  },1000)
+  return()=>{window.clearInterval(timer);window.clearTimeout(dismissTimer.current);busy.current=false;releaseAmbient('messages')}
  },[enabled])
  useEffect(()=>{
   if(!active)return
