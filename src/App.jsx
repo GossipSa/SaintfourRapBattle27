@@ -400,7 +400,7 @@ export default function App() {
   <SaintfourNotifications suppressed={Boolean(warlockNotice||achievementToast||wilsonOpen||soundChoice===null||howardMailOpen||fifthInterviewOpen||dexKittenOpen||daroRiderOpen||rudiLetterOpen||poppyNotebookOpen)}/>
   <main>
   {page==='bank'&&<SaintfourBank/>}
-  {page==='spin'&&<LuckySpin onBack={()=>go('home')} onAchievements={()=>go('achievements')} onSlotsDiscovered={unlockSlots} onOpenSlots={()=>go('slots')}/>}
+  {page==='spin'&&<LuckySpin onBack={()=>go('home')} onAchievements={()=>go('achievements')} onSlotsDiscovered={unlockSlots} onOpenSlots={()=>go('slots')} slotsDiscovered={slotsDiscovered}/>}
   {page==='slots'&&slotsDiscovered&&<section className="inner-page wrap" style={{maxWidth:650,margin:'35px auto 75px'}}><button type="button" className="achievement-return" onClick={()=>go('spin')} style={{marginBottom:20}}>← НАЗАД К КОЛЕСУ УДАЧИ</button><HelleboreSlots onClose={()=>go('spin')}/></section>}
   {page==='achievements'&&<section className="achievements-page wrap">
     <div className="achievement-page-top"><button type="button" onClick={()=>go('home')} className="achievement-return"><ArrowRight size={16}/> НАЗАД НА ГЛАВНУЮ</button><span>SAINTFOUR / SECRET ACCESS</span></div>
