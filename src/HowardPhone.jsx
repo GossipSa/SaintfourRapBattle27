@@ -83,6 +83,16 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
   return()=>window.clearInterval(timer)
  },[isBlocked,visible,opened,nextReminder])
  useEffect(()=>()=>releaseAmbient('phone'),[])
+ // An unanswered ringing phone should not silence the rest of the site forever.
+ useEffect(()=>{
+  if(isBlocked||!visible||opened)return undefined
+  const timeout=window.setTimeout(()=>{
+   releaseAmbient('phone')
+   setVisible(false)
+   setNextReminder(n=>n+1)
+  },45000)
+  return()=>window.clearTimeout(timeout)
+ },[isBlocked,visible,opened])
 
  useEffect(()=>{
   if(!opened)return
