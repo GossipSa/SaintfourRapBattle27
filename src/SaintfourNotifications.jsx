@@ -63,12 +63,11 @@ export default function SaintfourNotifications({suppressed=false,enabled=false})
  if(!active)return null
  const Icon=icons[active.kind]||MessageCircle
  const close=()=>{setActive(null);setExpanded(false);busy.current=false;releaseAmbient('messages')}
- return <aside className={'sf-notification sf-notification--'+active.kind} role="status" aria-live="polite">
+ return <aside className={'sf-notification sf-sandbox-notification sf-notification--'+active.kind} role="status" aria-live="polite">
   <div className="sf-notification-top"><span><Icon size={14}/> {active.from} / INBOX</span><button type="button" aria-label="Закрыть уведомление" onClick={close}><X size={16}/></button></div>
   <strong>{expanded?active.reply:active.title}</strong>
   {!expanded&&active.body&&<p>{active.body}</p>}
   {!expanded&&active.action&&<button type="button" className="sf-notification-action" onClick={()=>setExpanded(true)}>{active.action} ↗</button>}
   {active.kind==='typing'&&<span className="sf-notification-typing" aria-label="Печатает"><i/><i/><i/></span>}
-  <small>{expanded?'СООБЩЕНИЕ ПОЛУЧЕНО':active.action?'НАЖМИТЕ, ЧТОБЫ ОТВЕТИТЬ':'УВЕДОМЛЕНИЕ ИСЧЕЗНЕТ АВТОМАТИЧЕСКИ'}</small>
  </aside>
 }
