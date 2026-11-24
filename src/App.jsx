@@ -378,7 +378,7 @@ export default function App() {
  },[warlockNotice])
  useEffect(()=>{
    if(!achievementToast)return undefined
-   const t=window.setTimeout(()=>setAchievementToast(null),10000)
+   const t=window.setTimeout(()=>setAchievementToast(null),document.querySelector('.hp-overlay')?4000:10000)
    return ()=>window.clearTimeout(t)
  },[achievementToast])
 
