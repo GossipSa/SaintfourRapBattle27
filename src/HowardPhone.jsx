@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Phone, PhoneOff, X, LockKeyhole, Mail } from 'lucide-react'
+import { Phone, PhoneOff, X, LockKeyhole, Mail, Trophy } from 'lucide-react'
 import './HowardPhone.css'
 import {rudySmsStories} from './rudy-sms-stories.js'
 import {reconcilePhoneArchive} from './PhoneArchive.jsx'
@@ -183,6 +183,9 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const chainRef=useRef(chain)
  const updateChain=fn=>{const next=fn(chainRef.current);chainRef.current=next;setChain(next);try{localStorage.setItem('sf27-phone-chain-v1',JSON.stringify(next))}catch{}}
  const countCall=name=>updateChain(v=>({...v,[name]:(v[name]||0)+1}))
+ const [noticeQueue,setNoticeQueue]=useState([])
+ useEffect(()=>{if(!noticeQueue.length)return;const t=setTimeout(()=>setNoticeQueue(q=>q.slice(1)),4000);return()=>clearTimeout(t)},[noticeQueue[0]])
+ useEffect(()=>{const handler=e=>setNoticeQueue(q=>[...q,...e.detail]);window.addEventListener('sf27-phone-archive',handler);return()=>window.removeEventListener('sf27-phone-archive',handler)},[])
  const newContacts={darren:'31415926',rudy:'23231927',abigail:'14021927'}
  const hasNewContact=name=>name==='abigail'?Boolean(chain.abigailOpen):chain.first===name||Boolean(chain.first&&chain.second)
  const [savedNumbers,setSavedNumbers]=useState(()=>{try{const a=JSON.parse(localStorage.getItem('sf27-phone-book-v1')||'[]');return Array.isArray(a)?a:[]}catch{return []}})
@@ -427,6 +430,8 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const dismiss=()=>{releaseAmbient('phone');markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
  if(!visible&&!isBlocked)return null
  return <>
+  {noticeQueue[0]&&!document.hidden&&<aside key={noticeQueue[0].id} className={'sf-notification hp-live-notice hp-live-award hp-live-tone-'+({firstSms:'violet',gossip25:'violet',firstContact:'cyan',darren25:'gold',darren60:'gold',rudyFirst:'green',rudySms:'green',rudy25:'green',abiBlock:'rose',rudyUnblock:'green',abi25:'rose',allContacts:'cyan',calls250:'orange',calls1000:'gold',wrong25:'cyan',probe5:'violet'}[noticeQueue[0].id]||'gold')} role="status" aria-live="polite"><div className="sf-notification-top"><span><Trophy size={14}/> PHONE ARCHIVE / SECRET</span><button type="button" aria-label="Закрыть уведомление" onClick={()=>setNoticeQueue(q=>q.slice(1))}><X size={16}/></button></div><strong>{noticeQueue[0].title}</strong><small>НОВОЕ СЕКРЕТНОЕ ДОСТИЖЕНИЕ</small></aside>}
+
   {isBlocked&&!opened&&<button type="button" className="hp-pocket-launcher" onClick={open} aria-label="Достать Motorola"><Phone size={17}/><span>MOTOROLA</span>{unread>0&&<span className="hp-sms-alert" style={{color:'#ffb6f4',animation:'hp-blink 1.2s infinite'}}>✉ {unread}</span>}</button>}
   {!isBlocked&&!opened&&!suppressed&&<div className="hp-floating">
     <button type="button" className="hp-closed" onClick={open} aria-label="Открыть звонящую фиолетовую раскладушку">
