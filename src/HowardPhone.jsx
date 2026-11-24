@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Phone, PhoneOff, X, LockKeyhole } from 'lucide-react'
+import { Phone, PhoneOff, X, LockKeyhole, Mail, Trophy } from 'lucide-react'
 import './HowardPhone.css'
 import {reconcilePhoneArchive} from './PhoneArchive.jsx'
 import { acquireAmbient, releaseAmbient, ambientElapsed, ambientRandom } from './ambient-timing.js'
@@ -428,7 +428,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const dismiss=()=>{releaseAmbient('phone');markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
  if(!visible&&!isBlocked)return null
  return <>
-  {noticeQueue[0]&&!document.hidden&&<div className={'hp-live-notice hp-live-'+noticeQueue[0].kind} role="status" aria-live="polite"><span>{noticeQueue[0].kind==='sms'?'✉ НОВОЕ СООБЩЕНИЕ':'★ СЕКРЕТНОЕ ДОСТИЖЕНИЕ'}</span><strong>{noticeQueue[0].title}</strong>{noticeQueue[0].kind==='award'?<small>+{noticeQueue[0].amount} SF$</small>:<small>Откройте сообщения Motorola</small>}<button type="button" aria-label="Закрыть уведомление" onClick={()=>setNoticeQueue(q=>q.slice(1))}>×</button></div>}
+  {noticeQueue[0]&&!document.hidden&&<aside key={noticeQueue[0].id} className={'sf-notification hp-live-notice hp-live-'+noticeQueue[0].kind+' hp-live-tone-'+(noticeQueue[0].kind==='sms'?(noticeQueue[0].title==='RUDY BROOKS'?'green':noticeQueue[0].title==='ABIGAIL'?'rose':'violet'):({firstSms:'violet',gossip25:'violet',firstContact:'cyan',darren25:'gold',darren60:'gold',rudyFirst:'green',rudySms:'green',rudy25:'green',abiBlock:'rose',rudyUnblock:'green',abi25:'rose',allContacts:'cyan',calls250:'orange',calls1000:'gold',wrong25:'cyan',probe5:'violet'}[noticeQueue[0].id]||'gold'))} role="status" aria-live="polite"><div className="sf-notification-top"><span>{noticeQueue[0].kind==='sms'?<Mail size={14}/>:<Trophy size={14}/>} {noticeQueue[0].kind==='sms'?'MOTOROLA / INBOX':'PHONE ARCHIVE / SECRET'}</span><button type="button" aria-label="Закрыть уведомление" onClick={()=>setNoticeQueue(q=>q.slice(1))}><X size={16}/></button></div><strong>{noticeQueue[0].title}</strong><small>{noticeQueue[0].kind==='sms'?'НОВОЕ СООБЩЕНИЕ':'НОВОЕ СЕКРЕТНОЕ ДОСТИЖЕНИЕ'}</small></aside>}
   {isBlocked&&!opened&&<button type="button" className="hp-pocket-launcher" onClick={open} aria-label="Достать Motorola"><Phone size={17}/><span>MOTOROLA</span>{unread>0&&<span className="hp-sms-alert" style={{color:'#ffb6f4',animation:'hp-blink 1.2s infinite'}}>✉ {unread}</span>}</button>}
   {!isBlocked&&!opened&&!suppressed&&<div className="hp-floating">
     <button type="button" className="hp-closed" onClick={open} aria-label="Открыть звонящую фиолетовую раскладушку">
