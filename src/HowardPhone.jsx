@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Phone, PhoneOff, X, LockKeyhole } from 'lucide-react'
 import './HowardPhone.css'
+import { acquireAmbient, releaseAmbient, ambientElapsed, ambientRandom } from './ambient-timing.js'
 import { dexCallStories } from './dex-call-stories.js'
 
 const STORE='sf27-howard-phone-v2'
@@ -33,7 +34,7 @@ function readState(){try{
  if(new URLSearchParams(window.location.search).get('resetHoward')==='1'){localStorage.removeItem(STORE);sessionStorage.removeItem('sf27-howard-seen');return {calls:0,introDone:false,blocked:false,limit:0,firstSeen:false,missed:false,reminders:0}}
 const data=JSON.parse(localStorage.getItem(STORE)||'{}');return {calls:Math.max(0,Number(data.calls)||0),introDone:Boolean(data.introDone),blocked:Boolean(data.blocked),limit:Number(data.limit)||0,firstSeen:Boolean(data.firstSeen||data.introDone),missed:Boolean(data.missed),reminders:Math.max(0,Number(data.reminders)||0)}}catch{return {calls:0,introDone:false,blocked:false,limit:0}}}
 function saveState(state){try{localStorage.setItem(STORE,JSON.stringify(state))}catch{/* storage disabled */}}
-export default function HowardPhone({onBlocked,achievementUnlocked=false}){
+export default function HowardPhone({onBlocked,achievementUnlocked=false,suppressed=false}){
  const [secretFound,setSecretFound]=useState(hasSecret)
  const [dexFound,setDexFound]=useState(hasDex)
  const [dexUsed,setDexUsed]=useState(readDexCalls)
@@ -42,13 +43,14 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const [expandedContact,setExpandedContact]=useState(null)
  const [secretReply,setSecretReply]=useState('')
  const [secretCalls,setSecretCalls]=useState(()=>{try{return Math.max(0,Number(localStorage.getItem('sf27-howard-secret-calls'))||0)}catch{return 0}})
- const [visible,setVisible]=useState(()=>{try{const reset=new URLSearchParams(window.location.search).get('resetHoward')==='1';const state=readState();return reset||!state.blocked||hasSecret()||hasDex()}catch{return true}})
+ const [visible,setVisible]=useState(()=>{try{const reset=new URLSearchParams(window.location.search).get('resetHoward')==='1';const state=readState();return reset||state.blocked}catch{return true}})
  const [opened,setOpened]=useState(()=>new URLSearchParams(window.location.search).get('resetHoward')==='1')
  const [progress,setProgress]=useState(readState)
  const [reply,setReply]=useState(null)
  const [mode,setMode]=useState('incoming')
  const [dismissed,setDismissed]=useState(false)
  const [nextReminder,setNextReminder]=useState(0)
+ const dueAt=useRef(ambientElapsed()+ambientRandom(30000,90000))
  const isBlocked=progress.blocked||achievementUnlocked
  // Resume the pre-block storyline on each visit, even if a previous call was dismissed.
  useEffect(()=>{if(!isBlocked&&!progress.firstSeen){const next={...progress,firstSeen:true};setProgress(next);saveState(next)}},[])
@@ -58,30 +60,28 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  useEffect(()=>{if(!opened||mode!=='secret-connecting')return;const timer=setTimeout(()=>setMode('secret-answer'),1800);return()=>clearTimeout(timer)},[opened,mode])
  useEffect(()=>{if(!opened||mode!=='dex-connecting'||!dexStory)return;const timer=setTimeout(()=>setMode('dex-answer'),dexStory.connectMs);return()=>clearTimeout(timer)},[opened,mode,dexStory])
  useEffect(()=>{
-  if(new URLSearchParams(window.location.search).get('resetHoward')==='1')return
-  if(isBlocked||visible||opened)return
-  let timer
-  const show=()=>{
+  // Random first arrival on every visit, even if the visitor previously dismissed it.
+  // Retrying every two seconds avoids a missed notification when Telegram is backgrounded.
+  if(isBlocked){releaseAmbient('phone');return}
+  if(visible||opened)return
+  dueAt.current=ambientElapsed()+(
+   nextReminder===0?ambientRandom(30000,90000):ambientRandom(REMINDER_MIN,REMINDER_MIN+REMINDER_RANGE)
+  )
+  const timer=window.setInterval(()=>{
+   if(ambientElapsed()<dueAt.current||suppressed)return
+   if(!acquireAmbient('phone'))return
    setVisible(true)
    setDismissed(false)
-   if(!progress.firstSeen){
-    const next={...progress,firstSeen:true}
-    setProgress(next);saveState(next)
-   }else{
-    const next={...progress,reminders:progress.reminders+1}
-    setProgress(next);saveState(next)
-   }
-  }
-  const schedule=()=>{
-   window.clearTimeout(timer)
-   if(document.visibilityState==='hidden')return
-   const delay=isBlocked?3000:progress.firstSeen?REMINDER_MIN+Math.floor(Math.random()*REMINDER_RANGE):5000+Math.round(Math.random()*3000)
-   timer=window.setTimeout(show,delay)
-  }
-  schedule()
-  document.addEventListener('visibilitychange',schedule)
-  return()=>{window.clearTimeout(timer);document.removeEventListener('visibilitychange',schedule)}
- },[isBlocked,progress.firstSeen,visible,opened,nextReminder,secretFound])
+   setProgress(prev=>{
+    const next={...prev,firstSeen:true,reminders:nextReminder===0?prev.reminders:prev.reminders+1}
+    saveState(next)
+    return next
+   })
+  },2000)
+  return()=>window.clearInterval(timer)
+ },[isBlocked,visible,opened,nextReminder,suppressed])
+ useEffect(()=>()=>releaseAmbient('phone'),[])
+
  useEffect(()=>{
   if(!opened)return
   const key=e=>{if(e.key==='Escape'){setOpened(false);setMode('incoming')}}
@@ -101,7 +101,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
   const next={...progress,calls:progress.calls+1}
   if(next.calls>=next.limit)next.blocked=true
   setProgress(next);saveState(next)
-  if(next.blocked){setMode('final');onBlocked?.();return}
+  if(next.blocked){releaseAmbient('phone');setMode('final');onBlocked?.();return}
   const pool=next.calls<8?responses.slice(0,5):next.calls<22?responses:responses.slice(1)
   const chosen=pool[Math.floor(Math.random()*pool.length)]
   setReply(chosen);setMode('answer')
@@ -112,11 +112,11 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false}){
  const pressKey=k=>{if(!isBlocked||!(secretFound||dexFound))return;const digit=k.charAt(0);if(!/^[0-9]$/.test(digit))return;setDial(v=>(v+digit).slice(0,14));setMode('secret-idle')}
  const hang=()=>{if(mode==='incoming')markMissed();setMode(isBlocked&&(secretFound||dexFound)?'secret-idle':progress.blocked?'blocked':'idle')}
  const close=()=>{if(mode==='incoming')markMissed();setOpened(false);setMode('incoming')}
- const dismiss=()=>{markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
+ const dismiss=()=>{releaseAmbient('phone');markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
  if(!visible&&!isBlocked)return null
  return <>
   {isBlocked&&!opened&&<button type="button" className="hp-pocket-launcher" onClick={open} aria-label="Достать Motorola"><Phone size={17}/><span>MOTOROLA</span></button>}
-  {!isBlocked&&!opened&&<div className="hp-floating">
+  {!isBlocked&&!opened&&!suppressed&&<div className="hp-floating">
     <button type="button" className="hp-closed" onClick={open} aria-label="Открыть звонящую фиолетовую раскладушку">
      <span className="hp-closed-hinge"/><span className="hp-closed-logo">M</span><span className="hp-closed-display"><Phone size={20}/><small>{isBlocked&&secretFound?'DIAL':isBlocked?'BLOCKED':progress.introDone||progress.missed?'CALL LOG':'INCOMING'}</small></span><span className="hp-closed-led"/>
     </button>
