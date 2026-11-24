@@ -25,19 +25,23 @@ const between=(min,max)=>min+Math.floor(Math.random()*(max-min+1))
 function readHistory(){try{const v=JSON.parse(localStorage.getItem(store)||'{}');return {shown:Array.isArray(v.shown)?v.shown:[],last:Number.isInteger(v.last)?v.last:-1}}catch{return {shown:[],last:-1}}}
 function choose(history){let available=messages.map((_,i)=>i).filter(i=>!history.shown.includes(i));if(!available.length)available=messages.map((_,i)=>i).filter(i=>i!==history.last);const i=available[Math.floor(Math.random()*available.length)];const next={shown:[...history.shown,i].slice(-messages.length),last:i};try{localStorage.setItem(store,JSON.stringify(next))}catch{/* storage unavailable */}return {index:i,next}}
 const icons={message:MessageCircle,attachment:ImageOff,sheriff:ShieldAlert,energy:Zap,unknown:Eye,typing:Mail}
-export default function SaintfourNotifications({suppressed=false}){
+export default function SaintfourNotifications({suppressed=false,enabled=false}){
  const [active,setActive]=useState(null)
  const [expanded,setExpanded]=useState(false)
  const history=useRef(readHistory())
  const busy=useRef(false)
  const suppressedRef=useRef(suppressed)
+ const enabledRef=useRef(enabled)
  const dismissTimer=useRef(null)
  useEffect(()=>{suppressedRef.current=suppressed},[suppressed])
+ useEffect(()=>{enabledRef.current=enabled},[enabled])
  useEffect(()=>{
-  // First message after 90–150 seconds, then 7–12 minutes of active time.
+  // Ambient messages must never begin during Howard's phone storyline.
+  // When Howard blocks the visitor, start a fresh 90–150s active-time countdown.
+  if(!enabled)return undefined
   let due=ambientElapsed()+ambientRandom(90000,150000)
   const timer=window.setInterval(()=>{
-   if(ambientElapsed()<due||suppressedRef.current||busy.current)return
+   if(!enabledRef.current||ambientElapsed()<due||suppressedRef.current||busy.current)return
    if(!acquireAmbient('messages'))return
    const chosen=choose(history.current)
    history.current=chosen.next
@@ -47,14 +51,14 @@ export default function SaintfourNotifications({suppressed=false}){
    due=ambientElapsed()+ambientRandom(420000,720000)
   },2000)
   return()=>{clearInterval(timer);clearTimeout(dismissTimer.current);releaseAmbient('messages')}
- },[])
+ },[enabled])
  useEffect(()=>{
   if(!active)return
   clearTimeout(dismissTimer.current)
   dismissTimer.current=window.setTimeout(()=>{setActive(null);setExpanded(false);busy.current=false;releaseAmbient('messages')},expanded?6500:active.ttl)
   return()=>clearTimeout(dismissTimer.current)
  },[active,expanded])
- useEffect(()=>{if(suppressed&&active){setActive(null);setExpanded(false);busy.current=false;releaseAmbient('messages')}},[suppressed,active])
+ useEffect(()=>{if((suppressed||!enabled)&&active){setActive(null);setExpanded(false);busy.current=false;releaseAmbient('messages')}},[suppressed,enabled,active])
  if(!active)return null
  const Icon=icons[active.kind]||MessageCircle
  const close=()=>{setActive(null);setExpanded(false);busy.current=false;releaseAmbient('messages')}
