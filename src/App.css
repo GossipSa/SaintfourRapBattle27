@@ -639,3 +639,28 @@
 
 /* Compact secret-achievement vault: collapsed by default on every screen size. */
 .sf-secret-accordion{margin-top:18px}.sf-secret-accordion>summary{list-style:none;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:15px 18px;cursor:pointer;border:1px solid #735385;border-radius:9px;background:linear-gradient(115deg,#30213e,#1d1728);color:#e8c9fb;font-size:11px;font-weight:850;letter-spacing:.08em}.sf-secret-accordion>summary::-webkit-details-marker{display:none}.sf-secret-accordion>summary:focus-visible{outline:2px solid #d9a3f4;outline-offset:3px}.sf-secret-accordion-action{color:#b6a0c5;white-space:nowrap}.sf-secret-accordion-action span{display:inline-block;margin-left:8px;transition:transform .2s}.sf-secret-accordion[open] .sf-secret-accordion-action span{transform:rotate(180deg)}.sf-secret-accordion>.achievement-collection{margin-top:17px}@media(max-width:540px){.sf-secret-accordion>summary{padding:12px;letter-spacing:.035em;font-size:10px}.sf-secret-accordion-action{white-space:normal}}
+
+
+/* Achievement identity: vivid individual accents even before unlocking. */
+.achievement-tier-6{--tier:#f1b36f;--tier-dark:#563320;--tier-glow:#f1a95829}
+.achievement-tier-7{--tier:#b58cf2;--tier-dark:#40305e;--tier-glow:#af78f534}
+.achievement-tier-8{--tier:#88b9ff;--tier-dark:#243b63;--tier-glow:#689eff31}
+.achievement-tier-9{--tier:#f28c9c;--tier-dark:#5d293f;--tier-glow:#ef68802e}
+.achievement-tier-10{--tier:#f0ce69;--tier-dark:#5b471b;--tier-glow:#edca6035}
+.achievement-tier-11{--tier:#9fdc91;--tier-dark:#29492b;--tier-glow:#83d97930}
+.achievement-tier-12{--tier:#e78dc8;--tier-dark:#562b50;--tier-glow:#e574bd36}
+.achievement-item.is-locked{border-color:color-mix(in srgb,var(--tier) 44%,#342039);background:radial-gradient(ellipse at 0% 30%,var(--tier-glow),transparent 65%),linear-gradient(112deg,#27172d,#17101d)}
+.achievement-item.is-locked::before{opacity:1}
+.achievement-item.is-locked .achievement-emblem{opacity:1;border-color:color-mix(in srgb,var(--tier) 64%,#25172c);color:var(--tier);background:linear-gradient(145deg,var(--tier-dark),#16101d)}
+.achievement-item.is-locked .achievement-item-copy>span{color:color-mix(in srgb,var(--tier) 70%,#ccb9d1)}
+.achievement-item.is-locked .achievement-item-copy h2{color:#c0a7c7}
+.achievement-item.is-locked .achievement-item-copy p{color:#a995b2}
+.achievement-item.is-earned .achievement-item-copy h2{color:var(--tier)}
+.sf-slots-shortcut{width:100%;margin:15px 0 25px;padding:17px 19px;display:flex;align-items:center;gap:15px;text-align:left;border:1px solid #d7ac65;border-radius:9px;background:radial-gradient(ellipse at 0 50%,#c89b4135,transparent 65%),linear-gradient(115deg,#342820,#18121d);color:#ffe3b4;box-shadow:inset 3px 0 #edca74;cursor:pointer}
+.sf-slots-shortcut:hover,.sf-slots-shortcut:focus-visible{border-color:#ffe3a2;background:linear-gradient(115deg,#453021,#24182c)}
+.sf-slots-shortcut-icon{display:grid;place-items:center;flex:none;width:48px;height:48px;border:1px solid #e7bb77;border-radius:10px;background:#4c352b;color:#f4cc7b}
+.sf-slots-shortcut-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px}
+.sf-slots-shortcut-copy small{font:800 9px 'DM Sans',sans-serif;letter-spacing:.12em;color:#dab97d}
+.sf-slots-shortcut-copy strong{font:900 23px/1 'Barlow Condensed',Impact,sans-serif;letter-spacing:.04em;color:#fff1d7}
+.sf-slots-shortcut-copy>span{font:500 11px/1.4 'DM Sans',sans-serif;color:#dec5a5}
+@media(max-width:600px){.sf-slots-shortcut{padding:12px 13px;gap:10px}.sf-slots-shortcut-icon{width:40px;height:40px}.sf-slots-shortcut-copy strong{font-size:19px}.sf-slots-shortcut-copy>span{font-size:10px}.sf-slots-shortcut-copy small{font-size:8px}}
