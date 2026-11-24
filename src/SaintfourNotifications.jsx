@@ -5,22 +5,17 @@ import { acquireAmbient, releaseAmbient, ambientElapsed, ambientRandom } from '.
 
 const messages=[
  {from:'POPPY EMERSON',kind:'message',title:'Кто-нибудь видел организатора?',body:'Мне нужно согласовать следующий выпуск. Желательно до его выхода.',action:'ОТВЕТИТЬ',reply:'POPPY: Отлично. Тогда найдите его и передайте, что я жду.',ttl:16000},
- {from:'POPPY EMERSON',kind:'message',title:'Новый материал готов.',body:'Нет, я не скажу, про кого. Следите за обновлениями.',ttl:9000},
- {from:'POPPY EMERSON',kind:'message',title:'Срочно нужен комментарий.',body:'Вы случайно не знаете, кто вообще придумал этот батл?',action:'НЕ ЗНАЮ',reply:'POPPY: Как и все остальные. Прекрасно.',ttl:15000},
  {from:'LIL DEX',kind:'message',title:'Если кто-то спросит —',body:'Я здесь не был.',action:'ЧТО ТЫ НАТВОРИЛ?',reply:'DEX: Слишком много вопросов.',ttl:16000},
- {from:'LIL DEX',kind:'attachment',title:'Декс Хоук отправил фотографию',body:'Вложение · IMG_027.jpg',action:'ОТКРЫТЬ',reply:'Вложение удалено отправителем.',ttl:18000},
- {from:'LIL DEX',kind:'message',title:'Слушай.',body:'Ты ничего не видел. Договорились?',action:'ДОГОВОРИЛИСЬ',reply:'DEX: Вот и отлично.',ttl:15000},
  {from:'SHERIFF WILSON',kind:'sheriff',title:'Ваше присутствие зафиксировано.',body:'Это не повод для паники. Пока.',ttl:8500},
  {from:'SHERIFF WILSON',kind:'sheriff',title:'Служебное уведомление',body:'Пожалуйста, не подавайте жалобы ради развлечения.',ttl:10000},
  {from:'BLACK HELLEBORE ENERGY',kind:'energy',title:'Вы выглядите уставшим.',body:'Совпадение? Не думаем.',ttl:8500},
  {from:'BLACK HELLEBORE ENERGY',kind:'energy',title:'ЕЩЁ НЕ СПИТЕ?',body:'Мы тоже. По совершенно другим причинам.',ttl:8000},
  {from:'UNKNOWN',kind:'unknown',title:'Вы всё ещё здесь?',body:'',ttl:5500},
  {from:'UNKNOWN',kind:'unknown',title:'Не всё предназначено для просмотра.',body:'Сообщение будет удалено.',ttl:6500},
- {from:'MC NETTI',kind:'typing',title:'MC NETTI печатает…',body:'',ttl:5800},
  {from:'MC NETTI',kind:'typing',title:'MC NETTI печатает…',body:'',ttl:4500},
- {from:'SYSTEM',kind:'message',title:'Новое сообщение',body:'Отправитель отменил отправку.',ttl:7000}
+ {from:'SYSTEM',kind:'message',title:'Новое сообщение',body:'Отправитель отменил отправку.',ttl:7000},
 ]
-const store='sf27-ambient-notification-history-v1'
+const store='sf27-ambient-notification-history-v2'
 const between=(min,max)=>min+Math.floor(Math.random()*(max-min+1))
 function readHistory(){try{const v=JSON.parse(localStorage.getItem(store)||'{}');return {shown:Array.isArray(v.shown)?v.shown:[],last:Number.isInteger(v.last)?v.last:-1}}catch{return {shown:[],last:-1}}}
 function choose(history){let available=messages.map((_,i)=>i).filter(i=>!history.shown.includes(i));if(!available.length)available=messages.map((_,i)=>i).filter(i=>i!==history.last);const i=available[Math.floor(Math.random()*available.length)];const next={shown:[...history.shown,i].slice(-messages.length),last:i};try{localStorage.setItem(store,JSON.stringify(next))}catch{/* storage unavailable */}return {index:i,next}}
