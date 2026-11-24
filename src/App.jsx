@@ -10,6 +10,7 @@ import HypePolls from './HypePolls.jsx'
 import SecretInterview from './SecretInterview.jsx'
 import PoppyNotebook from './PoppyNotebook.jsx'
 import HowardPhone from './HowardPhone.jsx'
+import PhoneArchive from './PhoneArchive.jsx'
 import { acquireAmbient, releaseAmbient, ambientElapsed, ambientRandom } from './ambient-timing.js'
 import SaintfourNotifications from './SaintfourNotifications.jsx'
 import TwoHourSecret from './TwoHourSecret.jsx'
@@ -437,7 +438,7 @@ export default function App() {
     </div>
     <div className={'achievement-reward '+(unlockedCount===5?'achievement-reward-ready':'')} role={unlockedCount===5?'button':undefined} tabIndex={unlockedCount===5?0:undefined} aria-label={unlockedCount===5?'Открыть коллекционный ALL ACCESS TICKET':undefined} onClick={()=>{if(unlockedCount===5)setAllAccessOpen(true)}} onKeyDown={e=>{if(unlockedCount===5&&(e.key==='Enter'||e.key===' ')){e.preventDefault();setAllAccessOpen(true)}}}><div><span>FINAL REWARD / COLLECTION 01</span><h2><Ticket size={25}/> ALL ACCESS TICKET</h2><p>{unlockedCount===5?'Вся коллекция собрана! Твой коллекционный билет доступен. Нажми, чтобы открыть его.':'Коллекционный билет на шоу откроется, когда ты соберёшь всю первую коллекцию. Само шоу бесплатно для всех.'}</p>{unlockedCount===5&&<span className="achievement-reward-open">ПОСМОТРЕТЬ БИЛЕТ <ArrowRight size={15}/></span>}</div><span className="achievement-reward-lock">{unlockedCount===5?<CheckCircle2 size={17}/>:<LockKeyhole size={17}/>} {unlockedCount===5?'UNLOCKED / 5 OF 5':`LOCKED / ${unlockedCount} OF 5`}</span></div>
     {slotsDiscovered&&<button type="button" className="sf-slots-shortcut" onClick={()=>go('slots')}><span className="sf-slots-shortcut-icon"><Zap size={22}/></span><span className="sf-slots-shortcut-copy"><small>BLACK HELLEBORE / SECRET UNLOCKED</small><strong>LUCKY 777 · ИГРАТЬ В СЛОТЫ</strong><span>Секретная игра уже открыта. Вернуться можно в любой момент.</span></span><ArrowRight size={21}/></button>}
-    <div className="achievement-category-nav" aria-label="Категории достижений"><a href="#sf-achievement-active" onClick={e=>{e.preventDefault();document.getElementById('sf-achievement-active')?.scrollIntoView({behavior:'smooth',block:'start'})}}>ЗА АКТИВНОСТЬ <span>{activityCount} / 2</span></a><a href="#sf-achievement-secrets" onClick={e=>{e.preventDefault();document.getElementById('sf-achievement-secrets')?.scrollIntoView({behavior:'smooth',block:'start'})}}>СЕКРЕТНЫЕ <span>{foundSecrets} / ???</span></a></div>
+    <div className="achievement-category-nav" aria-label="Категории достижений"><a href="#sf-achievement-active" onClick={e=>{e.preventDefault();document.getElementById('sf-achievement-active')?.scrollIntoView({behavior:'smooth',block:'start'})}}>ЗА АКТИВНОСТЬ <span>{activityCount} / 2</span></a><a href="#sf-achievement-secrets" onClick={e=>{e.preventDefault();document.getElementById('sf-achievement-secrets')?.scrollIntoView({behavior:'smooth',block:'start'})}}>СЕКРЕТНЫЕ <span>{foundSecrets} / ???</span></a>{howardStoryCompleted&&<a href="#sf-phone-archive" onClick={e=>{e.preventDefault();document.getElementById("sf-phone-archive")?.scrollIntoView({behavior:"smooth",block:"start"})}}>PHONE ARCHIVE <span>???</span></a>}</div>
     <section className="achievement-category" id="sf-achievement-active">
       <div className="achievement-category-heading"><div><span className="achievement-category-kicker">01 / THE PARTICIPANTS</span><h2>ЗА <em>АКТИВНОСТЬ.</em></h2><p>Посещай сайт, участвуй в голосованиях и следи за премьерами.</p></div><span className="achievement-category-count">{String(activityCount).padStart(2,'0')} <i>/ 02</i></span></div>
       <div className="achievement-collection">
@@ -490,6 +491,7 @@ export default function App() {
       </div>
       </details>
     </section>
+    <PhoneArchive enabled={howardStoryCompleted}/>
     <section className="achievement-category achievement-category-spin" aria-label="Достижения Lucky Spin">
       <LuckySpinAchievements onOpen={()=>go('spin')}/>
     </section>
