@@ -51,6 +51,8 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const [dismissed,setDismissed]=useState(false)
  const [nextReminder,setNextReminder]=useState(0)
  const dueAt=useRef(ambientElapsed()+ambientRandom(30000,90000))
+ const suppressedRef=useRef(suppressed)
+ suppressedRef.current=suppressed
  const isBlocked=progress.blocked||achievementUnlocked
  // Resume the pre-block storyline on each visit, even if a previous call was dismissed.
  useEffect(()=>{if(!isBlocked&&!progress.firstSeen){const next={...progress,firstSeen:true};setProgress(next);saveState(next)}},[])
@@ -68,7 +70,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
    nextReminder===0?ambientRandom(30000,90000):ambientRandom(REMINDER_MIN,REMINDER_MIN+REMINDER_RANGE)
   )
   const timer=window.setInterval(()=>{
-   if(ambientElapsed()<dueAt.current||suppressed)return
+   if(ambientElapsed()<dueAt.current||suppressedRef.current)return
    if(!acquireAmbient('phone'))return
    setVisible(true)
    setDismissed(false)
@@ -79,7 +81,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
    })
   },2000)
   return()=>window.clearInterval(timer)
- },[isBlocked,visible,opened,nextReminder,suppressed])
+ },[isBlocked,visible,opened,nextReminder])
  useEffect(()=>()=>releaseAmbient('phone'),[])
 
  useEffect(()=>{
