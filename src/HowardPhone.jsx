@@ -5,6 +5,107 @@ import { acquireAmbient, releaseAmbient, ambientElapsed, ambientRandom } from '.
 import { dexCallStories } from './dex-call-stories.js'
 import { poppyCallStories } from './poppy-call-stories.js'
 
+const gossipSms=[
+ "Блять. Не туда.",
+ "Мистер Говард снова требует установить мою личность. Передайте ему удачи.",
+ "Если кто-то спросит, кто записал Говарда на батл, я ничего не знаю.",
+ "Декс опять не согласовал текст. Будем удивляться вместе.",
+ "Кто-нибудь видел Даррена? У нас вообще-то съёмки.",
+ "Руди попросил выбрать его удачные фотографии. Прислал 47 одинаковых.",
+ "Наш генеральный партнёр сегодня особенно генеральный и особенно недовольный.",
+ "Эбигейл попросила удалить одну фотографию. Теперь мне хочется её опубликовать.",
+ "Надин пока держится. Не знаю, как.",
+ "Шериф Уилсон снова интересуется моей деятельностью. Приятно иметь постоянных читателей.",
+ "Если вы нашли мой номер — нет, не нашли.",
+ "Сегодня без сплетен. У меня выходной. Хотя подождите…",
+ "Кто-нибудь объяснит Дексу, что котёнок не может официально подписывать договоры?",
+ "Пенелопа обещала больше не брать интервью у Говарда. Посмотрим.",
+ "Даррен прислал мне научную статью вместо текста для батла.",
+ "У нас четыре рэпера и ни одного человека, способного прийти вовремя.",
+ "Black Hole Energy уже не помогает.",
+ "Иногда мне кажется, что единственный адекватный участник этого шоу — кот Декса.",
+ "Не распространяйте непроверенные сплетни. Это вообще-то моя работа.",
+ "Нет, WARLOCK не выкупил канал. Пока.",
+ "Если вам позвонит шериф, мы с вами не знакомы.",
+ "Сентфор — маленький город. Слишком маленький для такого количества идиотов.",
+ "Кстати, кто вам вообще разрешил столько знать?",
+ "Хорошего вечера. И поменьше звонков Говарду. Хотя нет, звоните.",
+ "Поппи попросила не публиковать её переписку с участниками. Справедливо. Там половина слов под цензуру.",
+ "Декс принёс на репетицию кота. Кот оказался пунктуальнее.",
+ "У Говарда есть замечания к сценарию. У меня есть замечания к Говарду.",
+ "Даррен сказал, что его шуба — инвестиция. Не спрашивайте.",
+ "Руди пытается выяснить, кто придумал его рэперское имя. Не выдавайте меня.",
+ "Сегодня выяснилось, что у нашего диджея больше терпения, чем у всех нас вместе взятых.",
+ "Поппи требует отпуск. Мы ещё даже не закончили первый выпуск.",
+ "Надин отказалась комментировать происходящее. Умное решение.",
+ "Шериф интересуется, кто дал разрешение на мероприятие. Какое мероприятие?",
+ "Проверила документы WARLOCK. Теперь у меня ещё больше вопросов.",
+ "Декс опять исчез. Проверьте парковку.",
+ "Даррен объяснял мне разницу между аргументом и утверждением. Я просто попросила его записать интервью.",
+ "Эбигейл считает, что камера недостаточно часто показывает Руди.",
+ "У Руди есть план на победу. По его словам, план — победить.",
+ "Если Говард предложит вам подписать что-нибудь, хотя бы прочитайте мелкий шрифт.",
+ "Я не отвечаю за то, что участники говорят в микрофон. Особенно Декс.",
+ "Кот Декса сегодня отказался от интервью. Уважаю его принципы.",
+ "Кто-то переставил кресла на площадке. Теперь мистер Говард хочет официальное объяснение.",
+ "Даррен попросил не называть его ботаником. Принято. Доктор наук.",
+ "Поппи сказала, что у неё всё под контролем. Через пять минут попросила помощи.",
+ "Руди забыл текст. Зато вспомнил счёт последней игры.",
+ "Эбигейл снова проверяет комментарии. Всем удачи.",
+ "Если вам предложили энергетик из подозрительной банки — проверьте этикетку.",
+ "Монтаж одного интервью занимает больше времени, чем само интервью. Спасибо, Декс.",
+ "Я обещала себе не читать комментарии. Продержалась семь минут.",
+ "Никто не знает, где сценарий. Сценарий у меня. Пока не спрашивайте.",
+ "Надин сегодня снова оказалась главной темой чужих разговоров.",
+ "В Сентфоре слухи распространяются быстрее, чем официальные опровержения.",
+ "Шериф Уилсон, если вы это читаете, добрый вечер.",
+ "Говард назвал происходящее цирком. Билеты на цирк уже практически готовы.",
+ "Даррен выбирает между двумя парами очков. Съёмочная группа ждёт.",
+ "Руди уверен, что публика будет на его стороне. Публика пока молчит.",
+ "Декс попросил вырезать одну фразу. Какую именно, не сказал.",
+ "Поппи не обязана знать, кто организовал этот бардак. Но обязана его вести.",
+ "Кто-то выпил последний энергетик. Начинаем внутреннее расследование.",
+ "Мой любимый жанр — официальное опровержение того, чего никто ещё не опубликовал.",
+ "Слухи о моей личности снова оказались слухами. Какая неожиданность.",
+ "Даррен принёс папку с материалами. На батл. Папку.",
+ "Руди обещал быть через пять минут. Это было двадцать минут назад.",
+ "Эбигейл попросила согласовать ракурс. Ракурс Руди, разумеется.",
+ "Не спрашивайте Говарда, доволен ли он. Сэкономите время.",
+ "Декс утверждает, что цепь — часть костюма. Костюма, который он носит каждый день.",
+ "Поппи сегодня сказала в микрофон то, что мы все думали. Пришлось запикать.",
+ "Элис заслуживает отдельной премии за работу в этих условиях.",
+ "Иногда мне хочется просто выложить исходники. Потом вспоминаю про последствия.",
+ "Сегодня в Сентфоре подозрительно тихо. Мне это не нравится.",
+ "Говард потребовал список ответственных. Список начинается и заканчивается вопросительным знаком.",
+ "Даррен попросил уточнить критерии голосования. Конечно, попросил.",
+ "Руди назвал свою стратегию беспроигрышной. Запомнили.",
+ "Декс предложил заменить интервью пятью минутами молчания. Соблазнительно.",
+ "Поппи утверждает, что ей всё равно. У неё уже три страницы заметок.",
+ "Эбигейл не понравился мой заголовок. Значит, заголовок удачный.",
+ "Кот Декса получил больше комплиментов, чем некоторые участники.",
+ "WARLOCK просит соблюдать деловой стиль. Мы стараемся. Не очень успешно.",
+ "Шериф опять хочет поговорить. Я опять занята.",
+ "Не всё, что происходит за кулисами, стоит показывать. Но как же хочется.",
+ "Руди прислал голосовое на четыре минуты. Суть: всё нормально.",
+ "Даррен исправил опечатку в афише. Заодно исправил мне пунктуацию.",
+ "Декс назвал репетицию бессмысленной. Потом пришёл первым.",
+ "Поппи попросила не ставить ей вопросы про Надин. Записала.",
+ "Сегодня никто не поссорился. Пока что.",
+ "Если кто-то видел мой сон, верните его.",
+ "Мистер Говард, это не официальное заявление. Расслабьтесь. Хотя бы попробуйте.",
+ "У меня на рабочем столе больше компромата, чем свободного места.",
+ "Даррен спросил, можно ли добавить сноски к панчам.",
+ "Руди попросил включить музыку погромче. Элис попросила его отойти от пульта.",
+ "Декс обещает, что всё будет нормально. Вот теперь я переживаю.",
+ "Эбигейл интересуется списком гостей. Список гостей интересуется Эбигейл.",
+ "Поппи сегодня снова пришлось объяснять правила. Взрослым людям.",
+ "Надин, если ты это читаешь, держись.",
+ "Мне прислали очередную теорию о том, кто я. Фантазия у вас хорошая.",
+ "У нас закончился кофе. Это не сплетня, это чрезвычайная ситуация.",
+ "Пожалуйста, не звоните всем участникам одновременно. Хотя я бы посмотрела.",
+ "Сентфор не спит. И мне, видимо, тоже не светит.",
+ "Некоторые секреты лучше оставить секретами. Особенно мои."
+]
 const STORE='sf27-howard-phone-v2'
 const SECRET_STORE='sf27-howard-second-number-v1'
 const SECRET_NUMBER='27042007'
@@ -71,6 +172,9 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const [menuIndex,setMenuIndex]=useState(0)
  const [smsIndex,setSmsIndex]=useState(0)
  const [smsPage,setSmsPage]=useState(0)
+ const [probe,setProbe]=useState('')
+ const probeCount=useRef(0)
+ const [probeDone,setProbeDone]=useState(()=>{try{return localStorage.getItem('sf27-gossip-probe-done')==='1'}catch{return false}})
  const unread=inbox.filter(m=>!m.read).length
  const sms=inbox[smsIndex]
  const smsParts=sms?.text.match(/.{1,78}(?:\s|$)|\S+/gu)||[]
@@ -85,10 +189,37 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
   const timer=setInterval(()=>{let due=0;try{due=Number(localStorage.getItem('sf27-phone-intro-due'))||0;if(!due){due=Date.now()+60000+Math.random()*60000;localStorage.setItem('sf27-phone-intro-due',String(due))}}catch{}if(Date.now()<due||document.hidden||opened||suppressed)return;window.dispatchEvent(new CustomEvent('sf27-phone-sms',{detail:{id:'gossip-intro',sender:'GOSSIP SAINTFOUR',number:'????????',text:'Материалы по Бруксу получила. Пока ничего не публикуем.'}}))},1000)
   return()=>clearInterval(timer)
  },[menuReady,inbox,opened,suppressed])
- const readSms=i=>{setSmsIndex(i);setSmsPage(0);setMode('sms-read');saveInbox(inbox.map((m,j)=>j===i?{...m,read:true}:m))}
+ useEffect(()=>{
+  if(!menuReady||!inbox.some(m=>m.id==='gossip-intro'))return
+  const tick=()=>{
+   let due=0;try{due=Number(localStorage.getItem('sf27-gossip-next-due'))||0;if(!due){due=Date.now()+ambientRandom(240000,480000);localStorage.setItem('sf27-gossip-next-due',String(due))}}catch{return}
+   if(Date.now()<due||document.hidden||opened||suppressed)return
+   const regular=inbox.filter(m=>/^gossip-regular-/.test(m.id))
+   const used=new Set(regular.map(m=>m.id.split('-').slice(-2).join('-')))
+   const cycle=Math.floor(regular.length/gossipSms.length)
+   const available=gossipSms.map((_,i)=>i).filter(i=>!used.has(cycle+'-'+i))
+   if(!available.length)return
+   const i=available[Math.floor(Math.random()*available.length)]
+   try{localStorage.setItem('sf27-gossip-next-due',String(Date.now()+ambientRandom(240000,480000)))}catch{}
+   window.dispatchEvent(new CustomEvent('sf27-phone-sms',{detail:{id:'gossip-regular-'+cycle+'-'+i,sender:'GOSSIP SAINTFOUR',number:'????????',text:gossipSms[i]}}))
+  }
+  const timer=setInterval(tick,1000);return()=>clearInterval(timer)
+ },[menuReady,inbox,opened,suppressed])
+ const inspectGossip=()=>{
+  let n=probeCount.current;try{n=Number(localStorage.getItem('sf27-gossip-probe-count'))||0}catch{}
+  n++;probeCount.current=n;try{localStorage.setItem('sf27-gossip-probe-count',String(n))}catch{}
+  const fake=()=>String(ambientRandom(80000000,89999999))
+  setProbe(n===1?'НОМЕР СКРЫТ':n===2?'ДАННЫЕ НЕДОСТУПНЫ':n===5?'ОШИБКА ИДЕНТИФИКАЦИИ':'ЛОЖНЫЙ НОМЕР: '+fake())
+  if(n>=5&&!probeDone&&!inbox.some(m=>m.id==='gossip-probe-reply')){
+   setProbeDone(true);try{localStorage.setItem('sf27-gossip-probe-done','1')}catch{}
+   // Append while reading so that the selected message remains at the same index.
+   saveInbox([...inbox,{id:'gossip-probe-reply',sender:'GOSSIP SAINTFOUR',number:'????????',text:'Вы сейчас серьёзно пытаетесь узнать мой номер? Уилсон, перелогиньтесь.',read:false}])
+  }
+ }
+ const readSms=i=>{setProbe('');setSmsIndex(i);setSmsPage(0);setMode('sms-read');saveInbox(inbox.map((m,j)=>j===i?{...m,read:true}:m))}
  const openInbox=()=>{setSmsIndex(0);setMode(inbox.length?'sms-list':'sms-empty')}
  const moveSelection=delta=>{if(mode==='phone-menu')setMenuIndex(v=>(v+delta+2)%2);if(mode==='sms-list'&&inbox.length)setSmsIndex(v=>(v+delta+inbox.length)%inbox.length)}
- const centre=()=>{if(mode==='poppy-answer'||mode==='poppy-unlock'){advancePoppy();return}if(mode==='sms-read'){if(smsPage<smsParts.length-1)setSmsPage(v=>v+1);else setMode('sms-list');return}if(mode==='sms-list'){if(inbox.length)readSms(smsIndex);return}if(mode==='phone-menu'){if(menuIndex===0)setMode('secret-idle');else openInbox();return}if(menuReady)setMode('phone-menu')}
+ const centre=()=>{if(mode==='sms-read'&&probe){setProbe('');return}if(mode==='poppy-answer'||mode==='poppy-unlock'){advancePoppy();return}if(mode==='sms-read'){if(smsPage<smsParts.length-1)setSmsPage(v=>v+1);else setMode('sms-list');return}if(mode==='sms-list'){if(inbox.length)readSms(smsIndex);return}if(mode==='phone-menu'){if(menuIndex===0)setMode('secret-idle');else openInbox();return}if(menuReady)setMode('phone-menu')}
 
  // Resume the pre-block storyline on each visit, even if a previous call was dismissed.
  useEffect(()=>{if(!isBlocked&&!progress.firstSeen){const next={...progress,firstSeen:true};setProgress(next);saveState(next)}},[])
@@ -213,7 +344,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const callNumber=()=>{if(mode==='secret-connecting'||mode==='dex-connecting'||mode==='poppy-connecting')return;if(dial===DEX_NUMBER&&dexFound){callDex();return}if(dial===SECRET_NUMBER&&secretFound){callSecret();return}if(dial===POPPY_NUMBER&&poppyFound){callPoppy();return}setMode('secret-wrong')}
  const callSecret=()=>{if(mode==='secret-connecting')return;if(dial!==SECRET_NUMBER){setMode('secret-wrong');return}if(!poppyFound&&secretCalls>=24){revealPoppy('howard');return}const index=secretCalls%secretLines.length;setSecretReply(secretLines[index]);setSecretCalls(secretCalls+1);try{localStorage.setItem('sf27-howard-secret-calls',String(secretCalls+1))}catch{}setMode('secret-connecting')}
  const pressKey=k=>{if(!isBlocked||!(secretFound||dexFound||poppyFound))return;const digit=k.charAt(0);if(!/^[0-9]$/.test(digit))return;setDial(v=>(v+digit).slice(0,14));setMode('secret-idle')}
- const hang=()=>{if(mode==='sms-read'){setMode('sms-list');return}if(['sms-list','sms-empty'].includes(mode)){setMode('phone-menu');return}if(mode==='phone-menu'){close();return}if(mode==='final'){close();return}const now=Date.now();const double=now-lastHang.current<500;lastHang.current=double?0:now;if(double&&isBlocked&&(secretFound||dexFound||poppyFound))setDial('');if(mode==='incoming')markMissed();if(mode==='poppy-connecting')setPoppyBusy(false);setMode(isBlocked&&(secretFound||dexFound||poppyFound)?(menuReady&&!double&&!['secret-idle','secret-wrong'].includes(mode)?'phone-menu':'secret-idle'):progress.blocked?'blocked':'idle')}
+ const hang=()=>{if(mode==='sms-read'){setProbe('');setMode('sms-list');return}if(['sms-list','sms-empty'].includes(mode)){setMode('phone-menu');return}if(mode==='phone-menu'){close();return}if(mode==='final'){close();return}const now=Date.now();const double=now-lastHang.current<500;lastHang.current=double?0:now;if(double&&isBlocked&&(secretFound||dexFound||poppyFound))setDial('');if(mode==='incoming')markMissed();if(mode==='poppy-connecting')setPoppyBusy(false);setMode(isBlocked&&(secretFound||dexFound||poppyFound)?(menuReady&&!double&&!['secret-idle','secret-wrong'].includes(mode)?'phone-menu':'secret-idle'):progress.blocked?'blocked':'idle')}
  const close=()=>{if(mode==='incoming')markMissed();if(mode==='poppy-connecting')setPoppyBusy(false);if(!isBlocked){releaseAmbient('phone');setVisible(false);setNextReminder(n=>n+1)}setOpened(false);setMode('incoming')}
  const dismiss=()=>{releaseAmbient('phone');markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
  if(!visible&&!isBlocked)return null
@@ -243,7 +374,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
       <div className="hp-screen">
        <div className="hp-status"><span>▂▄▆</span><span>SF · 27</span><span>▰▰▰</span></div>
        <div className="hp-screen-body" onClick={()=>{if(["poppy-answer","poppy-unlock","sms-read"].includes(mode))centre()}}>
-        {mode==='phone-menu'?<><span className="hp-screen-kicker">ГЛАВНОЕ МЕНЮ</span>{['☎ НАБОР НОМЕРА','✉ СООБЩЕНИЯ ('+unread+')'].map((label,i)=><button key={i} type="button" aria-current={menuIndex===i?'true':undefined} onClick={()=>{setMenuIndex(i);if(i===0)setMode('secret-idle');else openInbox()}} style={{width:'100%',padding:'7px 3px',border:'1px solid '+(menuIndex===i?'#e5a4fa':'#63416f'),borderRadius:5,background:menuIndex===i?'#713c85':'#281633',color:'#f5d5ff',font:'700 10px monospace',cursor:'pointer'}}>{label}</button>)}<small>ВЫБЕРИТЕ ПУНКТ · ▲ ▼ ●</small></>:mode==='sms-list'?<><span className="hp-screen-kicker">ВХОДЯЩИЕ · {inbox.length}</span><div style={{width:'100%',minHeight:0,maxHeight:100,overflowY:'auto'}}>{inbox.map((m,i)=><button key={m.id} type="button" onClick={()=>readSms(i)} aria-current={smsIndex===i?'true':undefined} style={{display:'block',width:'100%',marginBottom:3,padding:5,textAlign:'left',border:'1px solid '+(smsIndex===i?'#e5a4fa':'#63416f'),borderRadius:4,background:smsIndex===i?'#713c85':'#281633',color:'#f5d5ff',font:'700 9px monospace',overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis',cursor:'pointer'}}>{m.read?'✉':'●'} {m.sender} · {m.text}</button>)}</div><small>НАЖМИТЕ НА SMS ИЛИ ●</small></>:mode==='sms-empty'?<><strong>НЕТ СООБЩЕНИЙ</strong><small>КРАСНАЯ — НАЗАД</small></>:mode==='sms-read'?<><span className="hp-screen-kicker">SMS · {smsIndex+1}/{inbox.length}</span><small>{sms?.sender} · {sms?.number}</small><strong className="hp-poppy-story">{smsParts[smsPage]}</strong><small>● — {smsPage<smsParts.length-1?'ДАЛЕЕ':'К СПИСКУ'}</small></>:mode==='secret-idle'||mode==='secret-wrong'?<><span className="hp-screen-kicker">НАБОР НОМЕРА</span><strong className="hp-dial-display">{dial||'________'}</strong><small>{mode==='secret-wrong'?'НОМЕР НЕ НАЙДЕН':'НАБЕРИТЕ СОХРАНЁННЫЙ НОМЕР'}</small></>:mode==='poppy-unlock'?<><span className="hp-screen-kicker">НОВЫЙ КОНТАКТ · POPPY</span><strong className="hp-poppy-story">{poppyLines[poppySlide]}</strong><small>77701927 СОХРАНЁН · {poppySlide+1}/{poppyLines.length} · КНОПКА ●</small></>:mode==='poppy-connecting'?<><span className="hp-screen-kicker">POPPY EMERSON</span><Phone className="hp-ring" size={23}/><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong><small>{POPPY_NUMBER}</small></>:mode==='poppy-no-answer'?<><PhoneOff size={23}/><strong>АБОНЕНТ НЕ ОТВЕЧАЕТ</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='poppy-answer'?<><span className="hp-screen-kicker">POPPY EMERSON · {poppySlide+1}/{poppyLines.length}</span><strong className="hp-poppy-story">{poppyLines[poppySlide]}</strong><small>{poppySlide===poppyLines.length-1?'КОНЕЦ РАЗГОВОРА · ●':'СЛЕДУЮЩАЯ РЕПЛИКА · ●'}</small></>:mode==='dex-connecting'?<><span className="hp-screen-kicker">LIL DEX / ИСХОДЯЩИЙ</span><strong>{DEX_NUMBER}</strong><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong></>:mode==='dex-answer'?<><span className="hp-screen-kicker">LIL DEX · {dexStory?.duration}</span><strong className="hp-dex-story">{dexStory?.text}</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='secret-connecting'?<><span className="hp-screen-kicker">ИСХОДЯЩИЙ ВЫЗОВ</span><strong>{SECRET_NUMBER}</strong><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong></>:mode==='secret-answer'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong>{secretReply}</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='blocked'?<><LockKeyhole size={31}/><strong>КОНТАКТ<br/>ЗАБЛОКИРОВАН</strong><small>WARLOCK INDUSTRIES</small></>:
+        {mode==='phone-menu'?<><span className="hp-screen-kicker">ГЛАВНОЕ МЕНЮ</span>{['☎ НАБОР НОМЕРА','✉ СООБЩЕНИЯ ('+unread+')'].map((label,i)=><button key={i} type="button" aria-current={menuIndex===i?'true':undefined} onClick={()=>{setMenuIndex(i);if(i===0)setMode('secret-idle');else openInbox()}} style={{width:'100%',padding:'7px 3px',border:'1px solid '+(menuIndex===i?'#e5a4fa':'#63416f'),borderRadius:5,background:menuIndex===i?'#713c85':'#281633',color:'#f5d5ff',font:'700 10px monospace',cursor:'pointer'}}>{label}</button>)}<small>ВЫБЕРИТЕ ПУНКТ · ▲ ▼ ●</small></>:mode==='sms-list'?<><span className="hp-screen-kicker">ВХОДЯЩИЕ · {inbox.length}</span><div style={{width:'100%',minHeight:0,maxHeight:100,overflowY:'auto'}}>{inbox.map((m,i)=><button key={m.id} type="button" onClick={()=>readSms(i)} aria-current={smsIndex===i?'true':undefined} style={{display:'block',width:'100%',marginBottom:3,padding:5,textAlign:'left',border:'1px solid '+(smsIndex===i?'#e5a4fa':'#63416f'),borderRadius:4,background:smsIndex===i?'#713c85':'#281633',color:'#f5d5ff',font:'700 9px monospace',overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis',cursor:'pointer'}}>{m.read?'✉':'●'} {m.sender} · {m.text}</button>)}</div><small>НАЖМИТЕ НА SMS ИЛИ ●</small></>:mode==='sms-empty'?<><strong>НЕТ СООБЩЕНИЙ</strong><small>КРАСНАЯ — НАЗАД</small></>:mode==='sms-read'?<><span className="hp-screen-kicker">SMS · {smsIndex+1}/{inbox.length}</span>{sms?.sender==='GOSSIP SAINTFOUR'?<button type="button" className="hp-sms-sender" onClick={e=>{e.stopPropagation();inspectGossip()}}>{sms.sender} · ????????</button>:<small>{sms?.sender} · {sms?.number}</small>}<strong className={probe?'hp-sms-probe':'hp-poppy-story'}>{probe||smsParts[smsPage]}</strong><small>● — {probe?'К СООБЩЕНИЮ':smsPage<smsParts.length-1?'ДАЛЕЕ':'К СПИСКУ'}</small></>:mode==='secret-idle'||mode==='secret-wrong'?<><span className="hp-screen-kicker">НАБОР НОМЕРА</span><strong className="hp-dial-display">{dial||'________'}</strong><small>{mode==='secret-wrong'?'НОМЕР НЕ НАЙДЕН':'НАБЕРИТЕ СОХРАНЁННЫЙ НОМЕР'}</small></>:mode==='poppy-unlock'?<><span className="hp-screen-kicker">НОВЫЙ КОНТАКТ · POPPY</span><strong className="hp-poppy-story">{poppyLines[poppySlide]}</strong><small>77701927 СОХРАНЁН · {poppySlide+1}/{poppyLines.length} · КНОПКА ●</small></>:mode==='poppy-connecting'?<><span className="hp-screen-kicker">POPPY EMERSON</span><Phone className="hp-ring" size={23}/><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong><small>{POPPY_NUMBER}</small></>:mode==='poppy-no-answer'?<><PhoneOff size={23}/><strong>АБОНЕНТ НЕ ОТВЕЧАЕТ</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='poppy-answer'?<><span className="hp-screen-kicker">POPPY EMERSON · {poppySlide+1}/{poppyLines.length}</span><strong className="hp-poppy-story">{poppyLines[poppySlide]}</strong><small>{poppySlide===poppyLines.length-1?'КОНЕЦ РАЗГОВОРА · ●':'СЛЕДУЮЩАЯ РЕПЛИКА · ●'}</small></>:mode==='dex-connecting'?<><span className="hp-screen-kicker">LIL DEX / ИСХОДЯЩИЙ</span><strong>{DEX_NUMBER}</strong><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong></>:mode==='dex-answer'?<><span className="hp-screen-kicker">LIL DEX · {dexStory?.duration}</span><strong className="hp-dex-story">{dexStory?.text}</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='secret-connecting'?<><span className="hp-screen-kicker">ИСХОДЯЩИЙ ВЫЗОВ</span><strong>{SECRET_NUMBER}</strong><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong></>:mode==='secret-answer'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong>{secretReply}</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='blocked'?<><LockKeyhole size={31}/><strong>КОНТАКТ<br/>ЗАБЛОКИРОВАН</strong><small>WARLOCK INDUSTRIES</small></>:
          mode==='final'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong className="hp-angry">КТО ДАЛ ВАМ МОЙ НОМЕР?!</strong><small>ВАШ НОМЕР ЗАБЛОКИРОВАН</small></>:
          mode==='mistake'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong>Прошу прощения. Кажется, я ошибся номером.</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:
          mode==='answer'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong>{reply?.text}</strong><small>{reply?.status}</small></>:
