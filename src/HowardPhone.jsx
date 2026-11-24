@@ -113,7 +113,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const callSecret=()=>{if(mode==='secret-connecting')return;if(dial!==SECRET_NUMBER){setMode('secret-wrong');return}const index=secretCalls%secretLines.length;setSecretReply(secretLines[index]);setSecretCalls(secretCalls+1);try{localStorage.setItem('sf27-howard-secret-calls',String(secretCalls+1))}catch{}setMode('secret-connecting')}
  const pressKey=k=>{if(!isBlocked||!(secretFound||dexFound))return;const digit=k.charAt(0);if(!/^[0-9]$/.test(digit))return;setDial(v=>(v+digit).slice(0,14));setMode('secret-idle')}
  const hang=()=>{if(mode==='incoming')markMissed();setMode(isBlocked&&(secretFound||dexFound)?'secret-idle':progress.blocked?'blocked':'idle')}
- const close=()=>{if(mode==='incoming')markMissed();setOpened(false);setMode('incoming')}
+ const close=()=>{if(mode==='incoming')markMissed();if(!isBlocked){releaseAmbient('phone');setVisible(false);setNextReminder(n=>n+1)}setOpened(false);setMode('incoming')}
  const dismiss=()=>{releaseAmbient('phone');markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
  if(!visible&&!isBlocked)return null
  return <>
