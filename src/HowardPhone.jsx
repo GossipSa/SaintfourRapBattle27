@@ -262,7 +262,6 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
       <span className="hp-bottom-mark">MOTOR / SF EDITION</span>
      </div>
     </div>
-    <div className="hp-caption">{mode.startsWith('poppy-')?'POPPY EMERSON · Личная линия.':mode.startsWith('dex-')?'LIL DEX. Никто не обещал, что разговор будет нормальным.':mode.startsWith('secret-')?'Личный номер. Говард явно не ожидал этого звонка.':mode==='blocked'?'Натаниэль Говард заблокировал ваш номер.':mode==='final'?'Достижение открыто: «ГОВАРД ЗАБЛОКИРОВАЛ ВАС»':mode==='incoming'?'Неизвестный номер. Ответить на вызов?':mode==='mistake'?'Звонок оборвался. Но номер остался в журнале.':progress.missed&&!progress.introDone?'1 пропущенный вызов. Номер сохранился. Может, перезвоним?':'Можно попробовать перезвонить.'}</div>
    </div>
   </div>}
  </>
