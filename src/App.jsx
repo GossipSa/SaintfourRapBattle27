@@ -337,9 +337,8 @@ export default function App() {
  useEffect(()=>{
    // WARLOCK can return after long visits, independently from Howard's phone arc.
    if(warlockDue.current===null){
-     let seen=false
-     try{seen=window.sessionStorage.getItem('sf27-warlock-notice-v1')==='1'}catch{/* private mode */}
-     warlockDue.current=ambientElapsed()+(seen?ambientRandom(720000,1080000):ambientRandom(150000,240000))
+     // Each fresh page visit gets an early WARLOCK alert, even if one was seen earlier.
+     warlockDue.current=ambientElapsed()+ambientRandom(150000,240000)
    }
    const timer=window.setInterval(()=>{
      if(achievementToast||ambientElapsed()<warlockDue.current)return
