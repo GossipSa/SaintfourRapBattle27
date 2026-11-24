@@ -51,6 +51,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const [dexUsed,setDexUsed]=useState(readDexCalls)
  const [dexStory,setDexStory]=useState(null)
  const [dial,setDial]=useState('')
+ const lastHang=useRef(0)
  const [expandedContact,setExpandedContact]=useState(null)
  const [secretReply,setSecretReply]=useState('')
  const [secretCalls,setSecretCalls]=useState(()=>{try{return Math.max(0,Number(localStorage.getItem('sf27-howard-secret-calls'))||0)}catch{return 0}})
@@ -108,7 +109,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
 
  useEffect(()=>{
   if(!opened)return
-  const key=e=>{if(e.key==='Escape'){setOpened(false);setMode('incoming')}}
+  const key=e=>{if(e.key==='Escape'){setPoppyBusy(false);setOpened(false);setMode('incoming')}}
   document.addEventListener('keydown',key)
   return()=>document.removeEventListener('keydown',key)
  },[opened])
@@ -189,7 +190,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const callNumber=()=>{if(mode==='secret-connecting'||mode==='dex-connecting'||mode==='poppy-connecting')return;if(dial===DEX_NUMBER&&dexFound){callDex();return}if(dial===SECRET_NUMBER&&secretFound){callSecret();return}if(dial===POPPY_NUMBER&&poppyFound){callPoppy();return}setMode('secret-wrong')}
  const callSecret=()=>{if(mode==='secret-connecting')return;if(dial!==SECRET_NUMBER){setMode('secret-wrong');return}if(!poppyFound&&Math.random()<1/100){revealPoppy('howard');return}const index=secretCalls%secretLines.length;setSecretReply(secretLines[index]);setSecretCalls(secretCalls+1);try{localStorage.setItem('sf27-howard-secret-calls',String(secretCalls+1))}catch{}setMode('secret-connecting')}
  const pressKey=k=>{if(!isBlocked||!(secretFound||dexFound||poppyFound))return;const digit=k.charAt(0);if(!/^[0-9]$/.test(digit))return;setDial(v=>(v+digit).slice(0,14));setMode('secret-idle')}
- const hang=()=>{if(mode==='incoming')markMissed();if(mode==='poppy-connecting')setPoppyBusy(false);setMode(isBlocked&&(secretFound||dexFound||poppyFound)?'secret-idle':progress.blocked?'blocked':'idle')}
+ const hang=()=>{if(mode==='final'){close();return}const now=Date.now();const double=now-lastHang.current<500;lastHang.current=double?0:now;if(double&&isBlocked&&(secretFound||dexFound||poppyFound))setDial('');if(mode==='incoming')markMissed();if(mode==='poppy-connecting')setPoppyBusy(false);setMode(isBlocked&&(secretFound||dexFound||poppyFound)?'secret-idle':progress.blocked?'blocked':'idle')}
  const close=()=>{if(mode==='incoming')markMissed();if(mode==='poppy-connecting')setPoppyBusy(false);if(!isBlocked){releaseAmbient('phone');setVisible(false);setNextReminder(n=>n+1)}setOpened(false);setMode('incoming')}
  const dismiss=()=>{releaseAmbient('phone');markMissed();setDismissed(true);setVisible(false);setOpened(false);setMode('incoming');if(!isBlocked)setNextReminder(n=>n+1)}
  if(!visible&&!isBlocked)return null
@@ -214,12 +215,12 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
       {poppyFound&&<button type="button" className={'hp-contact-tab hp-contact-poppy '+(expandedContact==='poppy'?'is-expanded':'')} onClick={()=>setExpandedContact(v=>v==='poppy'?null:'poppy')} aria-expanded={expandedContact==='poppy'}><span className="hp-tab-label">POPPY</span>{expandedContact==='poppy'&&<span className="hp-tab-details"><small>PRIVATE / SAVED</small><strong>77 70<br/>19 27</strong><span>Пенелопа Эмерсон</span></span>}</button>}
      </aside>}
     <div className="hp-phone">
-     <button type="button" className="hp-upper" onClick={mode==='poppy-answer'||mode==='poppy-unlock'?advancePoppy:close} aria-label="Сложить телефон">
+     <button type="button" className="hp-upper" onClick={close} aria-label="Сложить телефон">
       <span className="hp-earpiece"/>
       <div className="hp-screen">
        <div className="hp-status"><span>▂▄▆</span><span>SF · 27</span><span>▰▰▰</span></div>
        <div className="hp-screen-body">
-        {mode==='secret-idle'||mode==='secret-wrong'?<><span className="hp-screen-kicker">НАБОР НОМЕРА</span><strong className="hp-dial-display">{dial||'________'}</strong><small>{mode==='secret-wrong'?'НОМЕР НЕ НАЙДЕН':'НАБЕРИТЕ СОХРАНЁННЫЙ НОМЕР'}</small></>:mode==='poppy-unlock'?<><span className="hp-screen-kicker">НОВЫЙ КОНТАКТ · POPPY</span><strong className="hp-poppy-story">{poppyLines[poppySlide]}</strong><small>77701927 СОХРАНЁН · {poppySlide+1}/{poppyLines.length} · НАЖМИ НА ЭКРАН</small></>:mode==='poppy-connecting'?<><span className="hp-screen-kicker">POPPY EMERSON</span><Phone className="hp-ring" size={23}/><strong>СОЕДИНЕНИЕ...</strong><small>{POPPY_NUMBER}</small></>:mode==='poppy-no-answer'?<><PhoneOff size={23}/><strong>АБОНЕНТ НЕ ОТВЕЧАЕТ</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='poppy-answer'?<><span className="hp-screen-kicker">POPPY EMERSON · {poppySlide+1}/{poppyLines.length}</span><strong className="hp-poppy-story">{poppyLines[poppySlide]}</strong><small>{poppySlide===poppyLines.length-1?'КОНЕЦ РАЗГОВОРА · НАЖМИ':'НАЖМИ НА ЭКРАН →'}</small></>:mode==='dex-connecting'?<><span className="hp-screen-kicker">LIL DEX / ИСХОДЯЩИЙ</span><strong>{DEX_NUMBER}</strong><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong></>:mode==='dex-answer'?<><span className="hp-screen-kicker">LIL DEX · {dexStory?.duration}</span><strong className="hp-dex-story">{dexStory?.text}</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='secret-connecting'?<><span className="hp-screen-kicker">ИСХОДЯЩИЙ ВЫЗОВ</span><strong>{SECRET_NUMBER}</strong><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong></>:mode==='secret-answer'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong>{secretReply}</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='blocked'?<><LockKeyhole size={31}/><strong>КОНТАКТ<br/>ЗАБЛОКИРОВАН</strong><small>WARLOCK INDUSTRIES</small></>:
+        {mode==='secret-idle'||mode==='secret-wrong'?<><span className="hp-screen-kicker">НАБОР НОМЕРА</span><strong className="hp-dial-display">{dial||'________'}</strong><small>{mode==='secret-wrong'?'НОМЕР НЕ НАЙДЕН':'НАБЕРИТЕ СОХРАНЁННЫЙ НОМЕР'}</small></>:mode==='poppy-unlock'?<><span className="hp-screen-kicker">НОВЫЙ КОНТАКТ · POPPY</span><strong className="hp-poppy-story">{poppyLines[poppySlide]}</strong><small>77701927 СОХРАНЁН · {poppySlide+1}/{poppyLines.length} · КНОПКА ●</small></>:mode==='poppy-connecting'?<><span className="hp-screen-kicker">POPPY EMERSON</span><Phone className="hp-ring" size={23}/><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong><small>{POPPY_NUMBER}</small></>:mode==='poppy-no-answer'?<><PhoneOff size={23}/><strong>АБОНЕНТ НЕ ОТВЕЧАЕТ</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='poppy-answer'?<><span className="hp-screen-kicker">POPPY EMERSON · {poppySlide+1}/{poppyLines.length}</span><strong className="hp-poppy-story">{poppyLines[poppySlide]}</strong><small>{poppySlide===poppyLines.length-1?'КОНЕЦ РАЗГОВОРА · ●':'СЛЕДУЮЩАЯ РЕПЛИКА · ●'}</small></>:mode==='dex-connecting'?<><span className="hp-screen-kicker">LIL DEX / ИСХОДЯЩИЙ</span><strong>{DEX_NUMBER}</strong><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong></>:mode==='dex-answer'?<><span className="hp-screen-kicker">LIL DEX · {dexStory?.duration}</span><strong className="hp-dex-story">{dexStory?.text}</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='secret-connecting'?<><span className="hp-screen-kicker">ИСХОДЯЩИЙ ВЫЗОВ</span><strong>{SECRET_NUMBER}</strong><strong className="hp-connecting">СОЕДИНЕНИЕ<span className="hp-dots"/></strong></>:mode==='secret-answer'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong>{secretReply}</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:mode==='blocked'?<><LockKeyhole size={31}/><strong>КОНТАКТ<br/>ЗАБЛОКИРОВАН</strong><small>WARLOCK INDUSTRIES</small></>:
          mode==='final'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong className="hp-angry">КТО ДАЛ ВАМ МОЙ НОМЕР?!</strong><small>ВАШ НОМЕР ЗАБЛОКИРОВАН</small></>:
          mode==='mistake'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong>Прошу прощения. Кажется, я ошибся номером.</strong><small>ВЫЗОВ ЗАВЕРШЁН</small></>:
          mode==='answer'?<><span className="hp-screen-kicker">НАТАНИЭЛЬ ГОВАРД</span><strong>{reply?.text}</strong><small>{reply?.status}</small></>:
@@ -233,21 +234,15 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
      <div className="hp-joint"><span/></div>
      <div className="hp-lower">
       <div className="hp-actions">
-       <button type="button" className="hp-answer" onClick={isBlocked&&(secretFound||dexFound||poppyFound)?callNumber:call} aria-label={mode==='incoming'?'Ответить на звонок':'Позвонить ещё раз'} disabled={mode==='blocked'||mode==='final'||mode==='mistake'||mode==='secret-connecting'||mode==='dex-connecting'||mode==='poppy-connecting'||mode==='poppy-answer'||mode==='poppy-unlock'}><Phone size={20}/></button>
-       <span className="hp-dpad"><span>▲</span><span>◀ ● ▶</span><span>▼</span></span>
-       <button type="button" className="hp-hang" onClick={hang} aria-label="Сбросить звонок"><PhoneOff size={19}/></button>
+       <button type="button" className="hp-answer" onClick={isBlocked&&(secretFound||dexFound||poppyFound)?callNumber:call} aria-label={mode==='incoming'?'Ответить на звонок':'Позвонить ещё раз'} disabled={mode==='blocked'||mode==='final'||mode==='secret-connecting'||mode==='dex-connecting'||mode==='poppy-connecting'||mode==='poppy-answer'||mode==='poppy-unlock'}><Phone size={20}/></button>
+       <button type="button" className="hp-dpad" onClick={advancePoppy} disabled={mode!=='poppy-answer'&&mode!=='poppy-unlock'} aria-label="Следующая реплика"><span>▲</span><span>◀ ● ▶</span><span>▼</span></button>
+       <button type="button" className="hp-hang" onClick={hang} aria-label="Завершить вызов; два нажатия — очистить номер"><PhoneOff size={19}/></button>
       </div>
       <div className="hp-keys">{['1','2 ABC','3 DEF','4 GHI','5 JKL','6 MNO','7 PQRS','8 TUV','9 WXYZ','*','0 +','#'].map(k=><button type="button" key={k} onClick={()=>{if(isBlocked&&(secretFound||dexFound||poppyFound)&&!['poppy-answer','poppy-unlock','poppy-connecting'].includes(mode))pressKey(k);else if(mode==='idle')setMode('incoming')}}>{<><span className="hp-key-digit">{k.charAt(0)}</span>{k.length>1&&<span className="hp-key-letters">{k.slice(1).trim()}</span>}</>}</button>)}</div>
-      {isBlocked&&(secretFound||dexFound)&&<button type="button" className="hp-clear-dial" onClick={()=>{setDial('');setMode('secret-idle')}}>СБРОСИТЬ НОМЕР</button>}<span className="hp-bottom-mark">MOTOR / SF EDITION</span>
+      <span className="hp-bottom-mark">MOTOR / SF EDITION</span>
      </div>
     </div>
     <div className="hp-caption">{mode.startsWith('poppy-')?'POPPY EMERSON · Личная линия.':mode.startsWith('dex-')?'LIL DEX. Никто не обещал, что разговор будет нормальным.':mode.startsWith('secret-')?'Личный номер. Говард явно не ожидал этого звонка.':mode==='blocked'?'Натаниэль Говард заблокировал ваш номер.':mode==='final'?'Достижение открыто: «ГОВАРД ЗАБЛОКИРОВАЛ ВАС»':mode==='incoming'?'Неизвестный номер. Ответить на вызов?':mode==='mistake'?'Звонок оборвался. Но номер остался в журнале.':progress.missed&&!progress.introDone?'1 пропущенный вызов. Номер сохранился. Может, перезвоним?':'Можно попробовать перезвонить.'}</div>
-    {(mode==='answer'||mode==='idle'||mode==='mistake')&&<button type="button" className="hp-redial" onClick={()=>{if(mode==='mistake'){setMode('idle')}else{call()}}}>ПОЗВОНИТЬ ЕЩЁ РАЗ ↗</button>}
-    {(mode==='poppy-answer'||mode==='poppy-unlock')&&<button type="button" className="hp-redial hp-poppy-next" onClick={advancePoppy}>{poppySlide===poppyLines.length-1?'ЗАВЕРШИТЬ РАЗГОВОР ↗':'СЛЕДУЮЩАЯ РЕПЛИКА →'}</button>}
-    {mode==='poppy-no-answer'&&<button type="button" className="hp-redial" onClick={()=>{setDial(POPPY_NUMBER);setMode('secret-idle')}}>ПОЗВОНИТЬ СНОВА ↗</button>}
-    {mode==='dex-answer'&&<button type="button" className="hp-redial" onClick={()=>{setDial(DEX_NUMBER);setMode('secret-idle')}}>ПОЗВОНИТЬ СНОВА ↗</button>}
-    {mode==='secret-answer'&&<button type="button" className="hp-redial" onClick={()=>setMode('secret-idle')}>ПОЗВОНИТЬ СНОВА ↗</button>}
-    {mode==='final'&&<button type="button" className="hp-redial" onClick={close}>ЗАКРЫТЬ ТЕЛЕФОН ↗</button>}
    </div>
   </div>}
  </>
