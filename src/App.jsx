@@ -49,7 +49,7 @@ const media = [
   { id:'interview-dex', type:'INTERVIEW', title:'LIL DEX — INTERVIEW', duration:'03 DEC · 19:00 МСК', artist:'Lil Dex', date:'2026-12-03', thumbnail:`${import.meta.env.BASE_URL}media/interviews/dex.jpg`, url:'/api/interviews/dex' },
   { id:'interview-netti', type:'INTERVIEW', title:'MC NETTI — INTERVIEW', duration:'10 DEC · 19:00 МСК', artist:'MC Netti', date:'2026-12-10', thumbnail:`${import.meta.env.BASE_URL}media/interviews/netti.jpg`, url:'/api/interviews/netti' },
   { id:'interview-rud', type:'INTERVIEW', title:'YUNG RUD — INTERVIEW', duration:'17 DEC · 19:00 МСК', artist:'Yung Rud', date:'2026-12-17', thumbnail:`${import.meta.env.BASE_URL}media/interviews/rudi.jpg`, url:'/api/interviews/rudi' },
-  { id:'interview-daro', type:'INTERVIEW', title:'DON DARO — INTERVIEW', duration:'24 DEC · 19:00 МСК', artist:'Don Daro', date:'2026-12-24', thumbnail:`${import.meta.env.BASE_URL}media/interviews/daro.jpg`, url:'/api/interviews/daro' },
+  { id:'interview-daro', type:'INTERVIEW', title:'DON DARO — INTERVIEW', duration:'24 DEC · 19:00 МСК', artist:'Don Daro', date:'2026-12-24', thumbnail:`${import.meta.env.BASE_URL}media/interviews/don-daro-final-20261125.jpg`, url:'/api/interviews/daro' },
   { id:'interview-nadine', type:'INTERVIEW', title:'NADINE — INTERVIEW', duration:'31 DEC · 19:00 МСК', artist:'Nadine', date:'2026-12-31', thumbnail:`${import.meta.env.BASE_URL}media/interviews/nadine.jpg`, url:'/api/interviews/nadine' },
   { id:'trailer', type:'VIDEO', title:'SAINTFOUR RAP BATTLE — OFFICIAL TEASER', duration:'SOON', artist:'Saintfour', thumbnail:`${import.meta.env.BASE_URL}media/teaser.jpg`, url:'' },
 ]
