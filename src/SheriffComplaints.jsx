@@ -1,3 +1,4 @@
+import {track} from './BattleAnalytics.jsx'
 import { useState } from 'react'
 import { ShieldAlert, X, FileText, CheckCircle2, Trophy } from 'lucide-react'
 import './sheriff-complaints.css'
@@ -249,6 +250,7 @@ export default function SheriffComplaints({open,onClose,onFirstComplaint,achieve
  const [lastTired,setLastTired]=useState(-1)
  if(!open)return null
  const submit=()=>{
+  track('complaint')
   const next=count+1
   setCount(next)
   try{localStorage.setItem(key,String(next))}catch{/* private mode */}
