@@ -14,7 +14,22 @@ const milestones=[
  {count:1000000,title:'МИЛЛИОН. ТЫ СЕРЬЁЗНО?',description:'Поппи не верит. Декс уважает. Говард отказался комментировать.'}
 ]
 const categoryWeights={'Декс':8,'Руди':8,'Говард':8,'Даррен':8,'Надин':9,'Поппи':9,'Батл / закулисье':9,'Warlock / архив':7,'Школа Сентфора':6,'BLACK HELLEBORE':8,'Сплетница Сентфора':7,'Saintfour / город':7,'Фанат / зритель':6}
-function drawPrize(){const n=Math.random()*100;let cursor=0;let category='Фанат / зритель';for(const [name,weight] of Object.entries(categoryWeights)){cursor+=weight;if(n<cursor){category=name;break}}const choices=spinPrizes.filter(p=>p.group===category);return choices[Math.floor(Math.random()*choices.length)]}
+function drawPrize(record){
+ const n=Math.random()*100;let cursor=0;let category='Фанат / зритель'
+ for(const [name,weight] of Object.entries(categoryWeights)){cursor+=weight;if(n<cursor){category=name;break}}
+ const choices=spinPrizes.filter(p=>p.group===category)
+ const natural=choices[Math.floor(Math.random()*choices.length)]
+ const collected=new Set(record.found)
+ const last=record.history[0]?.id
+ // Keep the original consecutive-repeat odds exactly: a bonus repeat can
+ // never replace a natural match with the immediately preceding prize.
+ if(natural.id===last||collected.has(natural.id))return natural
+ const progress=spinPrizes.reduce((count,p)=>count+Number(collected.has(p.id)),0)/spinPrizes.length
+ const repeatBoost=0.15*(1-progress)
+ if(Math.random()>=repeatBoost)return natural
+ const repeats=choices.filter(p=>collected.has(p.id)&&p.id!==last)
+ return repeats.length?repeats[Math.floor(Math.random()*repeats.length)]:natural
+}
 const wheelIcons=[Cigarette,Flower2,CircleDot,Zap,Cat,Disc3,Flame,Music2,Mic2,Crown,Star,Diamond]
 const blank={spins:0,history:[],found:[],secret:false}
 function load(){try{const s=JSON.parse(localStorage.getItem(storageKey));if(s&&Number.isFinite(s.spins)&&Array.isArray(s.history)&&Array.isArray(s.found))return {...blank,...s}}catch{/* storage disabled */}return blank}
@@ -34,7 +49,7 @@ export default function LuckySpin({onBack,onAchievements,onSlotsDiscovered,onOpe
  const spin=()=>{
   if(rolling)return
   const secretDrop=Math.random()<0.00005
-  const prize=secretDrop?{id:'bh777',group:'BLACK HELLEBORE',name:'НЕИЗВЕСТНЫЙ ПРИЗ',description:'Похоже, колесо открыло что-то, чего не было в списке.'}:drawPrize()
+  const prize=secretDrop?{id:'bh777',group:'BLACK HELLEBORE',name:'НЕИЗВЕСТНЫЙ ПРИЗ',description:'Похоже, колесо открыло что-то, чего не было в списке.'}:drawPrize(record)
   setResult(null);setRolling(true);setAchievementNotice(null)
   const extra=1800+Math.random()*1800
   setAngle(a=>a+360*6+extra)
