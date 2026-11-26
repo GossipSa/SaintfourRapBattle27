@@ -1,3 +1,4 @@
+import {track,AnalyticsConsent} from './BattleAnalytics.jsx'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDownRight, ArrowRight, ChevronLeft, ChevronRight, Clapperboard, Flame, Home, Menu, Mic2, Play, Radio, Vote, X, Trophy, LockKeyhole, CheckCircle2, Ticket, Zap, FlaskConical, Mail, Eye, FileWarning, Volume2, VolumeX, Phone, PhoneOff, AudioLines, SlidersHorizontal, NotebookPen } from 'lucide-react'
 import './App.css'
@@ -88,6 +89,7 @@ function Cover({src, alt, className='', initials='', style={}}) {
 function SectionTitle({tag,title,action, onAction}){return <div className="section-heading"><div><p className="eyebrow"><span className="red-dot"/> {tag}</p><h2 className="glitch-heading" data-text={title}>{title}</h2></div>{action && <button className="text-button" onClick={onAction}>{action} <ArrowRight size={16}/></button>}</div>}
 export default function App() {
  const [page,setPage]=useState('home')
+ useEffect(()=>{track('section',page)},[page])
  const [slotsDiscovered,setSlotsDiscovered]=useState(()=>{try{return window.localStorage.getItem('sf27-secret-slots-discovered')==='1'}catch{return false}})
  const unlockSlots=()=>{setSlotsDiscovered(true);try{window.localStorage.setItem('sf27-secret-slots-discovered','1')}catch{/* private mode */}}
  const musicRef=useRef(null)
@@ -190,12 +192,19 @@ export default function App() {
  const [externalDialogOpen,setExternalDialogOpen]=useState(false)
  useEffect(()=>{const update=()=>setExternalDialogOpen(Boolean(document.querySelector('[role="dialog"][aria-modal="true"]:not(.hp-window)')));const observer=new MutationObserver(update);observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['role','aria-modal']});update();return()=>observer.disconnect()},[])
  const [howardMailOpen,setHowardMailOpen]=useState(false)
+ useEffect(()=>{if(howardMailOpen)track('secret','howard_mail')},[howardMailOpen])
  const [dexKittenOpen,setDexKittenOpen]=useState(false)
+ useEffect(()=>{if(dexKittenOpen)track('secret','dex_kitten')},[dexKittenOpen])
  const [daroRiderOpen,setDaroRiderOpen]=useState(false)
+ useEffect(()=>{if(daroRiderOpen)track('secret','daro_rider')},[daroRiderOpen])
  const [rudiLetterOpen,setRudiLetterOpen]=useState(false)
+ useEffect(()=>{if(rudiLetterOpen)track('secret','rudi_letter')},[rudiLetterOpen])
  const [poppyNotebookOpen,setPoppyNotebookOpen]=useState(false)
+ useEffect(()=>{if(poppyNotebookOpen)track('secret','poppy_notebook')},[poppyNotebookOpen])
  const [fifthInterviewOpen,setFifthInterviewOpen]=useState(false)
+ useEffect(()=>{if(fifthInterviewOpen)track('secret','fifth_interview')},[fifthInterviewOpen])
  const [allAccessOpen,setAllAccessOpen]=useState(false)
+ useEffect(()=>{if(allAccessOpen)track('ticket','opened')},[allAccessOpen])
  const [activeVideo,setActiveVideo]=useState(null)
  const [watchedVideos,setWatchedVideos]=useState(()=>{try{return JSON.parse(localStorage.getItem('sf27-watched-videos-v1')||'{}')}catch{return {}}})
  const [watchToast,setWatchToast]=useState('')
@@ -203,6 +212,7 @@ export default function App() {
   if(!video||watchedVideos[video.id])return
   const next={...watchedVideos,[video.id]:true}
   setWatchedVideos(next)
+  track('video_complete',video.id)
   try{localStorage.setItem('sf27-watched-videos-v1',JSON.stringify(next))}catch{}
   const interviewIds=['interview-dex','interview-netti','interview-rud','interview-daro','interview-nadine']
   if(interviewIds.every(id=>next[id]))setWatchToast('ПРЕДАННЫЙ ФАНАТ — все 5 интервью просмотрены!')
@@ -221,6 +231,8 @@ export default function App() {
    try { const saved=JSON.parse(window.localStorage.getItem('sf27-achievements-v2')||'{}'); return saved&&typeof saved==='object'?saved:{} } catch { return {} }
  })
  useEffect(()=>{syncAchievements()},[achievements])
+ const priorAnalyticsAchievements=useRef(achievements)
+ useEffect(()=>{for(const id of Object.keys(achievements))if(achievements[id]&&!priorAnalyticsAchievements.current[id])track('achievement',id);priorAnalyticsAchievements.current=achievements},[achievements])
  const [achievementToast,setAchievementToast]=useState(null)
  const [warlockNotice,setWarlockNotice]=useState(false)
  const [wilsonOpen,setWilsonOpen]=useState(false)
@@ -417,6 +429,7 @@ export default function App() {
  const openInterview=(item)=>{
    if(!item.url || !premieres[interviewKey(item.id)]?.available)return
    setActiveVideo(item)
+   track('video_start',item.id)
  }
  useEffect(()=>{window.scrollTo({top:0,behavior:'smooth'})},[page])
  useEffect(()=>{const onKey=e=>{if(e.key==='Escape'){if(poppyNotebookOpen){setPoppyNotebookOpen(false)}else if(rudiLetterOpen){setRudiLetterOpen(false)}else if(daroRiderOpen){setDaroRiderOpen(false)}else if(dexKittenOpen){setDexKittenOpen(false)}else if(fifthInterviewOpen){setFifthInterviewOpen(false)}else if(howardMailOpen){setHowardMailOpen(false)}else{setSelected(null);setActiveVideo(null);setGalleryIndex(null)}} if(galleryIndex!==null){if(e.key==='ArrowRight')setGalleryIndex(i=>(i+1)%gallery.length);if(e.key==='ArrowLeft')setGalleryIndex(i=>(i+gallery.length-1)%gallery.length)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[galleryIndex,howardMailOpen,fifthInterviewOpen,dexKittenOpen,daroRiderOpen,rudiLetterOpen,poppyNotebookOpen])
@@ -540,7 +553,7 @@ export default function App() {
     
   </section>}
   </main>
-  <footer className="footer"><div className="wrap footer-main"><div><span className="footer-logo">SAINTFOUR</span><p>RAP BATTLE <b>’27</b></p><small>AN ORIGINAL GOSSIP SAINTFOUR PROJECT</small></div><div className="footer-nav">{nav.slice(1).map(n=><button key={n.id} onClick={()=>go(n.id)} className={n.id==='achievements'?'achievement-footer-link':undefined}>{n.id==='achievements'&&<Trophy size={14}/>} {n.name}{n.id==='achievements'&&<span>{unlockedCount}/5</span>}</button>)}</div><div className="footer-stamp"><Radio size={23}/><span>UNDERGROUND<br/>NEVER DIES.</span></div></div><div className="wrap fan-disclaimer-footer"><details><summary>UNOFFICIAL FAN PROJECT · ПРАВОВАЯ ИНФОРМАЦИЯ</summary><p>SAINTFOUR RAP BATTLE ’27 — неофициальный фанатский проект, созданный исключительно в развлекательных целях по мотивам вселенной «Клуба Романтики». Все права на оригинальных персонажей и материалы принадлежат их соответствующим правообладателям. Проект не связан с разработчиками и не является официальным.</p></details></div><div className="wrap footer-bottom"><span>© {2027} GOSSIP SAINTFOUR. FAN PROJECT.</span><span>MADE FOR THE CULTURE. NOT FOR THE CLOUT.</span><button type="button" className="wilson-footer-link" onClick={()=>setWilsonOpen(true)}><FileWarning size={13}/> REPORT AN INCIDENT · SHERIFF’S OFFICE</button></div></footer>
+  <footer className="footer"><AnalyticsConsent/><div className="wrap footer-main"><div><span className="footer-logo">SAINTFOUR</span><p>RAP BATTLE <b>’27</b></p><small>AN ORIGINAL GOSSIP SAINTFOUR PROJECT</small></div><div className="footer-nav">{nav.slice(1).map(n=><button key={n.id} onClick={()=>go(n.id)} className={n.id==='achievements'?'achievement-footer-link':undefined}>{n.id==='achievements'&&<Trophy size={14}/>} {n.name}{n.id==='achievements'&&<span>{unlockedCount}/5</span>}</button>)}</div><div className="footer-stamp"><Radio size={23}/><span>UNDERGROUND<br/>NEVER DIES.</span></div></div><div className="wrap fan-disclaimer-footer"><details><summary>UNOFFICIAL FAN PROJECT · ПРАВОВАЯ ИНФОРМАЦИЯ</summary><p>SAINTFOUR RAP BATTLE ’27 — неофициальный фанатский проект, созданный исключительно в развлекательных целях по мотивам вселенной «Клуба Романтики». Все права на оригинальных персонажей и материалы принадлежат их соответствующим правообладателям. Проект не связан с разработчиками и не является официальным.</p></details></div><div className="wrap footer-bottom"><span>© {2027} GOSSIP SAINTFOUR. FAN PROJECT.</span><span>MADE FOR THE CULTURE. NOT FOR THE CLOUT.</span><button type="button" className="wilson-footer-link" onClick={()=>setWilsonOpen(true)}><FileWarning size={13}/> REPORT AN INCIDENT · SHERIFF’S OFFICE</button></div></footer>
   <SheriffComplaints open={wilsonOpen} achievementUnlocked={Boolean(achievements.wilsonSnitch)} onClose={()=>setWilsonOpen(false)} onFirstComplaint={unlockWilsonComplaint}/>
   {achievementToast==='dexOnTheLine'&&!wilsonOpen&&<div className="achievement-toast achievement-tier-6" role="status" aria-live="polite"><button type="button" className="achievement-toast-main" onClick={()=>{setAchievementToast(null);go('achievements')}}><div className="achievement-toast-medal"><div className="sf-medallion"><Phone size={23}/><i>12</i></div></div><div className="achievement-toast-copy"><span>NEW ACHIEVEMENT <i>12 / SECRET</i></span><strong>НА УХЕ У LIL DEX</strong><small>25 звонков Дексу! Посмотреть достижение →</small></div></button><button type="button" className="achievement-toast-dismiss" aria-label="Закрыть уведомление" onClick={()=>setAchievementToast(null)}><X size={16}/></button></div>}
    {warlockNotice&&!achievementToast&&<div className="warlock-notice" role="status" aria-live="polite"><span className="warlock-notice-kicker"><Eye size={13}/> WARLOCK SECURITY / SYSTEM MESSAGE</span><strong>WARLOCK ОТСЛЕЖИВАЕТ ВАШУ АКТИВНОСТЬ.</strong><small>Шутка. Наверное.</small><button type="button" aria-label="Закрыть уведомление" onClick={()=>{setWarlockNotice(false);releaseAmbient('warlock')}}><X size={15}/></button></div>}
