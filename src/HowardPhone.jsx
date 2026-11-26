@@ -1,3 +1,4 @@
+import {track} from './BattleAnalytics.jsx'
 import { useEffect, useRef, useState } from 'react'
 import { Phone, PhoneOff, X, LockKeyhole, Mail, Trophy } from 'lucide-react'
 import './HowardPhone.css'
@@ -182,7 +183,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const [chain,setChain]=useState(()=>{try{const old=JSON.parse(localStorage.getItem('sf27-phone-chain-v1')||'null');if(old){for(const [key,min,max] of [['due',60000,120000],['warningDue',30000,60000],['blockedUntil',180000,300000],['rudyDue',180000,300000]])if(old[key]>1000000000000)old[key]=smsClock.current+ambientRandom(min,max);return old}}catch{}return {dex:dexUsed.length+(poppyContact?.source==='dex'?1:0),howard:secretCalls+(poppyContact?.source==='howard'?1:0),poppy:(poppyProgress.used?.length||0)+(poppyProgress.introDone?1:0),first:null,second:false,due:0,darren:0,rudy:0}})
  const chainRef=useRef(chain)
  const updateChain=fn=>{const next=fn(chainRef.current);chainRef.current=next;setChain(next);try{localStorage.setItem('sf27-phone-chain-v1',JSON.stringify(next))}catch{}}
- const countCall=name=>updateChain(v=>({...v,[name]:(v[name]||0)+1}))
+ const countCall=name=>{track('call',name);return updateChain(v=>({...v,[name]:(v[name]||0)+1}))}
  const [noticeQueue,setNoticeQueue]=useState([])
  useEffect(()=>{if(!noticeQueue.length)return;const t=setTimeout(()=>setNoticeQueue(q=>q.slice(1)),4000);return()=>clearTimeout(t)},[noticeQueue[0]])
  useEffect(()=>{const handler=e=>setNoticeQueue(q=>[...q,...e.detail]);window.addEventListener('sf27-phone-archive',handler);return()=>window.removeEventListener('sf27-phone-archive',handler)},[])
@@ -398,6 +399,7 @@ export default function HowardPhone({onBlocked,achievementUnlocked=false,suppres
  const open=()=>{if(isBlocked){setOpened(true);setMenuIndex(0);setMode('phone-menu');return}setOpened(true);setMode(progress.firstSeen&&progress.missed&&!progress.introDone?'idle':progress.introDone?'idle':'incoming')}
  const call=()=>{
   if(isBlocked){setMode('blocked');return}
+  track('call','howard_initial')
   if(!progress.introDone){
    const next={...progress,introDone:true,firstSeen:true,missed:false,limit:30+Math.floor(Math.random()*16)}
    setProgress(next);saveState(next);setMode('mistake');return
